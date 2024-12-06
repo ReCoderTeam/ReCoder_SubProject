@@ -9,32 +9,32 @@ public class MainController {
 
     @GetMapping("/user")
     public String mainControll(){
-        return "index";
+        return "/index";
     }
 
-    @GetMapping("/booking")
+    @GetMapping("/user/booking")
     public String bookingPage() {
         return "/booking/booking";
     }
 
-    @GetMapping("/inquiry")
+    @GetMapping("/user/inquiry")
     public String inquiryPage() {
         return "/inquiry/inquiry";
     }
 
-    @GetMapping("/approvalMain")
+    @GetMapping("/user/approvalMain")
     public String approvalMainController(){
-        return "approvals/approvalMain";
+        return "/approvals/approvalMain";
     }
 
-    @GetMapping("/notification")
+    @GetMapping("/user/notification")
     public String notification() {
-        return "board/notification";
+        return "/board/notification";
     }
 
-    @GetMapping("sharedWork")
+    @GetMapping("/user/sharedWork")
     public String sharedWork(){
-        return "sharedWork";
+        return "/board/sharedWork";
     }
   
     @GetMapping("/auth/login")

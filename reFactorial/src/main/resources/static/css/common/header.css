@@ -12,6 +12,7 @@ header{
             img{
                 max-height: 85px;
                 width: fit-content;
+                cursor: pointer;
             }
 
             .menu_box{
