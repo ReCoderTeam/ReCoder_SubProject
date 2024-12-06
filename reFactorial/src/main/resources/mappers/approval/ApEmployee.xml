@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.approval.mapper.EmployeeMapper">
+    <!-- 직원 검색 -->
+    <select id="searchEmployee" parameterType="string" resultType="com.ohgiraffers.refactorial.approval.model.dto.EmployeeDTO">
+        SELECT
+            emp_id AS id,
+            emp_name AS name,
+            emp_no AS socialNumber,
+            emp_address AS address,
+            emp_email AS email,
+            emp_joined AS joinedDate,
+            annual_leave AS annualLeave,
+            emp_pwd AS password,
+            profile,
+            emp_phone AS phone,
+            dept_code AS deptCode,
+            position_value AS positionValue,
+            view_auth AS viewAuth
+        FROM employee
+        WHERE emp_name LIKE CONCAT('%', #{name}, '%')
+    </select>
+</mapper>

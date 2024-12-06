@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>검색 결과</title>
+</head>
+<body>
+<h1>검색 결과</h1>
+<table border="1">
+  <thead>
+  <tr>
+    <th>사원번호</th>
+    <th>이름</th>
+    <th>부서</th>
+    <th>직책</th>
+    <th>이메일</th>
+    <th>전화번호</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="employee : ${employees}">
+    <td th:text="${employee.empId}"></td>
+    <td th:text="${employee.name}"></td>
+    <td th:text="${employee.deptCode}"></td>
+    <td th:text="${employee.positionValue}"></td>
+    <td th:text="${employee.email}"></td>
+    <td th:text="${employee.phone}"></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
