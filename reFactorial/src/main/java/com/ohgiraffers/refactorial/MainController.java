@@ -14,12 +14,12 @@ public class MainController {
 
     @GetMapping("/booking")
     public String bookingPage() {
-        return "booking";
+        return "/booking/booking";
     }
 
     @GetMapping("/inquiry")
     public String inquiryPage() {
-        return "inquiry";
+        return "/inquiry/inquiry";
     }
 
     @GetMapping("/approvalMain")

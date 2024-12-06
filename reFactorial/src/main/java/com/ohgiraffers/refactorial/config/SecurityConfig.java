@@ -38,7 +38,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth ->{
             // permitAll() : 허가 받지 않은 사용자들도 접근 할 수 있는 URL
             // 여기 작성하지 않는 url에 접근할 경우 모두 로그인이 필요하다고 판단되어 로그인으로 보낸다.
-            auth.requestMatchers("/auth/login").permitAll();
+            auth.requestMatchers("/auth/login","/user/**").permitAll();
 
             // /user/* 은 일반회원 권한을 가진 사람들만 접근 가능
             auth.requestMatchers("/user/*").hasAnyAuthority(UserRole.USER.getRole());
