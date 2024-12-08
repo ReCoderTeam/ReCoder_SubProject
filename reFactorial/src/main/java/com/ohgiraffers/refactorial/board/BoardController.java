@@ -6,27 +6,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class BoardController {
 
-    @GetMapping("/freeBoard")
+    @GetMapping("user/freeBoard")
     public String freeBoard() {
         return "board/freeBoard";
     }
 
-    @GetMapping("/document")
+    @GetMapping("user/document")
     public String document() {
         return "board/document";
     }
 
-    @GetMapping("/vote")
+    @GetMapping("user/vote")
     public String vote() {
         return "board/vote";
     }
 
-    @GetMapping("/event")
+    @GetMapping("user/event")
     public String event() {
         return "board/event";
     }
 
-    @GetMapping("/freeBoardRegist")
+    @GetMapping("user/freeBoardRegist")
     public String freeBoardRegist() {
         return "board/freeBoardRegist";
     }
