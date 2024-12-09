@@ -17,5 +17,4 @@ public class ApprovalController {
     public String paymentPage(){
     return "approvals/approvalPage";
 }
-
 }
