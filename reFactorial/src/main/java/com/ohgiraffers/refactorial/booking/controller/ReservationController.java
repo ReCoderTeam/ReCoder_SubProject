@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,6 +47,12 @@ public class ReservationController {
     @PostMapping("/reserve")
     public String makeReservation(@ModelAttribute ReservationDTO reservationDTO, Model model) {
         reservationDTO.setReservationId(UUID.randomUUID().toString());
+
+        // 오늘 날짜 이전 예약 불가 체크
+        if (reservationDTO.getReservationDate().isBefore(LocalDate.now())) {
+            model.addAttribute("errorMessage", "예약은 오늘 이후의 날짜에만 가능합니다.");
+            return "booking/bookingForm"; // 예약 폼으로 돌아가기
+        }
 
         // 시작 시간과 종료 시간을 비교하여 유효성 검사 추가
         if (reservationDTO.getReservationStartTime().isAfter(reservationDTO.getReservationEndTime())) {

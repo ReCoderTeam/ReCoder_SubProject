@@ -33,7 +33,6 @@
     </delete>
 
     <!-- 특정 날짜와 시간 범위에 대해 예약 가능 여부를 확인하는 쿼리 -->
-    <!-- 특정 날짜와 시간 범위에 대해 예약 가능 여부를 확인하는 쿼리 -->
     <select id="checkReservationConflict" resultMap="ReservationResultMap" resultType="com.ohgiraffers.refactorial.booking.model.dto.ReservationDTO">
         SELECT reservation_id AS reservationId,
         reservation_date AS reservationDate,
