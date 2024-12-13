@@ -36,10 +36,10 @@ public class ReservationService {
         reservationDAO.deleteReservationById(reservationId);
     }
     // 중복 방지 메서드
-    public boolean isReservationAvailable(BigDecimal conferenceRoomNo,LocalDate date, LocalTime startTime, LocalTime endTime) {
-        // 모든 회의실에 대해 예약 충돌을 확인
+    public boolean isReservationAvailable(BigDecimal conferenceRoomNo, LocalDate date, LocalTime startTime, LocalTime endTime) {
+        // 예약이 겹치는지 체크하는 로직
         List<ReservationDTO> conflicts = reservationDAO.checkReservationConflict(conferenceRoomNo, date, startTime, endTime);
-        return conflicts.isEmpty(); // 충돌이 없으면 true 반환
+        return conflicts.isEmpty();
     }
 
     // 개인페이지 예약 내역 메서드

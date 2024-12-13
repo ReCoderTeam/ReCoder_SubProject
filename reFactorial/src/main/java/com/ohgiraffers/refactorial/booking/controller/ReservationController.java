@@ -45,14 +45,21 @@ public class ReservationController {
     // 예약을 처리하는 메서드
     @PostMapping("/reserve")
     public String makeReservation(@ModelAttribute ReservationDTO reservationDTO, Model model) {
-
         reservationDTO.setReservationId(UUID.randomUUID().toString());
 
+        // 시작 시간과 종료 시간을 비교하여 유효성 검사 추가
+        if (reservationDTO.getReservationStartTime().isAfter(reservationDTO.getReservationEndTime())) {
+            model.addAttribute("errorMessage", "예약 시작 시간이 종료 시간보다 늦을 수 없습니다.");
+            return "booking/bookingForm"; // 시작 시간이 종료 시간보다 늦을 경우 예약 폼으로 돌아가기
+        }
+
         // 예약 가능 여부 확인
-        boolean isAvailable = reservationService.isReservationAvailable(reservationDTO.getConferenceRoomNo(),
+        boolean isAvailable = reservationService.isReservationAvailable(
+                reservationDTO.getConferenceRoomNo(),
                 reservationDTO.getReservationDate(),
                 reservationDTO.getReservationStartTime(),
-                reservationDTO.getReservationEndTime());
+                reservationDTO.getReservationEndTime()
+        );
 
         if (!isAvailable) {
             model.addAttribute("errorMessage", "예약 시간이 중복됩니다. 다른 시간을 선택해 주세요.");
@@ -73,9 +80,9 @@ public class ReservationController {
     public String deleteReservationById(@RequestParam("reservationId") String reservationId) {
         try {
             reservationService.deleteReservationById(reservationId);
-            return "redirect:/user/booking"; // 삭제 후, 예약 목록 페이지로 리다이렉트
+            return "redirect:/booking/bookingList"; // 삭제 후, 예약 목록 페이지로 리다이렉트
         } catch (RuntimeException e) {
-            return "redirect:/user/booking";  // 삭제 중 오류 발생 시 에러 페이지로 이동
+            return "redirect:/booking/bookingList";  // 삭제 중 오류 발생 시 에러 페이지로 이동
         }
     }
 }
