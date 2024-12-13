@@ -45,7 +45,7 @@
         const todayAttPtag = document.querySelector("#todayAtt")
 
         window.onload = function () {
-            fetch("/attendance/getAttendance", {
+            fetch("/attendance/getTodayAttendance", {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

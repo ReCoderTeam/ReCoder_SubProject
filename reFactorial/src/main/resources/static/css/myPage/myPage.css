@@ -320,6 +320,18 @@ body{
     overflow: hidden;
 }
 
+.fc .fc-toolbar-title{
+    font-size: 1em;
+}
+
+.fc .fc-button{
+    padding: 0.1em 0.5em;
+}
+
+.fc-h-event{
+    border: none;
+}
+
 .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events{
-    display: none;
+    /*display: none;*/
 }

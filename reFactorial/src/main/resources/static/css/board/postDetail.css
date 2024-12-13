@@ -1,0 +1,47 @@
+.boardContainer {
+    display: flex; /* 플렉스 레이아웃 사용 */
+    flex-direction: row; /* 가로 방향으로 정렬 */
+    height: 100%; /* 컨테이너 높이를 화면 전체로 설정 */
+}
+.sidebar {
+    width: 20%; /* 사이드바 너비 */
+    border-right: 1px solid black; /* 오른쪽 경계선 */
+    padding: 20px; /* 내부 여백 */
+    overflow-y: auto; /* 사이드바 내용이 넘칠 경우 스크롤 */
+}
+.sidebar-title {
+    font-size: 32px; /* 글씨 크기 */
+    font-weight: bold; /* 글씨 굵게 */
+    color: #000; /* 글씨 색상 */
+    margin-bottom: 15px; /* 아래 여백 */
+    margin-top: 46px; /* 리스트 위치 아래로 조정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.sidebar ul {
+    margin-top: 10px; /* 리스트 위치 아래로 조정 */
+    list-style: none; /* 리스트 기본 스타일 제거 */
+    padding: 0; /* 내부 여백 제거 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+.sidebar li {
+    position: relative; /* 가상 요소 기준 위치 설정 */
+    padding: 10px 0; /* 리스트 항목 상하 여백 */
+    cursor: pointer; /* 마우스 커서 설정 */
+}
+.sidebar li::after {
+    content: ''; /* 구분 바 추가 */
+    display: block; /* 블록 형태로 설정 */
+    width: 35%; /* 구분 바 길이 */
+    height: 2px; /* 구분 바 굵기 */
+    background-color: black; /* 구분 바 색상 */
+    margin: 5px auto 0; /* 중앙 정렬 및 여백 */
+}
+.sidebar li:last-child::after {
+    display: none; /* 마지막 항목 구분 바 제거 */
+}
+.sidebar li:hover {
+    font-family: 'Noto Sans KR', Arial, sans-serif; /* 마우스 오버 시 폰트 */
+    color: #5C1915; /* 마우스 오버 시 텍스트 색상 */
+    font-weight: 1000; /* 마우스 오버 시 굵기 */
+}

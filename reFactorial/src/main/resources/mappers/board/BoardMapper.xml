@@ -74,4 +74,23 @@
         WHERE post_id = #{postId}
     </delete>
 
+    <!-- 댓글 등록 -->
+    <insert id="comment" parameterType="com.ohgiraffers.refactorial.board.model.dto.CommentDTO">
+        insert into tbl_comment
+        (
+        post_id,
+        emp_id,
+        comment_content,
+        comment_creationDate
+        )
+        values
+        (
+        #{postId},
+        #{empId},
+        #{commentContent},
+        #{commentCreationDate}
+        )
+    </insert>
+
+
 </mapper>

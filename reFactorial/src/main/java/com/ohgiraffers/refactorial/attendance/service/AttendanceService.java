@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -41,7 +42,7 @@ public class AttendanceService {
         int result = attendanceMapper.addEmpAttendance(attendance);
     }
 
-    public AttendanceDTO getAttendance(String userId) {
+    public AttendanceDTO getTodayAttendance(String userId) {
 
         LocalDate today = LocalDate.now();
 
@@ -50,8 +51,22 @@ public class AttendanceService {
         searchData.put("empId",userId);
         searchData.put("attDate",today);
 
+        // 근태 중복방지용 근태 체크 랑 공용
         AttendanceDTO attendance = attendanceMapper.checkAttendance(searchData);
 
         return attendance;
+    }
+
+    public List<AttendanceDTO> getAttendance(String empId, LocalDate firstDayOfMonth, LocalDate lastDayOfMonth) {
+
+        Map<String,Object> getAttendanceInfo = new HashMap<>();
+
+        getAttendanceInfo.put("empId",empId);
+        getAttendanceInfo.put("firstDayOfMonth",firstDayOfMonth);
+        getAttendanceInfo.put("lastDayOfMonth",lastDayOfMonth);
+
+        List<AttendanceDTO> attendanceList = attendanceMapper.getAttendance(getAttendanceInfo);
+
+        return attendanceList;
     }
 }

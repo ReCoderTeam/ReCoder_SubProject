@@ -58,7 +58,7 @@ public class ApprovalService {
         params.put("creatorId", creatorId); // 작성자 ID 추가
 
         approvalMapper.insertPm(params); // 매퍼 호출
-        return (String) params.get("pmId"); // 생성된 pmId 반환
+        return String.valueOf(params.get("pmId")); // 생성된 pmId 반환
     }
 
 

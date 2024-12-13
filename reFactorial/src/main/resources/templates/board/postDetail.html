@@ -4,39 +4,69 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시물 상세</title>
+
+  <!--폰트 적용-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" th:href="@{/css/common/header.css}">
+  <link rel="stylesheet" th:href="@{/css/common/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/common/style.css}">
+
+  <link rel="stylesheet" th:href="@{/css/board/postDetail.css}">
+
 </head>
 <body>
-<div>
-  <!-- 게시물 상세 제목 -->
-  <h1 th:text="${postDetail.postTitle}">게시물 제목</h1>
+<header th:replace="~{/common/header::headerFragment}"></header>
+<section>
+    <div class="boardContainer">
+      <!-- Sidebar -->
+      <div th:replace="~{/board/sidebar::sidebarFragment}"></div>
 
-  <!-- 작성자 정보 -->
-  <p><strong>작성자:</strong> <span th:text="${postDetail.empId}">작성자</span></p>
+      <div>
+        <!-- 게시물 상세 제목 -->
+        <h1 th:text="${postDetail.postTitle}">게시물 제목</h1>
 
-  <!-- 작성 날짜 -->
-  <p><strong>작성일:</strong> <span th:text="${postDetail.postCreationDate}">작성일</span></p>
+        <!-- 작성자 정보 -->
+        <p><strong>작성자:</strong> <span th:text="${postDetail.empId}">작성자</span></p>
 
-  <!-- 게시물 내용 -->
-  <p><strong>내용:</strong></p>
-  <div th:text="${postDetail.postContent}">
-    게시물 내용이 여기에 표시됩니다.
-  </div>
+        <!-- 작성 날짜 -->
+        <p><strong>작성일:</strong> <span th:text="${postDetail.postCreationDate}">작성일</span></p>
 
-  <!-- 수정 -->
-  <form action="/board/postUpdate" method="get">
-    <!-- 게시물 ID 전달 -->
-    <input type="hidden" name="postId" th:value="${postDetail.postId}">
-    <button type="submit" style="display: block; margin-top: 20px;">수 정</button>
-  </form>
+        <!-- 게시물 내용 -->
+        <p><strong>내용:</strong></p>
+        <div th:text="${postDetail.postContent}">
+          게시물 내용이 여기에 표시됩니다.
+        </div>
 
-  <!-- 삭제 -->
-  <form action="/board/postDelete" method="post">
-     <input type="hidden" name="postId" th:value="${postDetail.postId}">
-     <input type="hidden" name="categoryCode" th:value="${postDetail.categoryCode}">
-     <button type="submit" style="display: block; margin-top: 20px;">삭 제</button>
-  </form>
+        <!-- 수정 -->
+        <form action="/board/postUpdate" method="get">
+          <!-- 게시물 ID 전달 -->
+          <input type="hidden" name="postId" th:value="${postDetail.postId}">
+          <button type="submit" style="display: block; margin-top: 20px;">수 정</button>
+        </form>
 
-  <!-- 목록으로 돌아가기 -->
-  <a th:href="@{/board/list(categoryCode=${postDetail.categoryCode})}" style="display: block; margin-top: 20px;">목록으로 돌아가기</a>
-</div>
+        <!-- 삭제 -->
+        <form action="/board/postDelete" method="post">
+           <input type="hidden" name="postId" th:value="${postDetail.postId}">
+           <input type="hidden" name="categoryCode" th:value="${postDetail.categoryCode}">
+           <button type="submit" style="display: block; margin-top: 20px;">삭 제</button>
+        </form>
+
+        <!-- 목록으로 돌아가기 -->
+        <a th:href="@{/board/list(categoryCode=${postDetail.categoryCode})}" style="display: block; margin-top: 20px;">목록으로 돌아가기</a>
+
+        <!-- 댓글 -->
+        <form action="/board/comment" method="post">
+          <p>댓글</p>
+          <textarea id="comment" name="comment"></textarea>
+          <!-- 게시글 ID를 숨겨서 전달 -->
+          <input type="hidden" name="postId" th:value="${postDetail.postId}">
+          <button type="submit">등 록</button>
+        </form>
+      </div>
+    </div>
+</section>
+<footer th:replace="~{/common/footer::footerFragment}"></footer>
 </body>

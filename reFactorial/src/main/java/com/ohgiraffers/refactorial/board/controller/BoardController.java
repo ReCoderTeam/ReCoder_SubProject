@@ -2,6 +2,7 @@ package com.ohgiraffers.refactorial.board.controller;
 
 import com.ohgiraffers.refactorial.approval.service.ApprovalService;
 import com.ohgiraffers.refactorial.board.model.dto.BoardDTO;
+import com.ohgiraffers.refactorial.board.model.dto.CommentDTO;
 import com.ohgiraffers.refactorial.board.service.BoardService;
 import com.ohgiraffers.refactorial.user.model.dto.UserDTO;
 import jakarta.servlet.http.HttpSession;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -124,6 +126,32 @@ public class BoardController {
 //        return "redirect:/board/postDetail?postId=" + board.getPostId();    // 상세페이지 머무르기
         return "redirect:/board/list?categoryCode="+board.getCategoryCode();  // 게시판 이동
 
+    }
+
+    // 댓글 등록
+    @PostMapping("comment")
+    public String comment(@RequestParam String comment, @RequestParam int postId, HttpSession session) {
+
+        UserDTO user = (UserDTO) session.getAttribute("LoginUserInfo");     // 로그인한 유저의 정보를 가져옴
+
+        CommentDTO commentDetail = new CommentDTO();
+
+        System.out.println("comment = " + comment);
+        System.out.println("postId = " + postId);
+
+        LocalDate commentTime = LocalDate.now();
+
+        System.out.println("commentTime = " + commentTime);
+
+        commentDetail.setCommentContent(comment);
+        commentDetail.setPostId(postId);
+        commentDetail.setEmpId(user.getEmpId());
+        commentDetail.setCommentCreationDate(commentTime);
+
+        boardService.comment(commentDetail);
+
+
+        return "redirect:/board/postDetail?postId="+postId;
     }
 
     @GetMapping("document")

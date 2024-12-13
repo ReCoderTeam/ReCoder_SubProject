@@ -24,4 +24,12 @@
         WHERE att_date = #{attDate} AND emp_id = #{empId}
     </select>
 
+    <select id="getAttendance" parameterType="Map" resultMap="attendanceResult">
+        SELECT *
+        FROM tbl_attendance
+        WHERE emp_id = #{empId}
+            AND
+                att_date BETWEEN #{firstDayOfMonth} AND #{lastDayOfMonth}
+    </select>
+
 </mapper>
