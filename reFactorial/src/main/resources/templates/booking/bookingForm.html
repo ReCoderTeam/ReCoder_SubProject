@@ -85,17 +85,17 @@
         });
 
         if (isConflict) {
-        alert('선택한 날짜와 시간에 이미 예약이 존재합니다. 다른 시간을 선택해주세요.');
 
         // 리디렉션을 제대로 수행하려면 예약 폼이 아닌 예약 수정 폼으로 이동해야 하므로
         window.location.href = `booking/bookingForm.html`;
+        alert('선택한 날짜와 시간에 이미 예약이 존재합니다. 다른 시간을 선택해주세요.');
         return;
         } else {
-        reservationForm.submit(); // 예약이 충돌하지 않으면 폼 제출
+            reservationForm.submit(); // 예약이 충돌하지 않으면 폼 제출
         }
         } catch (error) {
         console.error('오류 발생:', error);
-        alert('예약 확인 중 문제가 발생했습니다. 관리자에게 문의하세요.');
+        alert('예약 확인 중 문제가 발생했습니다');
         }
         });
 
