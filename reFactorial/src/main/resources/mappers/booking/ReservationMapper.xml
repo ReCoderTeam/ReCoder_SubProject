@@ -33,18 +33,18 @@
     </delete>
 
     <!-- 특정 날짜와 시간 범위에 대해 예약 가능 여부를 확인하는 쿼리 -->
-    <select id="checkReservationConflict" resultMap="ReservationResultMap" resultType="com.ohgiraffers.refactorial.booking.model.dto.ReservationDTO">
-        SELECT reservation_id AS reservationId,
-        reservation_date AS reservationDate,
-        emp_id AS empId,
-        ConferenceRoom_no AS conferenceRoomNo,
-        reservationStartTime,
-        reservationEndTime
-        FROM tbl_reservation
-        WHERE ConferenceRoom_no = #{conferenceRoomNo}
-        AND reservation_date = #{date}
-        AND ( (reservationStartTime &lt; #{endTime} AND reservationEndTime &gt; #{startTime}) )
-    </select>
+        <select id="checkReservationConflict" resultMap="ReservationResultMap" resultType="com.ohgiraffers.refactorial.booking.model.dto.ReservationDTO">
+            SELECT reservation_id AS reservationId,
+            reservation_date AS reservationDate,
+            emp_id AS empId,
+            ConferenceRoom_no AS conferenceRoomNo,
+            reservationStartTime,
+            reservationEndTime
+            FROM tbl_reservation
+            WHERE ConferenceRoom_no = #{conferenceRoomNo}
+            AND reservation_date = #{date}
+            AND ( (reservationStartTime &lt; #{endTime} AND reservationEndTime &gt; #{startTime}) )
+        </select>
 
     <select id="getUserReservations" parameterType="java.lang.String" resultMap="ReservationResultMap">
         SELECT *

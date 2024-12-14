@@ -14,9 +14,9 @@ public class MailDTO {
     private String emailTitle;
     private String emailContent;
     private String emailAttachment;
-    private byte readStatus; // tinyint is mapped to byte in Java
-    private Date sentDate; // Assuming java.sql.Date
-    private byte trashDate; // Since the column type is tinyint
+    private byte readStatus;
+    private Date sentDate;
+    private byte trashDate;
     private String senderEmpId;
     private String receiverEmpId;
 }

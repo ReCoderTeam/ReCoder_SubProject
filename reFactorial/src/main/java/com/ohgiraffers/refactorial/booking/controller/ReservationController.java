@@ -5,6 +5,7 @@ import com.ohgiraffers.refactorial.booking.service.ReservationService;
 import com.ohgiraffers.refactorial.user.model.dto.UserDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -29,9 +29,9 @@ public class ReservationController {
 
     // 회의실을 선택하여 예약 폼을 띄우는 메서드
     @GetMapping("/bookingForm")
-    public String showBookingForm(@RequestParam("roomNo") String roomNo , Model model) {
+    public String showBookingForm(@RequestParam("roomNo") String roomNo, Model model) {
         // Ensure roomNo is passed correctly to the booking form page
-        model.addAttribute("roomNo",roomNo);
+        model.addAttribute("roomNo", roomNo);
         return "/booking/bookingForm";
     }
 
@@ -40,7 +40,7 @@ public class ReservationController {
         UserDTO user = (UserDTO) session.getAttribute("LoginUserInfo");
         List<ReservationDTO> userReservations = reservationService.getUserReservations(user.getEmpId());
         model.addAttribute("userReservations", userReservations);
-        return "booking/bookingList"; // 수정된 부분
+        return "/booking/bookingList"; // 수정된 부분
     }
 
     // 예약을 처리하는 메서드
@@ -70,7 +70,8 @@ public class ReservationController {
 
         if (!isAvailable) {
             model.addAttribute("errorMessage", "예약 시간이 중복됩니다. 다른 시간을 선택해 주세요.");
-            return "booking/bookingForm"; // 중복 시 예약 폼으로 돌아가기
+            // 중복되면 showBookingForm 으로 리디렉션
+            return "redirect:/bookingForm?roomNo=" + reservationDTO.getConferenceRoomNo(); // 리디렉션 경로 수정
         }
 
         try {
@@ -91,5 +92,11 @@ public class ReservationController {
         } catch (RuntimeException e) {
             return "redirect:/booking/bookingList";  // 삭제 중 오류 발생 시 에러 페이지로 이동
         }
+    }
+
+    @GetMapping("/api/reservations")
+    public ResponseEntity<List<ReservationDTO>> getAllReservations() {
+        List<ReservationDTO> reservations = reservationService.getAllReservations();
+        return ResponseEntity.ok(reservations); // 정상적으로 예약 목록 반환
     }
 }
