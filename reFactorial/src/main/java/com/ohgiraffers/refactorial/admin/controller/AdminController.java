@@ -83,6 +83,7 @@ public class AdminController {
         return mv;
     }
 
+    // 특정 회원 정보 수정할때 나타나는 페이지 addEmployee 활용
     @PostMapping("addEmployeeFragment")
     public String updateEmployeeFragment(@RequestBody Map<String, Object> res, Model model){
 
@@ -99,17 +100,25 @@ public class AdminController {
     @ResponseBody
     public Map<String, Object> getByDateAtt(@RequestParam String selectedDay,
                                             @RequestParam(defaultValue = "1") int page,
-                                            @RequestParam(defaultValue = "10") int size){
-        // 전체 데이터의 개수
-        int totalRecords = adminService.getTotalCountByDateAtt(selectedDay);
+                                            @RequestParam(defaultValue = "10") int size,
+                                            @RequestParam String searchDept,
+                                            @RequestParam String searchEmpName){
 
+        System.out.println("searchDept = " + searchDept);
+        System.out.println("searchEmpName = " + searchEmpName);
+        
+        // 전체 데이터의 개수
+        int totalRecords = adminService.getTotalCountByDateAtt(selectedDay, searchDept, searchEmpName);
+
+        System.out.println("totalRecords = " + totalRecords);
+        
         // 전체 페이지 수 계산
         int totalPages = (int) Math.ceil((double) totalRecords / size);
 
         // 건너뛸 갯수
         int offset = (page - 1) * size;
 
-        List<AttendanceDTO> getByDateAttList = adminService.getByDateAtt(selectedDay,offset,size);
+        List<AttendanceDTO> getByDateAttList = adminService.getByDateAtt(selectedDay,offset,size, searchDept, searchEmpName);
 
         Map<String, Object> result = new HashMap<>();
         result.put("items",getByDateAttList);

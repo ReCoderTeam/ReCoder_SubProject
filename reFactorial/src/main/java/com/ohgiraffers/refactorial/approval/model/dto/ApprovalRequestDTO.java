@@ -20,5 +20,6 @@ public class ApprovalRequestDTO {
     private List<String> referrers; // 참조자 리스트
     private int creatorId; // 작성자 ID 추가
     private String content;
+    private String leaveType;       // 휴가유형 (연차, 반차)
 
 }

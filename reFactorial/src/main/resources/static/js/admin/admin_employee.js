@@ -10,6 +10,8 @@ let sendSearchEmpName = '';
 let searchDept = null;
 let searchEmpName = null;
 
+let randomStr = 'P';
+
 document.addEventListener("DOMContentLoaded", function () {
     menuMainBox.innerHTML = `
                         <div class="employeeListBox">
@@ -166,8 +168,10 @@ let page = 1;
 // fetchData 함수는 전역에서 사용할 수 있도록 밖으로 이동
 const fetchData = (page = 1) => {
     const selectedDay = document.getElementById('searchAttDate').value;
+    const searchDept = document.getElementById('searchDept').value;
+    const searchEmpName = document.getElementById('searchEmpName').value;
 
-    fetch(`/admin/getByDateAtt?selectedDay=${encodeURIComponent(selectedDay)}&page=${page}&size=10`, {
+    fetch(`/admin/getByDateAtt?selectedDay=${encodeURIComponent(selectedDay)}&page=${page}&size=10&searchDept=${searchDept}&searchEmpName=${searchEmpName}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -175,65 +179,77 @@ const fetchData = (page = 1) => {
     })
         .then(response => response.json())
         .then(data => {
+            const pagination = document.querySelector('.pagination');
+
+            const totalPages = data.totalPages;
+
+            if (totalPages == '0' || totalPages == '1'){
+                pagination.style.display = "none";
+            } else {
+                pagination.style.display = "block";
+                pagination.innerHTML = '';  // 기존 페이지네이션 초기화
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.textContent = i;
+                    pageButton.addEventListener('click', () => {
+                        page = i
+                        fetchData(page);  // 해당 페이지 데이터 가져오기
+                    });
+                    pagination.appendChild(pageButton);
+                }
+            }
+
             console.log("전체 사원 근태 data: ", data);
 
             // 테이블의 tbody에 데이터를 추가
             const empAttTable = document.getElementById("empAttTable");
             empAttTable.innerHTML = '';
 
-            data.items.forEach((att) => {
-                fetch('/user/getNameById', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        empId: att.empId
+
+            if (data.items.length == 0){
+                empAttTable.innerHTML = `<div class="notMatch">검색 조건에 맞는 사원이 없습니다.</div>`
+            } else{
+                // 사원 이름 가져오기
+                data.items.forEach((att) => {
+                    fetch('/user/getNameById', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            empId: att.empId
+                        })
                     })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        const attEmpName = data.empName;
+                        .then(response => response.json())
+                        .then(data => {
+                            const attEmpName = data.empName;
 
-                        const row = `
-                        <tr>
-                            <td class="empId">${att.empId}</td>
-                            <td class="empName">${attEmpName}</td>
-                            <td class="attDate">${att.attDate}</td>
-                            <td class="attStatus">
-                                <select name="attStatus" id="attStatus" data-emp-id="${att.empId}" data-att-date="${att.attDate}" onchange="logAttStatus(this)">
-                                    <option value="지각" ${att.attStatus === '지각' ? 'selected' : ''}>지각</option>
-                                    <option value="연차" ${att.attStatus === '연차' ? 'selected' : ''}>연차</option>
-                                    <option value="반차" ${att.attStatus === '반차' ? 'selected' : ''}>반차</option>
-                                    <option value="정상 출근" ${att.attStatus === '정상 출근' || att.attStatus === '출근' ? 'selected' : ''}>정상 출근</option>
-                                </select>
-                            </td>
-                        </tr>
-                    `;
-                        empAttTable.innerHTML += row;
+                            const row = `
+                            <tr>
+                                <td class="empId">${att.empId}</td>
+                                <td class="empName">${attEmpName}</td>
+                                <td class="attDate">${att.attDate}</td>
+                                <td class="attStatus">
+                                    <select name="attStatus" id="attStatus" data-emp-id="${att.empId}" data-att-date="${att.attDate}" onchange="logAttStatus(this)">
+                                        <option value="지각" ${att.attStatus === '지각' ? 'selected' : ''}>지각</option>
+                                        <option value="연차" ${att.attStatus === '연차' ? 'selected' : ''}>연차</option>
+                                        <option value="반차" ${att.attStatus === '반차' ? 'selected' : ''}>반차</option>
+                                        <option value="정상 출근" ${att.attStatus === '정상 출근' || att.attStatus === '출근' ? 'selected' : ''}>정상 출근</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        `;
+                            empAttTable.innerHTML += row;
 
-                        // select 요소에 change 이벤트 리스너를 추가
-                        const selectElement = document.querySelector(`#attStatus[data-emp-id="${att.empId}"][data-att-date="${att.attDate}"]`);
-                        selectElement.addEventListener('change', (event) => logAttStatus(event.target));
-                    })
-                    .catch(error => {
-                        console.error("Fetch error: ", error);
-                    });
-            });
-
-            const pagination = document.querySelector('.pagination');
-            const totalPages = data.totalPages;
-
-            pagination.innerHTML = '';  // 기존 페이지네이션 초기화
-
-            for (let i = 1; i <= totalPages; i++) {
-                const pageButton = document.createElement('button');
-                pageButton.textContent = i;
-                pageButton.addEventListener('click', () => {
-                    page = i
-                    fetchData(page);  // 해당 페이지 데이터 가져오기
+                            // select 요소에 change 이벤트 리스너를 추가
+                            const selectElement = document.querySelector(`#attStatus[data-emp-id="${att.empId}"][data-att-date="${att.attDate}"]`);
+                            selectElement.addEventListener('change', (event) => logAttStatus(event.target));
+                        })
+                        .catch(error => {
+                            console.error("Fetch error: ", error);
+                        });
                 });
-                pagination.appendChild(pageButton);
             }
         })
         .catch(error => {
@@ -241,7 +257,7 @@ const fetchData = (page = 1) => {
         });
 };
 
-// logAttStatus 함수는 전역에서 호출될 수 있도록 정의
+// logAttStatus 함수는 전역에서 호출될 수 있도록 정의 (근태 수정 저장)
 function logAttStatus(selectElement) {
     const empId = selectElement.getAttribute('data-emp-id');
     const attDate = selectElement.getAttribute('data-att-date');
@@ -265,19 +281,31 @@ function logAttStatus(selectElement) {
     })
 }
 
-// updateAtt 버튼 클릭 시 이벤트
+// updateAtt(근태 수정) 버튼 클릭 시 이벤트
 updateAtt.addEventListener("click", () => {
     menuMainBox.innerHTML = `
             <div class="allEmpAttListBox">
                 <div class="searchAttBox">
-                    <form>
-                        <div class="searchAttIdBox">
-                            <label for="searchAttId">사번</label>
-                            <input type="text" id="searchAttId" name="searchAttId">
-                            <button type="button">조회</button>
+                    <div class="searchAttIdBox">
+                        <div class="searchBox">
+                            <div>
+                                <label for="searchDept">부서 : </label>
+                                <select name="searchDept" id="searchDept">
+                                    <option value="0" id="dept0">전체</option>
+                                    <option value="1" id="dept1">인사팀</option>
+                                    <option value="2" id="dept2">개발팀</option>
+                                    <option value="3" id="dept3">마케팅팀</option>
+                                    <option value="4" id="dept4">회계팀</option>
+                                    <option value="5" id="dept5">영업팀</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="searchEmpName">이름 : </label>
+                                <input type="text" name="searchEmpName" id="searchEmpName">
+                            </div>
                         </div>
-                        <input type="date" id="searchAttDate" name="searchAttDate">
-                    </form>
+                    </div>
+                    <input type="date" id="searchAttDate" name="searchAttDate">
                 </div>
                 <div class="empAttList">
                     <div class="empAttListTitle">
@@ -304,6 +332,8 @@ updateAtt.addEventListener("click", () => {
     document.getElementById('searchAttDate').value = formattedDate;
 
     const searchAttDateInput = document.getElementById('searchAttDate');
+    const searchDeptInput = document.getElementById('searchDept');
+    const searchEmpNameInput = document.getElementById('searchEmpName');
 
     // 처음 데이터 로드
     fetchData(1);
@@ -315,6 +345,18 @@ updateAtt.addEventListener("click", () => {
         page = 1
     });
 
+    // 검색 부서 변경될 때마다 데이터 새로고침
+    searchDeptInput.addEventListener('change', () => {
+        fetchData(1);
+        page = 1
+    });
+
+    // 검색 이름 변경될 때마다 데이터 새로고침
+    searchEmpNameInput.addEventListener('input', () => {
+        fetchData(1);
+        page = 1
+    });
+
     selectedMenu.forEach(menu => {
         menu.classList.remove("selected")
     })
@@ -322,3 +364,36 @@ updateAtt.addEventListener("click", () => {
     updateAtt.classList.add("selected")
 });
 
+function setRandomStr(deptCode){
+
+    const value = deptCode.value;
+
+    if (value == 1){
+        randomStr = 'P'
+    } else if(value == 2){
+        randomStr = 'D'
+    } else if(value == 3){
+        randomStr = 'M'
+    } else if(value == 4){
+        randomStr = 'A'
+    } else if(value == 5){
+        randomStr = 'S'
+    }
+
+    console.log("randomStr: ",randomStr)
+
+    randomEmpId()
+}
+
+function randomEmpId(){
+    //5자리 랜덤 문자열 생성
+    const randomNum = Math.floor(Math.random() * 100000);
+
+    const empIdValue = randomStr + randomNum.toString().padStart(5, "0");
+
+    const empId = document.querySelector('#empId');
+
+    console.log(empIdValue, typeof empIdValue)
+
+    empId.value = empIdValue
+}

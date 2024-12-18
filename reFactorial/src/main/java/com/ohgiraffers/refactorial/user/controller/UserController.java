@@ -26,6 +26,8 @@ public class UserController {
     @PostMapping("addEmployee")
     public ModelAndView addEmployee(ModelAndView mv, @ModelAttribute UserDTO userDTO){
 
+        System.out.println("userDTO.getEmpId() = " + userDTO.getEmpId());
+
         Integer result = memberService.addEmployee(userDTO);
 
         String message = null;
@@ -34,10 +36,10 @@ public class UserController {
             message = "중복된 회원이 존재합니다.";
         } else if (result == 0){        // insert 구문이 실행되다가 실패
             message = "서번 내부에서 오류가 발생했습니다.";
-            mv.setViewName("/admin/employee");
+            mv.setViewName("/admin/admin_employee");
         } else if (result >= 1) {
             message = "회원 가입이 완료되었습니다.";
-            mv.setViewName("/admin/employee");
+            mv.setViewName("/admin/admin_employee");
         }
 
         mv.addObject("message", message);

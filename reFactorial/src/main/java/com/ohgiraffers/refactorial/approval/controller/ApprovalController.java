@@ -313,6 +313,16 @@ public class ApprovalController {
         // 결재문서 저장
         String pmId = approvalService.saveApproval(approvalRequestDTO, creatorId);
 
+        // 휴가유형 처리 (휴가신청서일 경우만)
+        if ("category3".equals(approvalRequestDTO.getCategory())) {
+            if (approvalRequestDTO.getLeaveType() != null && !approvalRequestDTO.getLeaveType().isEmpty()) {
+                approvalService.updateLeaveType(pmId, approvalRequestDTO.getLeaveType());
+            } else {
+                model.addAttribute("errorMessage", "휴가유형을 선택해야 합니다.");
+                return "/approvals/approvalPage";
+            }
+        }
+
         // 승인자 저장 (입력된 승인자만 저장)
         approvalService.saveApprovers(pmId, approvers);
 
@@ -333,6 +343,8 @@ public class ApprovalController {
                 return "/approvals/approvalPage";
             }
         }
+
+
 
         return "/approvals/approvalMain";
     }
@@ -527,7 +539,7 @@ public class ApprovalController {
 
         document.setCategoryName(document.getCategoryName());
 
-        if("category3".equals(document.getCategory())){
+        if ("category3".equals(document.getCategory())) {
             String leaveType = approvalService.getLeaveTypeForDocument(pmId);
             document.setLeaveType(leaveType);
         }

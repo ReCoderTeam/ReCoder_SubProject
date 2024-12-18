@@ -44,33 +44,8 @@
                 </div>
 
                 <div class="inputSet">
-                    <label for="empId">사원번호 : </label>
-                    <input type="number" id="empId" name="empId" th:value="${ModifyUser != null ? ModifyUser.empId : ''}">
-                </div>
-
-                <div class="inputSet">
-                    <label for="empJoined">입사일 : </label>
-                    <input type="date" id="empJoined" name="empJoined" th:value="${ModifyUser != null ? ModifyUser.empJoined : ''}">
-                </div>
-
-                <div class="inputSet">
-                    <label for="annualLeave">연차 : </label>
-                    <input type="text" id="annualLeave" name="annualLeave" th:value="${ModifyUser != null ? ModifyUser.annualLeave : ''}">
-                </div>
-
-                <div th:unless="${ModifyUser != null and ModifyUser.empId != LoginUserInfo.empId}" class="inputSet">
-                    <label for="empPwd">비밀번호 : </label>
-                    <input type="text" id="empPwd" name="empPwd">
-                </div>
-
-                <div class="inputSet">
-                    <label for="empPhone">연락처 : </label>
-                    <input type="text" id="empPhone" name="empPhone" th:value="${ModifyUser != null ? ModifyUser.empPhone : ''}">
-                </div>
-
-                <div class="inputSet">
                     <label for="deptCode">부서 : </label>
-                    <select name="deptCode" id="deptCode" th:value="${ModifyUser != null ? ModifyUser.deptCode : ''}">
+                    <select name="deptCode" id="deptCode" th:value="${ModifyUser != null ? ModifyUser.deptCode : ''}" onchange="setRandomStr(this)">
                         <option value=1 th:selected="${ModifyUser != null && ModifyUser.deptCode == 1}">인사팀</option>
                         <option value=2 th:selected="${ModifyUser != null && ModifyUser.deptCode == 2}">개발팀</option>
                         <option value=3 th:selected="${ModifyUser != null && ModifyUser.deptCode == 3}">마케팅팀</option>
@@ -93,6 +68,32 @@
                         <option value=9 th:selected="${ModifyUser != null && ModifyUser.positionValue == 9}">사원</option>
                         <option value=10 th:selected="${ModifyUser != null && ModifyUser.positionValue == 10}">인턴</option>
                     </select>
+                </div>
+
+                <div class="inputSet">
+                    <label for="empId">사원번호 : </label>
+                    <input type="text" id="empId" name="empId" th:value="${ModifyUser != null ? ModifyUser.empId : ''}" readonly>
+                    <button type="button" th:unless="${ModifyUser}" onclick="randomEmpId()">생성하기</button>
+                </div>
+
+                <div class="inputSet">
+                    <label for="empJoined">입사일 : </label>
+                    <input type="date" id="empJoined" name="empJoined" th:value="${ModifyUser != null ? ModifyUser.empJoined : ''}">
+                </div>
+
+                <div class="inputSet">
+                    <label for="annualLeave">연차 : </label>
+                    <input type="text" id="annualLeave" name="annualLeave" th:value="${ModifyUser != null ? ModifyUser.annualLeave : ''}">
+                </div>
+
+                <div th:unless="${ModifyUser != null and ModifyUser.empId != LoginUserInfo.empId}" class="inputSet">
+                    <label for="empPwd">비밀번호 : </label>
+                    <input type="text" id="empPwd" name="empPwd">
+                </div>
+
+                <div class="inputSet">
+                    <label for="empPhone">연락처 : </label>
+                    <input type="text" id="empPhone" name="empPhone" th:value="${ModifyUser != null ? ModifyUser.empPhone : ''}">
                 </div>
 
                 <div class="inputSet">

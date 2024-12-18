@@ -205,26 +205,39 @@ section{
 
                 .searchAttBox{
                     display: flex;
-                    justify-content: center;
-                    height: 15%;
+                    height: 10%;
+                    width: 100%;
+                    justify-content: end;
+                    align-items: center;
+                    padding: 10px;
+                    box-sizing: border-box;
 
-                    form{
+                    .searchAttIdBox{
+
                         display: flex;
-                        width: 100%;
-                        height: 100%;
-                        justify-content: center;
+                        justify-content: end;
                         align-items: center;
 
-                        .searchAttIdBox{
-                            width: 60%;
+                        .searchBox{
                             display: flex;
-                            justify-content: space-around;
                             align-items: center;
-                            margin-right: 20px;
 
-                            input[type="text"]{
-                                background: none;
-                                padding: 3px 10px;
+                            div{
+                                display: flex;
+                                align-items: center;
+                                margin-right: 20px;
+
+                                label{
+                                    margin-right: 5px;
+                                }
+
+                                input[type="text"]{
+
+                                    border: solid 1px green;
+
+                                    background: none;
+                                    padding: 3px 10px;
+                                }
                             }
                         }
                     }
@@ -235,6 +248,14 @@ section{
                     box-sizing: border-box;
 
                     padding: 10px;
+
+                    .notMatch{
+                        font-size: 1.3em;
+                        padding-top: 10%;
+
+                        width: 100%;
+                        text-align: center;
+                    }
 
                     .empAttListTitle{
                         border: solid 1px black;

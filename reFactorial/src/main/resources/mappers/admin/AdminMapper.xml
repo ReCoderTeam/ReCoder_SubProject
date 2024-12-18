@@ -56,17 +56,30 @@
     </update>
 
     <select id="getByDateAtt" parameterType="Map" resultType="com.ohgiraffers.refactorial.attendance.dto.AttendanceDTO">
-        SELECT *
-        FROM tbl_attendance
-        WHERE DATE(att_date) = #{selectedDay}
-        ORDER BY emp_id
+        SELECT a.att_date AS attDate, a.att_time AS attTime, a.att_status AS attStatus, e.emp_id AS empId
+        FROM tbl_attendance a
+        LEFT OUTER JOIN employee e ON e.emp_id = a.emp_id
+        WHERE DATE(a.att_date) = #{selectedDay}
+        <if test="searchDept != null and searchDept != '' and searchDept != 0 " >
+            AND e.dept_code = #{searchDept}
+        </if>
+        <if test="searchEmpName != null and searchEmpName != ''">
+            AND e.emp_name LIKE CONCAT('%', #{searchEmpName}, '%')
+        </if>
         LIMIT #{offset}, #{size}
     </select>
 
-    <select id="getTotalCountByDateAtt" parameterType="String" resultType="int">
+    <select id="getTotalCountByDateAtt" parameterType="Map" resultType="int">
         SELECT count(*)
-        FROM tbl_attendance
-        WHERE DATE(att_date) = #{selectedDay}
+        FROM tbl_attendance a
+        LEFT OUTER JOIN employee e ON e.emp_id = a.emp_id
+        WHERE DATE(a.att_date) = #{selectedDay}
+        <if test="searchDept != null and searchDept != '' and searchDept != 0 " >
+            AND e.dept_code = #{searchDept}
+        </if>
+        <if test="searchEmpName != null and searchEmpName != ''">
+            AND e.emp_name LIKE CONCAT('%', #{searchEmpName}, '%')
+        </if>
     </select>
 
     <update id="modifyEmpAtt" parameterType="Map">

@@ -15,14 +15,6 @@
         <result property="categoryCode" column="category_code"/>
     </resultMap>
 
-    <resultMap id="voteResultMap" type="com.ohgiraffers.refactorial.board.model.dto.VoteDTO">
-        <id property="postId" column="post_id"/>
-        <result property="voteTitle" column="vote_title"/>
-        <result property="voteContent" column="vote_content"/>
-        <result property="voteCreationDate" column="vote_creation_date"/>
-        <result property="voteAndDate" column="vote_end_date"/>
-    </resultMap>
-
     <!-- 게시물 전체 조회 -->
     <select id="postList" parameterType="int" resultMap="boardResultMap">
         SELECT
@@ -43,6 +35,7 @@
     <insert id="boardPost" parameterType="com.ohgiraffers.refactorial.board.model.dto.BoardDTO">
         insert into tbl_post
         (
+        post_id,
         post_title,
         post_content,
         post_creationDate,
@@ -52,6 +45,7 @@
         )
         values
         (
+        #{postId},
         #{postTitle},
         #{postContent},
         #{postCreationDate},
@@ -61,14 +55,31 @@
         )
     </insert>
 
-    <!-- 투표게시판 등록 -->
-    <insert id="voteRegist">
-        insert into tbl_post
-
+    <!-- 투표게시물 등록 -->
+    <insert id="insertVoteItem">
+        INSERT INTO tbl_post
+        (
+        post_id,
+        post_title,
+        post_content,
+        post_creationDate,
+        emp_id,
+        post_modificationDate,
+        category_code)
+        VALUES
+        (
+        #{postId},
+        #{postTitle},
+        #{postContent},
+        #{postCreationDate},
+        #{empId},
+        #{postModificationDate},
+        #{categoryCode}
+        );
     </insert>
 
     <!-- 게시물 상세페이지 -->
-    <select id="postDetail" parameterType="int" resultMap="boardResultMap">
+    <select id="postDetail" parameterType="String" resultMap="boardResultMap">
         SELECT
             *
         FROM
@@ -94,7 +105,7 @@
     </update>
 
     <!-- 게시물 삭제 -->
-    <delete id="postDelete" parameterType="int">
+    <delete id="postDelete" parameterType="String">
         DELETE FROM tbl_post
         WHERE post_id = #{postId}
     </delete>
@@ -118,7 +129,7 @@
     </insert>
 
     <!-- 댓글 조회 -->
-    <select id="commentView" parameterType="int" resultType="com.ohgiraffers.refactorial.board.model.dto.CommentDTO">
+    <select id="commentView" parameterType="String" resultType="com.ohgiraffers.refactorial.board.model.dto.CommentDTO">
         SELECT
             *
         FROM

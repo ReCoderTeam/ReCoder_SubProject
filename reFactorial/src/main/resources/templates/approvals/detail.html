@@ -77,17 +77,18 @@
         <p><strong>카테고리:</strong>
           <span th:text="${document != null ? document.categoryName : '카테고리 정보 없음'}">카테고리</span>
         </p>
+        <div th:if="${document.category == 'category3'}">
+          <p><strong>휴가유형:</strong>
+            <span th:text="${document.leaveType != null ? document.leaveType : '휴가유형 정보 없음'}"></span>
+          </p>
         <p><strong>내용:</strong>
           <span th:text="${document != null ? document.content : '내용 없음'}">내용</span>
         </p>
       </div>
 
-      <div th:if="${document.category == 'category3'}">
-        <p><strong>휴가유형</strong>
-          <span th:text="${document.leaveType != null ? document.leaveType : '정보 없음'}"></span>
-        </p>
 
-      </div>
+
+<!--      </div>-->
 
       <!-- 승인자 정보 -->
       <div class="additional-info">

@@ -179,6 +179,7 @@
             pm.pm_status AS status,
             pm.pm_attachment AS attachment,
             emp.emp_name AS creatorName, -- 작성자 이름
+            pm.leave_type AS leaveType,
             GROUP_CONCAT(ap.emp_id ORDER BY ap.approval_order ASC) AS approvers, -- 승인자 목록 (순서 보장)
             GROUP_CONCAT(DISTINCT pr.emp_id) AS referrers, -- 참조자 목록
             pm.pm_content AS content,
@@ -360,4 +361,10 @@
         WHERE pm_id = #{pmId}
     </select>
 
+
+    <update id="updateLeaveType" parameterType="map">
+        UPDATE tbl_pm
+        SET leave_type = #{leaveType}
+        WHERE pm_id = #{pmId}
+    </update>
 </mapper>

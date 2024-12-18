@@ -20,7 +20,7 @@ public interface AdminMapper {
 //    List<AttendanceDTO> getByDateAtt(String selectedDay, int offset, int size);
 
     // 페이지네이션을 위한 날짜별 데이터 총 개수
-    int getTotalCountByDateAtt(String selectedDay);
+    int getTotalCountByDateAtt(Map<String,Object> sendData);
 
     // 날짜별 근태 전부 가져오기
     List<AttendanceDTO> getByDateAtt(Map<String, Object> sendData);
