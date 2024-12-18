@@ -1,6 +1,8 @@
 package com.ohgiraffers.refactorial.mail.controller;
 
+import com.ohgiraffers.refactorial.mail.model.dto.EmployeeDTO;
 import com.ohgiraffers.refactorial.mail.model.dto.MailDTO;
+import com.ohgiraffers.refactorial.mail.service.EmployeeService;
 import com.ohgiraffers.refactorial.mail.service.MailService;
 import com.ohgiraffers.refactorial.user.model.dto.LoginUserDTO;
 import jakarta.servlet.http.HttpSession;
@@ -18,9 +20,19 @@ public class MailController {
 
     private MailService mailService;
 
+    private EmployeeService employeeService;
+
     @Autowired
-    public MailController(MailService mailService) {
+    public MailController(MailService mailService, EmployeeService employeeService) {
         this.mailService = mailService;
+        this.employeeService = employeeService;
+    }
+
+    @PostMapping("/searchReceiver")
+    public String searchReceiver(@RequestParam("searchReceiverInput") String empName, Model model) {
+        List<EmployeeDTO> employees = employeeService.searchEmployees(empName);
+        model.addAttribute("employees", employees);
+        return "mail/sendMail :: searchResults";  // 타임리프의 Fragment를 사용하여 결과를 동적으로 표시
     }
 
     // 메일 쓰기 페이지로 이동

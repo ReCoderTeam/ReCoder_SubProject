@@ -79,4 +79,22 @@
 <!--boostrap-->
 
 </body>
+<script>
+    $(document).ready(function() {
+        // 검색 버튼 클릭 시
+        $('#searchReceiverInput').on('keyup', function() {
+            let searchValue = $(this).val();
+
+            $.ajax({
+                url: '/searchReceiver',
+                method: 'POST',
+                data: { searchReceiverInput: searchValue },
+                success: function(response) {
+                    $('#searchResults').html(response);  // 검색 결과를 모달에 표시
+                }
+            });
+        });
+    });
+
+</script>
 </html>
