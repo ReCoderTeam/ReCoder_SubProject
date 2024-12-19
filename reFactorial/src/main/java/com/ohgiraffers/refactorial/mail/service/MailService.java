@@ -26,7 +26,7 @@ public class MailService {
         String emId;
         do {
             emId = "EM" + String.format("%05d", (int) (Math.random() * 100000));
-        } while (!generatedIds.add(emId)); // 중복이 아니면 Set에 추가
+        } while (!generatedIds.add(emId)); // 중복이 아니면 Set에 추가 
 
 
         // 공통 메일 ID 설정
