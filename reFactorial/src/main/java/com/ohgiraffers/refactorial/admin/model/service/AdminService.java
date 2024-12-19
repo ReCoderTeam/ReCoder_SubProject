@@ -1,6 +1,7 @@
 package com.ohgiraffers.refactorial.admin.model.service;
 
 import com.ohgiraffers.refactorial.admin.model.dao.AdminMapper;
+import com.ohgiraffers.refactorial.admin.model.dto.TktReserveDTO;
 import com.ohgiraffers.refactorial.attendance.dto.AttendanceDTO;
 import com.ohgiraffers.refactorial.user.model.dto.LoginUserDTO;
 import com.ohgiraffers.refactorial.user.model.dto.UserDTO;
@@ -72,5 +73,9 @@ public class AdminService {
         sendData.put("selectedStatus",selectedStatus);
 
         return am.modifyEmpAtt(sendData);
+    }
+
+    public List<TktReserveDTO> getTktReserve(String selectedDay) {
+        return am.getTktReserve(selectedDay);
     }
 }

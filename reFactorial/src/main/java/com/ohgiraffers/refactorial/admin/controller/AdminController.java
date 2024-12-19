@@ -1,5 +1,6 @@
 package com.ohgiraffers.refactorial.admin.controller;
 
+import com.ohgiraffers.refactorial.admin.model.dto.TktReserveDTO;
 import com.ohgiraffers.refactorial.admin.model.service.AdminService;
 import com.ohgiraffers.refactorial.attendance.dto.AttendanceDTO;
 import com.ohgiraffers.refactorial.user.model.dto.LoginUserDTO;
@@ -26,6 +27,7 @@ public class AdminController {
     @Autowired
     private MemberService ms;
 
+    // 사원 페이지
     @GetMapping("employee")
     public String adminAddEmployee(){ return "admin/admin_employee"; }
 
@@ -144,6 +146,25 @@ public class AdminController {
         }
 
         return result;
+    }
+
+    // 예약자 관리 페이지
+    @GetMapping("tktreserve")
+    public String adminTktreserve(){ return "/admin/admin_tktreserve"; }
+
+    @GetMapping("getTktReserve")
+    @ResponseBody
+    public Map<String, Object> getTktReserve(@RequestParam(defaultValue = "")  String selectedDay){
+
+        System.out.println("selectedDay = " + selectedDay);
+
+        Map<String, Object> resultData = new HashMap<>();
+
+        List<TktReserveDTO> result = adminService.getTktReserve(selectedDay);
+
+        resultData.put("resultList",result);
+
+        return resultData;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ohgiraffers.refactorial.admin.model.dao;
 
+import com.ohgiraffers.refactorial.admin.model.dto.TktReserveDTO;
 import com.ohgiraffers.refactorial.attendance.dto.AttendanceDTO;
 import com.ohgiraffers.refactorial.user.model.dto.LoginUserDTO;
 import com.ohgiraffers.refactorial.user.model.dto.UserDTO;
@@ -27,4 +28,6 @@ public interface AdminMapper {
 
     // 사원 근태 수정해주기
     Integer modifyEmpAtt(Map<String, Object> sendData);
+
+    List<TktReserveDTO> getTktReserve(String selectedDay);
 }

@@ -90,4 +90,21 @@
           AND att_date = #{attDate}
     </update>
 
+    <select id="getTktReserve" parameterType="String" resultType="com.ohgiraffers.refactorial.admin.model.dto.TktReserveDTO">
+        SELECT
+            tkt_reserv_id AS tktReserveId,
+            tkt_reserv_name AS tktReserveName,
+            tkt_reserv_phone AS tktReservePhone,
+            tkt_reserv_address AS tktReserveAddress,
+            tkt_reserv_accomp_name AS tktReserveAccomp,
+            tkt_reserv_date AS tktReserveDate
+        FROM
+            tbl_tktreserv
+        <where>
+            <if test="selectedDay != null and selectedDay != ''">
+                tkt_reserv_date = #{selectedDay}
+            </if>
+        </where>
+    </select>
+
 </mapper>

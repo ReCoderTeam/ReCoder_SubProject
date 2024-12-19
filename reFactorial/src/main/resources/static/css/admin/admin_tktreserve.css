@@ -1,0 +1,121 @@
+section{
+    .rightBox{
+        display: flex;
+        flex-direction: column;
+        padding: 2% 3%;
+
+        .sideMenu{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            flex-direction: row;
+            padding: 10px 0;
+
+            div{
+                display: flex;
+                align-items: center;
+                justify-content: end;
+                label{
+                    margin-right: 5px;
+                }
+
+                input{
+                    padding:5px 30px;
+                }
+            }
+        }
+
+        .menuMainBox{
+            width: 100%;
+
+            padding: 10px 0;
+            box-sizing: border-box;
+            max-height: 70vh;
+            overflow-x: auto;
+            overflow-y: auto;
+
+            .tktreserve_item_box{
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                column-gap: 1.5%;
+                row-gap: 15px;
+
+                .tktreserve_item{
+                    width: 23.5%;
+                    min-height: 200px;
+                    height: fit-content;
+                    padding: 1%;
+                    background-color: white;
+                    border-radius: 20px;
+                    box-sizing: border-box;
+
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    font-size: 1em;
+
+                    box-shadow: 5px 5px 4px rgba(0,0,0,0.25);
+                    border: solid 1px rgba(0,0,0,0.25);
+
+                    #select_tkt{
+                        align-self: start;
+                        width: 12%;
+                        aspect-ratio: 1 / 1;
+                    }
+
+                    div{
+                        width: 100%;
+                        height: fit-content;
+                        text-align: center;
+                    }
+
+                    .random_img{
+                        width: 100%;
+
+                        display: flex;
+                        justify-content: center;
+                        padding: 10px 0;
+
+                        img{
+                            width: 60%;
+                            aspect-ratio: 1 / 1;
+                            border-radius: 50%;
+                        }
+                    }
+
+                    .tkt_names{
+
+                        display: flex;
+                        justify-content: center;
+
+                        div{
+                            width: fit-content;
+                        }
+
+                        div:first-child{
+                            margin-right: 10px;
+                        }
+                    }
+
+                    .tkt_date {
+                    }
+
+                    .tkt_phone{
+                    }
+                }
+
+                .notMatch{
+                    font-size: 1.3em;
+                    padding-top: 10%;
+
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
