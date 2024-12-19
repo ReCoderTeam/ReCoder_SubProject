@@ -28,6 +28,4 @@ public class EmployeeDTO {
     private String deptName;      // 부서명
     private String positionName;  // 직책명
 
-
-
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ohgiraffers.refactorial.mail.model.dao.MailEmployeeMapper">
+
+    <!-- 회원 이름으로 검색 -->
+    <select id="searchMailEmployeesByName" resultType="com.ohgiraffers.refactorial.mail.model.dto.MailEmployeeDTO">
+        SELECT emp_id, emp_name, emp_no, emp_address, emp_email, emp_joined, annual_leave, emp_pwd, profile, emp_phone, dept_code, position_value, view_auth
+        FROM employee
+        WHERE emp_name LIKE CONCAT('%' , #{searchReceiverInput}, '%')
+    </select>
+
+    <!-- 모든 직원 조회 -->
+    <select id="getAllMailEmployees" resultType="com.ohgiraffers.refactorial.mail.model.dto.MailEmployeeDTO">
+        SELECT emp_id, emp_name, emp_no, emp_address, emp_email, emp_joined, annual_leave, emp_pwd, profile, emp_phone, dept_code, position_value, view_auth
+        FROM employee
+    </select>
+
+</mapper>

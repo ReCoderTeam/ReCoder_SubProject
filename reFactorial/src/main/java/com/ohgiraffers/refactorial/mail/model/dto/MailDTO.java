@@ -3,6 +3,7 @@ package com.ohgiraffers.refactorial.mail.model.dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -18,6 +19,6 @@ public class MailDTO {
     private LocalDate sentDate; // 발송 날짜
     private boolean trashStatus; // 휴지통 이동 여부
     private String senderEmpId; // 발신자 사원번호
-    private String receiverEmpId; // 수신자 사원번호
+    private List<String> receiverEmpId; // 수신자 사원번호
 }
 

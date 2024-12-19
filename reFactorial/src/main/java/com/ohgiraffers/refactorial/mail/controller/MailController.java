@@ -43,9 +43,9 @@ public class MailController {
         model.addAttribute("senderEmpId", senderEmpId);
 
         // 메일 서비스 호출
-        mailService.sendMail(mailDTO);
+        // mailService.sendMail(mailDTO);
         System.out.println(mailDTO);
-        return "redirect:/mail/sentMails";
+        return "redirect:/mail/sendMail";
     }
 
     //내가 보낸 메일 읽기
