@@ -38,10 +38,8 @@ public interface BoardMapper {
     // 댓글 삭제
     void commentDelete(int commentId);
 
-//    // 투표게시글 등록
-//    void votePost(VoteDTO voteBoard);
+    // 항목 전달
+    void voteItem(String option);
 
-    // 투표 게시물 조회
-//    List<BoardDTO> voteList(int categoryCode);
 
 }

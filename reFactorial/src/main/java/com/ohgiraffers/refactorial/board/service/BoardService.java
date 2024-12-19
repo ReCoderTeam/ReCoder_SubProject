@@ -35,13 +35,6 @@ public class BoardService {
         boardMapper.boardPost(board);
     }
 
-    // 투표 게시글 등록
-    public void saveVoteItems(List<VoteItemDTO> voteItems) {
-        for (VoteItemDTO item : voteItems) {
-            boardMapper.insertVoteItem(item); // 투표 항목 저장
-        }
-    }
-
     // 상세페이지
     public BoardDTO postDetail(String postId) {
 
@@ -79,4 +72,8 @@ public class BoardService {
         boardMapper.commentDelete(commentId);
     }
 
+    // 투표 항목 전달
+    public void voteItem(String option) {
+        boardMapper.voteItem(option);
+    }
 }

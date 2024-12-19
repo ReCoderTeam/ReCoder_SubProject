@@ -55,27 +55,13 @@
         )
     </insert>
 
-    <!-- 투표게시물 등록 -->
-    <insert id="insertVoteItem">
-        INSERT INTO tbl_post
-        (
-        post_id,
-        post_title,
-        post_content,
-        post_creationDate,
-        emp_id,
-        post_modificationDate,
-        category_code)
-        VALUES
-        (
-        #{postId},
-        #{postTitle},
-        #{postContent},
-        #{postCreationDate},
-        #{empId},
-        #{postModificationDate},
-        #{categoryCode}
-        );
+    <!-- 투표 항목db -->
+    <insert id="voteItem" parameterType="com.ohgiraffers.refactorial.board.model.dto.VoteItemDTO">
+        <!-- 옵션 5개를 삽입하는 쿼리 -->
+        <foreach collection="options" item="option" index="index" open="" close="" separator=";">
+            INSERT INTO tbl_vote_item (post_id, item_title, item)
+            VALUES (#{postId}, #{itemTitle}, #{option});
+        </foreach>
     </insert>
 
     <!-- 게시물 상세페이지 -->

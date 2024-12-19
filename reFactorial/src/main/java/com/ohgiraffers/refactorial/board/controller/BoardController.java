@@ -59,7 +59,11 @@ public class BoardController {
     public String boardPost(@RequestParam String title,
                             @RequestParam String content,
                             @RequestParam int categoryCode,
-//                            @RequestParam List<String> item,
+//                            @RequestParam String option1,
+//                            @RequestParam String option2,
+//                            @RequestParam String option3,
+//                            @RequestParam String option4,
+//                            @RequestParam String option5,
                             Model model, HttpSession session) {
 
         LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");     // 로그인한 유저의 정보를 가져옴
@@ -75,23 +79,44 @@ public class BoardController {
         board.setPostModificationDate(LocalDateTime.now()); // 게시물 수정 시간
         board.setCategoryCode(categoryCode);    // 게시물 카테고리 코드
 
-//        // VoteItemDTO 리스트 생성 및 설정
-//        List<VoteItemDTO> voteItems = new ArrayList<>();
-//        for (String voteItem : item) {
-//            VoteItemDTO voteItemDTO = new VoteItemDTO();
-//            voteItemDTO.setPostId(boardId);
-//            voteItemDTO.setItemTitle(voteItem);
-//            voteItems.add(voteItemDTO);
+
+
+        
+//        List<String> options = new ArrayList<>();  // 옵션들을 리스트로 받음
+//
+//        if (option1 != null && !option1.isEmpty()) {
+//            options.add(option1);
+//        }
+//        if (option2 != null && !option2.isEmpty()) {
+//            options.add(option2);
+//        }
+//        if (option3 != null && !option3.isEmpty()) {
+//            options.add(option3);
+//        }
+//        if (option4 != null && !option4.isEmpty()) {
+//            options.add(option4);
+//        }
+//        if (option5 != null && !option5.isEmpty()) {
+//            options.add(option5);
+//        }
+//
+//
+//        System.out.println(option1);
+//        System.out.println(option2);
+//        System.out.println(option3);
+//        System.out.println(option4);
+//        System.out.println(option5);
+//
+//        // 리스트에 추가된 옵션들을 사용
+//        if (categoryCode == 4) {
+//            for (String option : options) {
+//                boardService.voteItem(option);  // 각 옵션을 voteItem 메서드에 전달
+//            }
 //        }
 
-//        System.out.println("voteItems" + voteItems);
-//
-//
-//        board.setVoteItems(voteItems); // BoardDTO에 투표 항목 설정
 
 
         boardService.post(board);   // 게시물 등록 기능
-//        boardService.saveVoteItems(voteItems); // 투표 항목 등록
 
 
         return "redirect:/board/list?categoryCode=" + categoryCode; // 내 API를 호출
