@@ -43,27 +43,22 @@
                 <div>회원 검색</div>
             </div>
 
-            <form action="searchReceiver" method="post" id="changePWForm">
+            <form action="/mail/searchReceiver" method="post" id="searchReceiverForm">
                 <div class="modal-body">
                     <label for="searchReceiverInput">회원</label>
-                    <input type="text" id="searchReceiverInput" name="presentPW">
+                    <input type="text" id="searchReceiverInput" name="searchReceiverInput" />
                 </div>
                 <div class="modal-footer">
-                    <!--                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-                    <button type="submit" id="matchPW">회원 검색</button>
+                    <button type="submit" id="matchReceiver">회원 검색</button>
                 </div>
             </form>
 
-            <!-- 검색 결과 -->
-            <div th:if="${employees != null}">
-                <h4>검색된 직원 목록</h4>
+            <!-- 검색 결과를 표시하는 부분 -->
+            <!-- 검색 결과를 출력할 부분 (Fragment로 정의) -->
+            <div th:fragment="searchResults">
                 <ul>
                     <li th:each="employee : ${employees}">
-                        <input type="checkbox" name="selectedEmployees" th:value="${employee.empId}" />
-                        <span th:text="${employee.empName}"></span> -
-                        <span th:text="${employee.deptCode}"></span> -
-                        <span th:text="${employee.positionValue}"></span> -
-                        <span th:text="${employee.empEmail}"></span>
+                        <span th:text="${employee.empName}"></span>  <!-- 예시: 직원 이름 출력 -->
                     </li>
                 </ul>
             </div>
@@ -79,22 +74,4 @@
 <!--boostrap-->
 
 </body>
-<script>
-    $(document).ready(function() {
-        // 검색 버튼 클릭 시
-        $('#searchReceiverInput').on('keyup', function() {
-            let searchValue = $(this).val();
-
-            $.ajax({
-                url: '/searchReceiver',
-                method: 'POST',
-                data: { searchReceiverInput: searchValue },
-                success: function(response) {
-                    $('#searchResults').html(response);  // 검색 결과를 모달에 표시
-                }
-            });
-        });
-    });
-
-</script>
 </html>

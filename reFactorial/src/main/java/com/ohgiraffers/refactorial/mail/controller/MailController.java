@@ -1,8 +1,8 @@
 package com.ohgiraffers.refactorial.mail.controller;
 
-import com.ohgiraffers.refactorial.mail.model.dto.EmployeeDTO;
+import com.ohgiraffers.refactorial.mail.model.dto.MailEmployeeDTO;
 import com.ohgiraffers.refactorial.mail.model.dto.MailDTO;
-import com.ohgiraffers.refactorial.mail.service.EmployeeService;
+import com.ohgiraffers.refactorial.mail.service.MailEmployeeService;
 import com.ohgiraffers.refactorial.mail.service.MailService;
 import com.ohgiraffers.refactorial.user.model.dto.LoginUserDTO;
 import jakarta.servlet.http.HttpSession;
@@ -20,19 +20,19 @@ public class MailController {
 
     private MailService mailService;
 
-    private EmployeeService employeeService;
+    private MailEmployeeService mailEmployeeService;
 
     @Autowired
-    public MailController(MailService mailService, EmployeeService employeeService) {
+    public MailController(MailService mailService, MailEmployeeService mailEmployeeService) {
         this.mailService = mailService;
-        this.employeeService = employeeService;
+        this.mailEmployeeService = mailEmployeeService;
     }
 
     @PostMapping("/searchReceiver")
-    public String searchReceiver(@RequestParam("searchReceiverInput") String empName, Model model) {
-        List<EmployeeDTO> employees = employeeService.searchEmployees(empName);
-        model.addAttribute("employees", employees);
-        return "mail/sendMail :: searchResults";  // 타임리프의 Fragment를 사용하여 결과를 동적으로 표시
+    public String searchReceiver(@RequestParam("searchReceiverInput") String searchReceiverInput, Model model) {
+        List<MailEmployeeDTO> employees = mailEmployeeService.searchEmployees(searchReceiverInput);  // 검색 로직
+        model.addAttribute("employees", employees);  // 검색 결과를 모델에 추가
+        return "mail/sendMail :: searchResults";  // sendMail.html에서 searchResults Fragment를 렌더링
     }
 
     // 메일 쓰기 페이지로 이동
