@@ -25,81 +25,105 @@
         <!-- Sidebar -->
         <div th:replace="~{/board/sidebar::sidebarFragment}"></div>
 
-        <!-- 상세페이지 -->
-        <div>
-            <!-- 게시물 상세 제목 -->
-            <h1 th:text="${postDetail.postTitle}">게시물 제목</h1>
+        <div class="rightBoxContainer">
+        <!-- 로그인한 사용자와 작성자 ID비교(본인만 수정,삭제 권한부여) -->
+            <div class="top-bar button">
+                <th:block th:if="${user.empId} == ${postDetail.empId}">
 
-            <!-- 작성자 정보 -->
-            <p><strong>작성자:</strong> <span th:text="${postDetail.empName}">작성자</span></p>
+                    <!-- 상세페이지 게시물 수정 -->
+                    <form action="/board/postUpdate" method="get">
+                        <!-- 게시물 ID 전달 -->
+                        <input type="hidden" name="postId" th:value="${postDetail.postId}">
+                        <button type="submit" style="display: block; margin-top: 20px;">수 정</button>
+                    </form>
 
-            <!-- 작성 날짜 -->
-            <p><strong>작성일:</strong> <span th:text="${postDetail.postCreationDate}">작성일</span></p>
-
-            <!-- 게시물 내용 -->
-            <p><strong>내용:</strong></p>
-            <div th:text="${postDetail.postContent}">
-                게시물 내용이 여기에 표시됩니다.
+                    <!-- 상세페이지 게시물 삭제 -->
+                    <form action="/board/postDelete" method="post">
+                        <input type="hidden" name="postId" th:value="${postDetail.postId}">
+                        <input type="hidden" name="categoryCode" th:value="${postDetail.categoryCode}">
+                        <button type="submit" style="display: block; margin-top: 20px;">삭 제</button>
+                    </form>
+                </th:block>
             </div>
 
-            <!-- 로그인한 사용자와 작성자 ID비교(본인만 수정,삭제 권한부여) -->
-            <th:block th:if="${user.empId} == ${postDetail.empId}">
+        <!-- 상세페이지 -->
+            <div class="boardDetail">
+                <!-- 게시물 상세 제목 -->
+                <h1 th:text="${postDetail.postTitle}">게시물 제목</h1>
 
-                <!-- 상세페이지 게시물 수정 -->
-                <form action="/board/postUpdate" method="get">
-                    <!-- 게시물 ID 전달 -->
-                    <input type="hidden" name="postId" th:value="${postDetail.postId}">
-                    <button type="submit" style="display: block; margin-top: 20px;">수 정</button>
-                </form>
+                <!-- 작성자 정보 -->
+                <p><strong>작성자:</strong> <span th:text="${postDetail.empName}">작성자</span></p>
 
-                <!-- 상세페이지 게시물 삭제 -->
-                <form action="/board/postDelete" method="post">
-                    <input type="hidden" name="postId" th:value="${postDetail.postId}">
-                    <input type="hidden" name="categoryCode" th:value="${postDetail.categoryCode}">
-                    <button type="submit" style="display: block; margin-top: 20px;">삭 제</button>
-                </form>
-            </th:block>
+                <!-- 작성 날짜 -->
+                <p><strong>작성일:</strong> <span th:text="${postDetail.postCreationDate}">작성일</span></p>
 
-            <!-- 목록으로 돌아가기 -->
-            <a th:href="@{/board/list(categoryCode=${postDetail.categoryCode})}"
-               style="display: block; margin-top: 20px;">목록으로 돌아가기</a>
-
-
-            <!-- 댓글 등록-->
-            <form action="/board/comment" method="post">
-                <p>댓글</p>
-                <textarea id="comment" name="comment"></textarea>
-                <!-- 게시글 ID를 숨겨서 전달 -->
-                <input type="hidden" name="postId" th:value="${postDetail.postId}">
-                <button type="submit">등 록</button>
-                <hr>
-                <div th:if="${comment != null}">
-                    <span th:text="${comment}">댓글 내용이 여기에 표시됩니다.</span>
+                <!-- 게시물 내용 -->
+                <p><strong>내용:</strong></p>
+                <div th:text="${postDetail.postContent}">
+                    게시물 내용이 여기에 표시됩니다.
                 </div>
-            </form>
 
-            <!-- 댓글 조회 -->
-            <div id="comment-list">
-                <div th:each="comment : ${commentView}"
-                     style="display: flex; border-bottom: 1px solid gray; padding: 10px;">
-                    <div style="width: 35%;" th:text="${comment.empName}">등록자</div>
-                    <div style="width: 30%;" th:text="${comment.commentContent}">댓글 내용</div>
-                    <div style="width: 30%;" th:text="${comment.commentCreationDate}">날짜</div>
+                <br>
+                <hr>
 
-                    <!-- 댓글 삭제 버튼 -->
-                    <th:block th:if="${user.empId} == ${comment.empId}">
-                        <button type="button" data-toggle="modal" data-target="#commentDeleteModal"
-                                th:data-comment-id="${comment.commentId}"
-                                th:data-post-id="${comment.postId}" class="deleteBtn">삭제
-                        </button>
-                    </th:block>
+                <form action="vote">
+                <!-- 투표 항목 조회 -->
+                    <div>
+                        <div th:each="voteView :${voteView}">
+                            <input type="checkbox" name="voteView" th:value="${voteView.itemTitle}" th:id="${voteView.itemTitle}" />
+                            <label th:for="${voteView.itemTitle}" th:text="${voteView.itemTitle}"></label>
+                            <hr>
+                        </div>
+                        <button type="submit">투표하기</button>
+                    </div>
+                </form>
 
+                <!-- 투표결과 -->
+
+                <!-- 목록으로 돌아가기 -->
+                <a th:href="@{/board/list(categoryCode=${postDetail.categoryCode})}"
+                   style="display: block; margin-top: 20px;">목록으로 돌아가기</a>
+
+
+                <!-- 댓글 등록-->
+                <form action="/board/comment" method="post">
+                    <p>댓글</p>
+                    <textarea id="comment" name="comment"></textarea>
+                    <!-- 게시글 ID를 숨겨서 전달 -->
+                    <input type="hidden" name="postId" th:value="${postDetail.postId}">
+                    <button type="submit">등 록</button>
+                    <hr>
+                    <div th:if="${comment != null}">
+                        <span th:text="${comment}">댓글 내용이 여기에 표시됩니다.</span>
+                    </div>
+                </form>
+
+                <!-- 댓글 조회 -->
+                <div id="comment-list">
+                    <div th:each="comment : ${commentView}"
+                         style="display: flex; border-bottom: 1px solid gray; padding: 10px;">
+                        <div style="width: 35%;" th:text="${comment.empName}">등록자</div>
+                        <div style="width: 30%;" th:text="${comment.commentContent}">댓글 내용</div>
+                        <div style="width: 30%;" th:text="${comment.commentCreationDate}">날짜</div>
+
+                        <!-- 댓글 삭제 버튼 -->
+                        <th:block th:if="${user.empId} == ${comment.empId}">
+                            <button type="button" data-toggle="modal" data-target="#commentDeleteModal"
+                                    th:data-comment-id="${comment.commentId}"
+                                    th:data-post-id="${comment.postId}" class="deleteBtn">삭제
+                            </button>
+                        </th:block>
+
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </section>
 <input type="hidden" id="empId" th:value="${user.empId}">
+
+
 <!-- 댓글 삭제 모달 -->
 <footer th:replace="~{/common/footer::footerFragment}"></footer>
 
@@ -128,8 +152,12 @@
     </div>
 </div>
 
-<script>
 
+
+
+
+
+<script>
     // 댓글 삭제 버튼 클릭 시 동작 (addEventListener 클릭시 동작을 하는 것)
     // 삭제버튼 눌렀을 때 data-comment-id와 data-post-id 세팅하는 이벤트
     document.querySelector('#comment-list').addEventListener('click', function (event) {

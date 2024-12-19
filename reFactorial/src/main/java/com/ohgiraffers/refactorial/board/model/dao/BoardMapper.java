@@ -3,10 +3,10 @@ package com.ohgiraffers.refactorial.board.model.dao;
 import com.ohgiraffers.refactorial.board.model.dto.BoardDTO;
 import com.ohgiraffers.refactorial.board.model.dto.CommentDTO;
 import com.ohgiraffers.refactorial.board.model.dto.VoteItemDTO;
+import com.ohgiraffers.refactorial.board.model.dto.VoteResultDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface BoardMapper {
@@ -16,9 +16,6 @@ public interface BoardMapper {
 
     // 게시글 등록
     void boardPost(BoardDTO board);
-
-    // 투표 게시글 등록
-    void insertVoteItem(VoteItemDTO item);
 
     // 상세페이지
     BoardDTO postDetail(String postId);
@@ -38,8 +35,12 @@ public interface BoardMapper {
     // 댓글 삭제
     void commentDelete(int commentId);
 
-    // 항목 전달
-    void voteItem(String option);
+    // 투표 항목 전달
+    void optionResult(VoteItemDTO options);
 
+    // 투표 항목 조회
+    List<VoteItemDTO> itemView(String postId);
 
+    // 투표 결과 전달
+    List<VoteResultDTO> voteResultView(String voteResult);
 }

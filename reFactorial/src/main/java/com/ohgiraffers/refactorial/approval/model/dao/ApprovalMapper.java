@@ -1,10 +1,12 @@
 package com.ohgiraffers.refactorial.approval.model.dao;
 
+import com.ohgiraffers.refactorial.approval.model.dto.ApprovalDetailDTO;
 import com.ohgiraffers.refactorial.approval.model.dto.DocumentDTO;
 import com.ohgiraffers.refactorial.approval.model.dto.FileDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -57,8 +59,8 @@ public interface ApprovalMapper {
                                         @Param("status") String status,
                                         @Param("reason") String reason);
 
-    void updateDocumentStatus(@Param("pmId") String pmId,
-                              @Param("status") String status);
+//    void updateDocumentStatus(@Param("pmId") String pmId,
+//                              @Param("status") String status);
 
     List<String> getAllApprovalStatuses(@Param("pmId") String pmId);
 
@@ -84,6 +86,21 @@ public interface ApprovalMapper {
                               @Param("status") String status);
 
     String findLeaveTypeByPmId(String pmId);
+    LocalDate findLeaveDateByPmId(String pmId);
+
 
     void updateLeaveType(String pmId, String leaveType);
+
+    ApprovalDetailDTO findApprovalDetailById(String pmId);
+
+    void updateLeaveDate(String pmId, LocalDate leaveDate);
+
+
+    Integer getCurrentApprovalStep(String pmId);
+
+    List<String> getApprovers(String pmId);
+
+    void updateDocumentStatus(String pmId, String 진행_중);
+
+    void updateRemainingApproversToInProgress(String pmId, String currentEmpId);
 }

@@ -2,6 +2,7 @@ package com.ohgiraffers.refactorial.approval.model.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
@@ -21,5 +22,6 @@ public class ApprovalRequestDTO {
     private int creatorId; // 작성자 ID 추가
     private String content;
     private String leaveType;       // 휴가유형 (연차, 반차)
+    private LocalDate leaveDate; // 휴가 날짜
 
 }

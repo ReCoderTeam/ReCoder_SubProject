@@ -126,13 +126,13 @@
     }
 
     // 초기 눈송이들 생성
-    for(let i = 0; i < 10; i++) {  // 초기눈송이 갯수
-        setTimeout(createSnowflake, Math.random() * 1000);  //숫자를 줄이면 더 빠르게 초기 눈송이가 생성됨
+    for(let i = 0; i < 50; i++) {  // 초기눈송이 갯수
+        setTimeout(createSnowflake, Math.random() * 8000);  //숫자를 줄이면 더 빠르게 초기 눈송이가 생성됨
                                                             //숫자를 키우면 더 천천히 생성됨
     }
 
-    // 계속해서 새로운 눈송이 생성
-    setInterval(createSnowflake, 20);
+    // 계속해서 새로운 눈송이 생성  클수록 조금
+    setInterval(createSnowflake, 800);
 
     // 눈의 양: setInterval의 시간(150)을 조절
     // 눈의 크기: size 변수의 범위(15-25px) 조절

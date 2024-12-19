@@ -3,6 +3,7 @@
     flex-direction: row; /* 가로 방향으로 정렬 */
     height: 100%; /* 컨테이너 높이를 화면 전체로 설정 */
 }
+
 .sidebar {
     width: 20%; /* 사이드바 너비 */
     border-right: 1px solid black; /* 오른쪽 경계선 */
@@ -159,4 +160,55 @@
     }
 }
 
+.rightBoxContainer{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: start;
+}
+
+.rightBoxContainer .top-bar{
+    align-self: end;
+
+    display: flex;
+    align-items: center;
+}
+
+.rightBoxContainer .top-bar form button{
+    margin-right: 10px;
+    background-color: #5C1915;
+    border: none;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 10px;
+}
+
+.rightBoxContainer .top-bar form:last-child button{
+    margin-right: 0;
+}
+
+.boardDetail{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-between;
+}
+#boardDetailForm{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-between;
+
+    .top-bar button {
+        padding: 10px 15px;
+        background-color: #5C1915;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+}
 

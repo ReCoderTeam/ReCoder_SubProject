@@ -35,14 +35,16 @@
     <!-- 제목과 버튼 그룹 -->
     <div class="header-group">
       <h2 th:text="${document != null ? document.title : '제목 없음'}">문서 제목</h2>
-      <div class="button-group" th:if="${isCurrentApprover}">
+
+      <div class="button-group">
         <form action="/approvals/detail" method="post">
           <input type="hidden" name="pmId" th:value="${document.pmId}">
+
           <!-- 승인 버튼 -->
           <button type="submit" name="action" value="approve"
                   class="submit-btn"
-                  th:classappend="${!isCurrentApprover} ? 'disabled-btn' : ''"
-                  th:disabled="${!isCurrentApprover}">
+                  th:disabled="${!isCurrentApprover}"
+                  th:classappend="${!isCurrentApprover} ? 'disabled-btn' : ''">
             승인
           </button>
           <!-- 반려 버튼 -->
@@ -55,7 +57,9 @@
           <!-- 전결 버튼 -->
           <button type="submit" name="action" value="finalize"
                   class="finalize-btn"
-                  th:if="${currentOrder == 1 || currentOrder == 2}">
+                  th:if="${currentOrder == 1 || currentOrder == 2}"
+                  th:classappend="${!isCurrentApprover} ? ' disabled-btn' : ''"
+                  th:disabled="${!isCurrentApprover}">
             전결
           </button>
         </form>
@@ -80,6 +84,9 @@
         <div th:if="${document.category == 'category3'}">
           <p><strong>휴가유형:</strong>
             <span th:text="${document.leaveType != null ? document.leaveType : '휴가유형 정보 없음'}"></span>
+          </p>
+          <p><strong>휴가 날짜:</strong>
+            <span th:text="${document.leaveDate != null ? document.leaveDate : '휴가 날짜 정보 없음'}"></span>
           </p>
         <p><strong>내용:</strong>
           <span th:text="${document != null ? document.content : '내용 없음'}">내용</span>
@@ -133,7 +140,8 @@
       <button class="submit-btn" onclick="window.history.back()">뒤로가기</button>
     </div>
   </div>
-</section>
+
+ </section>
 
 <!-- 모달창 -->
 <div id="confirmModal" class="modal">
@@ -151,61 +159,78 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const buttons = document.querySelectorAll('.submit-btn, .reject-btn, .finalize-btn');
+    const approveButton = document.querySelector('button[name="action"][value="approve"]');
+    const rejectButton = document.querySelector('button[name="action"][value="reject"]');
+    const finalizeButton = document.querySelector('button[name="action"][value="finalize"]');
     const modal = document.getElementById('confirmModal');
     const modalMessage = document.getElementById('modalMessage');
     const rejectReason = document.getElementById('rejectReason');
     const confirmBtn = document.getElementById('confirmBtn');
     const cancelBtn = document.getElementById('cancelBtn');
 
-    let actionType, pmId;
+    let actionType = ""; // 승인 유형
+    let pmId = document.querySelector('input[name="pmId"]').value; // 문서 ID
 
-    buttons.forEach(button => {
-      button.addEventListener('click', function (event) {
-        event.preventDefault();
+    // 버튼 클릭 이벤트 추가
+    [approveButton, rejectButton, finalizeButton].forEach((button) => {
+      button?.addEventListener("click", function (e) {
+        e.preventDefault();
         actionType = button.value;
-        pmId = document.querySelector('input[name="pmId"]').value;
 
-        if (actionType === 'approve') {
+        if (actionType === "approve") {
           modalMessage.textContent = "승인하시겠습니까?";
-          rejectReason.style.display = 'none';
-        } else if (actionType === 'reject') {
+          rejectReason.style.display = "none";
+        } else if (actionType === "reject") {
           modalMessage.textContent = "반려하시겠습니까?";
-          rejectReason.style.display = 'block';
-        } else if (actionType === 'finalize') {
+          rejectReason.style.display = "block";
+        } else if (actionType === "finalize") {
           modalMessage.textContent = "전결하시겠습니까?";
-          rejectReason.style.display = 'none';
+          rejectReason.style.display = "none";
         }
-        modal.style.display = 'block';
+
+        modal.style.display = "block";
       });
     });
 
-    confirmBtn.addEventListener('click', function () {
-      const reason = rejectReason.style.display === 'block' ? rejectReason.value : '';
-      sendAction(actionType, pmId, reason);
-      modal.style.display = 'none';
+    // 모달 창 확인 버튼 클릭
+    confirmBtn.addEventListener("click", function () {
+      const reason = rejectReason.style.display === "block" ? rejectReason.value : "";
+      sendApprovalAction(actionType, pmId, reason);
+      modal.style.display = "none";
     });
 
-    cancelBtn.addEventListener('click', function () {
-      modal.style.display = 'none';
+    // 모달 창 취소 버튼 클릭
+    cancelBtn.addEventListener("click", function () {
+      modal.style.display = "none";
     });
 
-    function sendAction(action, pmId, reason) {
-      fetch('/approvals/detail', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `action=${action}&pmId=${pmId}&reason=${reason}`
-      }).then(response => {
-        if (response.ok) {
-          if (action === 'approve' || action === 'finalize') {
-            window.location.href = '/approvals/completed';
-          } else if (action === 'reject') {
-            window.location.href = '/approvals/rejected';
-          }
-        } else {
-          alert("처리 중 오류가 발생했습니다.");
-        }
-      });
+    // 승인/반려/전결 요청 전송 함수
+    function sendApprovalAction(action, pmId, reason) {
+      fetch(`/approvals/detail`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `action=${action}&pmId=${pmId}&reason=${reason}`,
+      })
+              .then((response) => {
+                if (response.ok) {
+                  if (action === "approve") {
+                    alert("승인되었습니다.");
+                    window.location.reload(); // 페이지 새로고침
+                  } else if (action === "reject") {
+                    alert("반려되었습니다.");
+                    window.location.href = "/approvals/rejected";
+                  } else if (action === "finalize") {
+                    alert("전결되었습니다.");
+                    window.location.href = "/approvals/completed";
+                  }
+                } else {
+                  alert("처리 중 오류가 발생했습니다.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("서버와의 통신 중 문제가 발생했습니다.");
+              });
     }
   });
 </script>

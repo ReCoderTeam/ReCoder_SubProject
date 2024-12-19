@@ -2,6 +2,7 @@ package com.ohgiraffers.refactorial.approval.model.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -26,6 +27,7 @@ public class DocumentDTO {
         private String fileUrl;
         private String categoryName; // 변환된 카테고리 이름
         private String leaveType; // 휴가 유형 (연차, 반차)
+        private LocalDate leaveDate; // 휴가 날짜
 
 
         // categoryName 필드의 getter 정의

@@ -262,12 +262,7 @@
         WHERE pm_id = #{pmId} AND emp_id = #{empId}
     </update>
 
-    <!-- 문서 상태 업데이트 -->
-    <update id="updateDocumentStatus">
-        UPDATE tbl_pm
-        SET pm_status = #{status}
-        WHERE pm_id = #{pmId}
-    </update>
+
 
     <!-- 모든 승인 상태 가져오기 -->
     <select id="getAllApprovalStatuses" resultType="string">
@@ -323,10 +318,19 @@
 
     <!-- 진행 중 문서 가져오기 -->
     <select id="findInProgressDocuments" resultType="com.ohgiraffers.refactorial.approval.model.dto.DocumentDTO">
-        SELECT *
-        FROM tbl_pm
-        WHERE pm_status = '진행중' AND emp_id = #{empId}
-        ORDER BY pm_create DESC
+        SELECT
+            pm.pm_id AS pmId,
+            pm.pm_title AS title,
+            pm.pm_create AS createDate,
+            pm.pm_category AS category,
+            pm.pm_status AS status,
+            emp.emp_name AS creatorName
+        FROM tbl_pm pm
+                 LEFT JOIN tbl_approval ap ON pm.pm_id = ap.pm_id
+                 LEFT JOIN employee emp ON pm.emp_id = emp.emp_id
+        WHERE ap.pm_status = '진행 중'
+          AND ap.emp_id != #{empId} -- 승인한 사람 제외
+        ORDER BY pm.pm_create DESC
             LIMIT #{limit} OFFSET #{offset}
     </select>
 
@@ -334,7 +338,7 @@
     <select id="countInProgressDocuments" resultType="int">
         SELECT COUNT(*)
         FROM tbl_pm
-        WHERE pm_status = '진행중' AND emp_id = #{empId}
+        WHERE pm_status = '진행 중' AND emp_id = #{empId}
     </select>
 
 
@@ -361,10 +365,72 @@
         WHERE pm_id = #{pmId}
     </select>
 
+    <!-- 휴가 날짜 조회 -->
+    <select id="findLeaveDateByPmId" resultType="java.time.LocalDate">
+        SELECT leave_date
+        FROM tbl_pm
+        WHERE pm_id = #{pmId}
+    </select>
+
 
     <update id="updateLeaveType" parameterType="map">
         UPDATE tbl_pm
         SET leave_type = #{leaveType}
         WHERE pm_id = #{pmId}
     </update>
+
+    <update id="updateLeaveDate" parameterType="map">
+        UPDATE tbl_pm
+        SET leave_date = #{leaveDate}
+        WHERE pm_id = #{pmId}
+    </update>
+
+    <select id="findApprovalDetailById" parameterType="string" resultType="com.ohgiraffers.refactorial.approval.model.dto.ApprovalDetailDTO">
+        SELECT
+            pm_id AS pmId,
+            title,
+            create_date AS createDate,
+            category,
+            status,
+            attachment,
+            creator AS creatorId,
+            approvers,
+            referrers,
+            content,
+            leave_type AS leaveType
+        FROM
+            tbl_approval
+        WHERE
+            pm_id = #{pmId}
+    </select>
+
+
+    <!-- 현재 필요한 승인 순서 가져오기 -->
+    <select id="getCurrentApprovalStep" resultType="int">
+        SELECT MIN(approval_order)
+        FROM tbl_approval
+        WHERE pm_id = #{pmId} AND pm_status = '대기 중'
+    </select>
+
+    <select id="getApprovers" resultType="string">
+        SELECT emp_id
+        FROM tbl_approval
+        WHERE pm_id = #{pmId}
+    </select>
+
+    <update id="updateDocumentStatus">
+        UPDATE tbl_pm
+        SET pm_status = #{status}
+        WHERE pm_id = #{pmId}
+    </update>
+
+<!-- 진행 중 으로 상태를 업데이트해줌   -->
+    <update id="updateRemainingApproversToInProgress">
+        UPDATE tbl_approval
+        SET pm_status = '진행 중'
+        WHERE pm_id = #{pmId}
+          AND emp_id != #{currentEmpId}
+          AND pm_status = '대기 중';
+    </update>
+
 </mapper>

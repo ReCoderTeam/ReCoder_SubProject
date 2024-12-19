@@ -86,7 +86,8 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    height: calc(100vh - 160px);
+    max-height: calc(100vh - 215px);
+    /*height: calc(100vh - 160px);*/
 }
 
 /* 제목과 버튼을 한 줄에 배치 */
@@ -121,6 +122,15 @@ html, body {
     cursor: pointer;
     transition: all 0.2s ease;
 }
+
+/* 비활성화된 버튼 스타일 */
+button:disabled {
+    background-color: #e0e0e0; /* 비활성화 배경색 */
+    color: #9e9e9e; /* 비활성화 텍스트 색상 */
+    cursor: not-allowed; /* 클릭 불가 커서 */
+    border: 1px solid #d0d0d0; /* 경계선 색상 */
+}
+
 
 .submit-btn {
     background-color: #5C1915;

@@ -4,6 +4,7 @@ import com.ohgiraffers.refactorial.board.model.dao.BoardMapper;
 import com.ohgiraffers.refactorial.board.model.dto.BoardDTO;
 import com.ohgiraffers.refactorial.board.model.dto.CommentDTO;
 import com.ohgiraffers.refactorial.board.model.dto.VoteItemDTO;
+import com.ohgiraffers.refactorial.board.model.dto.VoteResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,7 +74,19 @@ public class BoardService {
     }
 
     // 투표 항목 전달
-    public void voteItem(String option) {
-        boardMapper.voteItem(option);
+    public void optionResult(VoteItemDTO options) {
+
+        boardMapper.optionResult(options);
+    }
+
+    public List<VoteItemDTO> itemView(String postId) {
+
+        return boardMapper.itemView(postId);
+    }
+
+    // 투표 결과 DB전달
+    public List<VoteResultDTO> voteResultView(String voteResult) {
+
+        return boardMapper.voteResultView(voteResult);
     }
 }

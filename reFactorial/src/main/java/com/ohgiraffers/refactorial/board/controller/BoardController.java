@@ -8,6 +8,7 @@ import com.ohgiraffers.refactorial.user.model.dto.LoginUserDTO;
 import com.ohgiraffers.refactorial.user.model.dto.UserDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -59,11 +60,11 @@ public class BoardController {
     public String boardPost(@RequestParam String title,
                             @RequestParam String content,
                             @RequestParam int categoryCode,
-//                            @RequestParam String option1,
-//                            @RequestParam String option2,
-//                            @RequestParam String option3,
-//                            @RequestParam String option4,
-//                            @RequestParam String option5,
+                            @RequestParam String option1,
+                            @RequestParam String option2,
+                            @RequestParam(required = false) String option3,
+                            @RequestParam(required = false) String option4,
+                            @RequestParam(required = false) String option5,
                             Model model, HttpSession session) {
 
         LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");     // 로그인한 유저의 정보를 가져옴
@@ -79,50 +80,46 @@ public class BoardController {
         board.setPostModificationDate(LocalDateTime.now()); // 게시물 수정 시간
         board.setCategoryCode(categoryCode);    // 게시물 카테고리 코드
 
+        // 카테고리가 4(투표게시판)일 때
+        if (categoryCode == 4) {
 
+            List<String> options = new ArrayList<>();
 
-        
-//        List<String> options = new ArrayList<>();  // 옵션들을 리스트로 받음
-//
-//        if (option1 != null && !option1.isEmpty()) {
-//            options.add(option1);
-//        }
-//        if (option2 != null && !option2.isEmpty()) {
-//            options.add(option2);
-//        }
-//        if (option3 != null && !option3.isEmpty()) {
-//            options.add(option3);
-//        }
-//        if (option4 != null && !option4.isEmpty()) {
-//            options.add(option4);
-//        }
-//        if (option5 != null && !option5.isEmpty()) {
-//            options.add(option5);
-//        }
-//
-//
-//        System.out.println(option1);
-//        System.out.println(option2);
-//        System.out.println(option3);
-//        System.out.println(option4);
-//        System.out.println(option5);
-//
-//        // 리스트에 추가된 옵션들을 사용
-//        if (categoryCode == 4) {
-//            for (String option : options) {
-//                boardService.voteItem(option);  // 각 옵션을 voteItem 메서드에 전달
-//            }
-//        }
+            if (option1 != null && !option1.isEmpty()) {
+                options.add(option1);
+            }
+            if (option2 != null && !option2.isEmpty()) {
+                options.add(option2);
+            }
+            if (option3 != null && !option3.isEmpty()) {
+                options.add(option3);
+            }
+            if (option4 != null && !option4.isEmpty()) {
+                options.add(option4);
+            }
+            if (option5 != null && !option5.isEmpty()) {
+                options.add(option5);
+            }
 
+//            System.out.println(options); // 값을 받은걸 리스트 형태로 출력
 
+            // 반복문돌려서 1개씩 만들기 (게시물 ID, 항목 이름)
+            for (String option : options) {
+                VoteItemDTO optionDTO = new VoteItemDTO();
+                optionDTO.setPostId(boardId);   // 게시물 ID
+                optionDTO.setItemTitle(option);   // 항목 이름
+                System.out.println("optionDTO의 값: " + optionDTO);
 
-        boardService.post(board);   // 게시물 등록 기능
+                boardService.optionResult(optionDTO);   // 투표 항목 DTO로 전달
+            }
 
+            boardService.post(board);   // 게시물 등록 기능
+        }
 
         return "redirect:/board/list?categoryCode=" + categoryCode; // 내 API를 호출
     }
 
-    // 게시물 상세페이지 / 댓글 등록
+    // 게시물 상세페이지 / 투표 항목
     @GetMapping("postDetail")
     public String postDetail(@RequestParam String postId, Model model, HttpSession session) {
 
@@ -132,13 +129,29 @@ public class BoardController {
         BoardDTO postDetail = boardService.postDetail(postId);
         // 댓글 리스트 가져옴
         List<CommentDTO> comment = boardService.commentView(postId);
+        // 항목 리스트 가져옴
+        List<VoteItemDTO> voteItem = boardService.itemView(postId);
+        // 투표결과 리스트로 보냄
+//        List<VoteResultDTO> voteSelect = boardService.voteResultView(voteResult);
+
 
         model.addAttribute("postDetail", postDetail);
         model.addAttribute("commentView", comment);
         model.addAttribute("user", user);   // user정보 postDetail에 전달(게시물 수정,삭제 권한)
+        model.addAttribute("voteView", voteItem);
+//        model.addAttribute("voteResult", voteSelect);
 
         return "/board/postDetail";
     }
+
+//    // 투표 결과를 db로 보냄
+//    @GetMapping("vote")
+//    public String voteResult(@RequestParam String voteItem) {
+//
+//        boardService.voteResult(voteItem);
+//
+//        return "/board/"
+//    }
 
     // 게시물 삭제
     @GetMapping("postDelete")
@@ -165,7 +178,6 @@ public class BoardController {
 
         return "/board/postUpdate";
     }
-
     @PostMapping("postUpdate")
     public String updatePost(@ModelAttribute BoardDTO board) {
 
@@ -201,6 +213,7 @@ public class BoardController {
         return "redirect:/board/postDetail?postId=" + postId;
     }
 
+    // 댓글 삭제
     @GetMapping("commentDelete")
     @ResponseBody   // 화면 이동이 아닌 데이터만 넘겨주기 위해 사용
     public List<CommentDTO> commentDelete(@RequestParam int commentId, @RequestParam String postId) {

@@ -1,9 +1,6 @@
 package com.ohgiraffers.refactorial.approval.controller;
 
-import com.ohgiraffers.refactorial.approval.model.dto.ApprovalRequestDTO;
-import com.ohgiraffers.refactorial.approval.model.dto.DocumentDTO;
-import com.ohgiraffers.refactorial.approval.model.dto.EmployeeDTO;
-import com.ohgiraffers.refactorial.approval.model.dto.FileDTO;
+import com.ohgiraffers.refactorial.approval.model.dto.*;
 import com.ohgiraffers.refactorial.approval.service.ApprovalService;
 import com.ohgiraffers.refactorial.user.model.dao.UserMapper;
 import com.ohgiraffers.refactorial.user.model.dto.LoginUserDTO;
@@ -29,6 +26,8 @@ import java.nio.file.Paths;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +68,7 @@ public class ApprovalController {
         String loggedInEmpId = user.getEmpId();
         int limit = 14; // 한 페이지당 문서 수
         int totalDocuments = approvalService.getCompletedDocumentsCount(loggedInEmpId); // 전체 문서 개수 가져오기
+
         int totalPages = totalDocuments > 0 ? (int) Math.ceil((double) totalDocuments / limit) : 1; // 최소 1페이지
 
         // 현재 페이지 범위 검증
@@ -83,6 +83,10 @@ public class ApprovalController {
 
         // 완료된 문서 가져오기
         List<DocumentDTO> completedDocuments = approvalService.getCompletedDocuments(loggedInEmpId, limit, offset);
+        if (completedDocuments == null) { // null 방지
+            completedDocuments = new ArrayList<>();
+        }
+
 
         // 문서 번호 설정 (현재 페이지에 맞는 번호)
         for (int i = 0; i < completedDocuments.size(); i++) {
@@ -104,8 +108,8 @@ public class ApprovalController {
         model.addAttribute("documents", completedDocuments);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("prevPage", prevPage);
-        model.addAttribute("nextPage", nextPage);
+        model.addAttribute("prevPage", currentPage > 1 ? currentPage - 1 : 1);
+        model.addAttribute("nextPage", currentPage < totalPages ? currentPage + 1 : totalPages);
 
         return "/approvals/completed";
     }
@@ -135,9 +139,15 @@ public class ApprovalController {
 
         int offset = (currentPage - 1) * limit; // offset 계산
 
+
+        System.out.println("empId: " + loggedInEmpId);
+        System.out.println("limit: " + limit);
+        System.out.println("offset: " + offset);
+
         // 진행 중인 문서 가져오기
         List<DocumentDTO> inProgressDocuments = approvalService.getInProgressDocuments(loggedInEmpId, limit, offset);
 
+        System.out.println("In Progress Documents: " + inProgressDocuments);
         // 문서 번호 설정
         for (int i = 0; i < inProgressDocuments.size(); i++) {
             inProgressDocuments.get(i).setRowNum(totalDocuments - offset - i);
@@ -320,6 +330,15 @@ public class ApprovalController {
             } else {
                 model.addAttribute("errorMessage", "휴가유형을 선택해야 합니다.");
                 return "/approvals/approvalPage";
+            }
+
+            // LocalDate를 문자열로 변환
+            LocalDate leaveDate = approvalService.getLeaveDateForDocument(pmId);
+            if (leaveDate != null) {
+                String formattedLeaveDate = leaveDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                model.addAttribute("leaveDate", formattedLeaveDate);
+            } else {
+                model.addAttribute("leaveDate", "휴가 날짜 정보 없음");
             }
         }
 
@@ -540,9 +559,18 @@ public class ApprovalController {
         document.setCategoryName(document.getCategoryName());
 
         if ("category3".equals(document.getCategory())) {
+            // 휴가 유형 처리
             String leaveType = approvalService.getLeaveTypeForDocument(pmId);
             document.setLeaveType(leaveType);
+
+            // 휴가 날짜 처리
+            LocalDate leaveDate = approvalService.getLeaveDateForDocument(pmId);
+            document.setLeaveDate(leaveDate);
+            model.addAttribute("leaveDate", leaveDate); // 모델에 날짜 추가
         }
+
+
+
 
         // 모델에 데이터 추가
         model.addAttribute("document", document);
@@ -565,7 +593,7 @@ public class ApprovalController {
                                        HttpSession session,
                                        Model model) {
 
-        System.out.println("Action: " + action + ", pmId: " + pmId + ", reason: " + reason); // 요청 로그
+
 
         LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");
 
@@ -579,31 +607,72 @@ public class ApprovalController {
         try {
             switch (action) {
                 case "approve":
-                    approvalService.approve(pmId, currentEmpId);
-                    // 모든 승인자가 승인되었는지 확인 후 완료 처리
-                    if (approvalService.isAllApproversApproved(pmId)) {
-                        approvalService.updateStatusToCompleted(pmId); // 상태를 '완료'로 변경
-                        return "/approvals/completed";
+                    // 현재 사용자가 승인 순서인지 확인
+                    if (!approvalService.isCurrentApprover(pmId, currentEmpId)) {
+                        model.addAttribute("errorMessage", "현재 승인 순서가 아닙니다.");
+                        return "redirect:/approvals/detail/" + pmId;
                     }
-                    break;
+
+                    // 승인 처리
+                    approvalService.approve(pmId, currentEmpId);
+
+                    // 최초 승인자인 경우, 나머지 승인자 상태를 '진행 중'으로 변경
+                    if (!approvalService.isAllApproversApproved(pmId)) {
+                        approvalService.updateRemainingApproversToInProgress(pmId, currentEmpId);
+                        return "redirect:/approvals/inProgress"; // 진행 중 페이지로 이동
+                    } else {
+                        approvalService.updateStatusToCompleted(pmId); // 상태를 '완료'로 변경
+                        return "redirect:/approvals/completed"; // 완료 페이지로 이동
+                    }
+
 
                 case "reject":
                     approvalService.reject(pmId, currentEmpId, reason);
-                    return "/approvals/rejected";
+                    return "redirect:/approvals/rejected"; // 반려된 경우
 
                 case "finalize":
                     approvalService.finalize(pmId, currentEmpId);
                     approvalService.updateStatusToCompleted(pmId); // 전결 시 바로 완료 처리
-                    return "/approvals/completed";
+                    return "redirect:/approvals/completed"; // 상태가 완료된 경우
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("errorMessage", "문서 처리 중 오류가 발생했습니다.");
-            return "approvals/detail";
+            return "redirect:/approvals/detail/" + pmId;
         }
 
-        return "/approvals/detail/" + pmId;
+        return "redirect:/approvals/detail/" + pmId;
+    }
+
+    @GetMapping("detail")
+    public String showApprovalDetail(@RequestParam("pmId") String pmId, Model model, HttpSession session) {
+
+
+        if (pmId == null || pmId.isEmpty()) {
+            model.addAttribute("errorMessage", "문서 ID가 제공되지 않았습니다.");
+            return "error/400";
+        }
+        // 세션에서 사용자 정보 확인
+        LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");
+
+        if (user == null) {
+            model.addAttribute("errorMessage", "로그인 정보가 없습니다. 다시 로그인해주세요.");
+            return "redirect:/login";
+        }
+
+        // 승인 문서 상세 정보 조회
+        try {
+            ApprovalDetailDTO approvalDetail = approvalService.getApprovalDetail(pmId);
+            model.addAttribute("approvalDetail", approvalDetail);
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("errorMessage", "문서 정보를 불러오는 중 오류가 발생했습니다.");
+            return "error/500"; // 오류 페이지로 이동
+        }
+
+        System.out.println("Received pmId: " + pmId); // 디버깅 로그 추가
+        return "approvals/detail"; // 상세 페이지로 이동
     }
 
 
