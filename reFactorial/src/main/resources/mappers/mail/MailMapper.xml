@@ -24,7 +24,7 @@
     <!-- 메일 보내기 -->
     <insert id="sendMail" parameterType="com.ohgiraffers.refactorial.mail.model.dto.MailDTO">
         INSERT INTO tbl_mail (email_id, email_title, email_content, sent_date, trash_status, sender_emp_id)
-        VALUES (#{emailId}, #{emailTitle}, #{emailContent}, CURDATE(), #{trashStatus}, #{senderEmpId})
+        VALUES (#{emailId}, #{emailTitle}, #{emailContent}, CURDATE(), 0 , #{senderEmpId})
     </insert>
     <insert id="saveReceiver" parameterType="com.ohgiraffers.refactorial.mail.model.dto.MailReceiverDTO">
         INSERT INTO tbl_mail_receivers (email_id, receiver_emp_id, read_status)
@@ -33,15 +33,32 @@
 
     <!-- 내가 보낸 메일 조회 -->
     <select id="getSentMails" resultMap="MailResultMap">
-        SELECT *
-        FROM tbl_mail
-        WHERE sender_emp_id = #{senderEmpId} AND trash_status = 0
-        ORDER BY sent_date DESC
+            SELECT
+            m.email_id,
+            m.email_title,
+            m.email_content,
+            m.sent_date,
+            m.trash_status,
+            m.sender_emp_id,
+            mr.receiver_emp_id
+            FROM
+            tbl_mail m
+            JOIN
+            tbl_mail_receivers mr ON m.email_id = mr.email_id
+            WHERE
+            m.sender_emp_id = #{senderEmpId} AND m.trash_status = 0
+            ORDER BY
+            m.sent_date DESC;
     </select>
+
 
     <!-- 내가 받은 메일 조회 -->
     <select id="getReceivedMails" resultMap="MailResultMap">
-        select * from tbl_mail m join tbl_mail_receivers mr on m.email_id = m.email_id;
+        SELECT
+        *
+        FROM tbl_mail m JOIN tbl_mail_receivers mr on m.email_id = m.email_id
+        WHERE mr.receiver_emp_id = #{receiverEmpId} AND m.trash_status = 0
+        ORDER BY m.sent_date DESC;
     </select>
 
 

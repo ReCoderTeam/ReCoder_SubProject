@@ -5,7 +5,9 @@ import com.ohgiraffers.refactorial.mail.model.dao.MailMapper;
 import com.ohgiraffers.refactorial.mail.model.dto.MailReceiverDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +24,11 @@ public class MailService {
 
     // 메일 보내기
     public void sendMail(MailDTO mailDTO) {
+
+        if (mailDTO.getReceiverEmpIds() == null || mailDTO.getReceiverEmpIds().isEmpty()) {
+            throw new IllegalArgumentException("수신자가 없습니다."); // 예외를 던지거나 로깅을 할 수 있습니다.
+        }
+
         // ID 생성 및 중복 방지 로직
         Set<String> generatedIds = new HashSet<>();
         String emId;
@@ -31,6 +38,7 @@ public class MailService {
 
         // 공통 메일 ID 설정
         mailDTO.setEmailId(emId);
+
 
         // 메일 저장
         mailMapper.sendMail(mailDTO); // 메일 정보 저장
@@ -47,11 +55,10 @@ public class MailService {
         }
     }
 
-
-
     // 내가 보낸 메일
     public List<MailDTO> getSentMails(String senderEmpId) {
         List<MailDTO> sentMails = mailMapper.getSentMails(senderEmpId);
+
         return sentMails;
     }
 
