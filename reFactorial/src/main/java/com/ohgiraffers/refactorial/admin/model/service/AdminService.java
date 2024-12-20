@@ -78,4 +78,8 @@ public class AdminService {
     public List<TktReserveDTO> getTktReserve(String selectedDay) {
         return am.getTktReserve(selectedDay);
     }
+
+    public TktReserveDTO getReserveById(String reserveId) {
+        return am.getReserveById(reserveId);
+    }
 }

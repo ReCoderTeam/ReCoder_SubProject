@@ -41,6 +41,7 @@ public interface BoardMapper {
     // 투표 항목 조회
     List<VoteItemDTO> itemView(String postId);
 
-    // 투표 결과 전달
-    List<VoteResultDTO> voteResultView(String voteResult);
+    // 투표 결과 생성
+    void voteResult(List<VoteResultDTO> voteItemList);
+
 }

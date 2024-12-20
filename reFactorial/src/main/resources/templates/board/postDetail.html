@@ -16,6 +16,7 @@
 
     <link rel="stylesheet" th:href="@{/css/board/postDetail.css}">
     <link rel="stylesheet" href="../../static/css/board/postDetail.css">
+    <link rel="stylesheet" th:href="@{/css/board/list.css}">
 
 </head>
 <body>
@@ -66,16 +67,18 @@
                 <br>
                 <hr>
 
-                <form action="vote">
+                <form action="/board/vote" method="post">
                 <!-- 투표 항목 조회 -->
                     <div>
-                        <div th:each="voteView :${voteView}">
-                            <input type="checkbox" name="voteView" th:value="${voteView.itemTitle}" th:id="${voteView.itemTitle}" />
-                            <label th:for="${voteView.itemTitle}" th:text="${voteView.itemTitle}"></label>
+                        <div th:each="vote :${voteView}">
+                            <input type="checkbox" name="voteIdList[]" th:value="${vote.itemId}"/>
+                            <label th:for="${vote.itemTitle}" th:text="${vote.itemTitle}"></label>
                             <hr>
                         </div>
                         <button type="submit">투표하기</button>
                     </div>
+                    <input type="hidden" name="categoryCode" th:value="${currentCategory}"/>
+                    <input type="hidden" name="postId" th:value="${postDetail.postId}"/>
                 </form>
 
                 <!-- 투표결과 -->
@@ -91,6 +94,7 @@
                     <textarea id="comment" name="comment"></textarea>
                     <!-- 게시글 ID를 숨겨서 전달 -->
                     <input type="hidden" name="postId" th:value="${postDetail.postId}">
+                    <input type="hidden" name="categoryCode" th:value="${postDetail.categoryCode}">
                     <button type="submit">등 록</button>
                     <hr>
                     <div th:if="${comment != null}">

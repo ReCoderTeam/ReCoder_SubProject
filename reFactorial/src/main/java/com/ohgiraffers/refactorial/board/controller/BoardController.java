@@ -50,6 +50,8 @@ public class BoardController {
     public String freeBoardRegist(@RequestParam int categoryCode, Model model) {
 
         model.addAttribute("categoryCode", categoryCode);
+        model.addAttribute("currentCategory", categoryCode);    // 게시판 사이드바에 값 전달
+
 
         return "/board/freeBoardRegist";
     }
@@ -113,15 +115,18 @@ public class BoardController {
                 boardService.optionResult(optionDTO);   // 투표 항목 DTO로 전달
             }
 
-            boardService.post(board);   // 게시물 등록 기능
         }
+
+        boardService.post(board);   // 게시물 등록 기능
 
         return "redirect:/board/list?categoryCode=" + categoryCode; // 내 API를 호출
     }
 
     // 게시물 상세페이지 / 투표 항목
     @GetMapping("postDetail")
-    public String postDetail(@RequestParam String postId, Model model, HttpSession session) {
+    public String postDetail(@RequestParam String postId,
+                             @RequestParam int categoryCode,
+                             Model model, HttpSession session) {
 
         // 로그인한 유저 정보를 가져옴
         LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");
@@ -131,27 +136,36 @@ public class BoardController {
         List<CommentDTO> comment = boardService.commentView(postId);
         // 항목 리스트 가져옴
         List<VoteItemDTO> voteItem = boardService.itemView(postId);
-        // 투표결과 리스트로 보냄
-//        List<VoteResultDTO> voteSelect = boardService.voteResultView(voteResult);
-
 
         model.addAttribute("postDetail", postDetail);
         model.addAttribute("commentView", comment);
         model.addAttribute("user", user);   // user정보 postDetail에 전달(게시물 수정,삭제 권한)
         model.addAttribute("voteView", voteItem);
-//        model.addAttribute("voteResult", voteSelect);
+        model.addAttribute("currentCategory", categoryCode);    // 게시판 사이드바에 값 전달
+
 
         return "/board/postDetail";
     }
 
-//    // 투표 결과를 db로 보냄
-//    @GetMapping("vote")
-//    public String voteResult(@RequestParam String voteItem) {
-//
-//        boardService.voteResult(voteItem);
-//
-//        return "/board/"
-//    }
+    // 투표 결과를 db로 보냄
+    @PostMapping("vote")
+    public String voteResult(@RequestParam List<Integer> voteIdList,
+                             @RequestParam int categoryCode,
+                             @RequestParam String postId,
+                             HttpSession session) {
+
+
+        LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");     // 로그인한 유저의 정보를 가져옴
+        List<VoteResultDTO> voteItemList = new ArrayList<>();
+
+        for(int i=0; i<voteIdList.size(); i++){
+            voteItemList.add(new VoteResultDTO(null, user.getEmpId(), voteIdList.get(i)));
+        }
+
+        boardService.voteResult(voteItemList);
+
+        return "redirect:/board/postDetail?categoryCode=" + categoryCode + "&postId=" + postId;    // redirect 를 사용하는 이유 - postDetail에 있는 데이터 사용을 위해!
+    }
 
     // 게시물 삭제
     @GetMapping("postDelete")
@@ -193,7 +207,10 @@ public class BoardController {
 
     // 댓글 등록
     @PostMapping("comment")
-    public String comment(@RequestParam String comment, @RequestParam String postId, HttpSession session, Model model) {
+    public String comment(@RequestParam String comment,
+                          @RequestParam String postId,
+                          @RequestParam int categoryCode,
+                          HttpSession session, Model model) {
 
         LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");     // 로그인한 유저의 정보를 가져옴
 
@@ -210,7 +227,7 @@ public class BoardController {
 
         boardService.comment(commentDetail);
 
-        return "redirect:/board/postDetail?postId=" + postId;
+        return "redirect:/board/postDetail?categoryCode=" + categoryCode + "&postId=" + postId;
     }
 
     // 댓글 삭제

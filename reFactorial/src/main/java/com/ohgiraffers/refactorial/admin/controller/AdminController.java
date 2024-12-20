@@ -1,18 +1,33 @@
 package com.ohgiraffers.refactorial.admin.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.BaseFont;
 import com.ohgiraffers.refactorial.admin.model.dto.TktReserveDTO;
 import com.ohgiraffers.refactorial.admin.model.service.AdminService;
 import com.ohgiraffers.refactorial.attendance.dto.AttendanceDTO;
 import com.ohgiraffers.refactorial.user.model.dto.LoginUserDTO;
 import com.ohgiraffers.refactorial.user.model.dto.UserDTO;
 import com.ohgiraffers.refactorial.user.model.service.MemberService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.file.FileSystems;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +41,8 @@ public class AdminController {
 
     @Autowired
     private MemberService ms;
+    @Autowired
+    private SpringTemplateEngine templateEngine;
 
     // 사원 페이지
     @GetMapping("employee")
@@ -41,9 +58,6 @@ public class AdminController {
         }
 
         List<LoginUserDTO> userList = adminService.getAllEmployee(sendDept,sendSearchEmpName);
-
-        System.out.println("sendDept = " + sendDept);
-        System.out.println("sendSearchEmpName = " + sendSearchEmpName);
 
         result.put("userList",userList);
 
@@ -111,8 +125,6 @@ public class AdminController {
         
         // 전체 데이터의 개수
         int totalRecords = adminService.getTotalCountByDateAtt(selectedDay, searchDept, searchEmpName);
-
-        System.out.println("totalRecords = " + totalRecords);
         
         // 전체 페이지 수 계산
         int totalPages = (int) Math.ceil((double) totalRecords / size);
@@ -156,8 +168,6 @@ public class AdminController {
     @ResponseBody
     public Map<String, Object> getTktReserve(@RequestParam(defaultValue = "")  String selectedDay){
 
-        System.out.println("selectedDay = " + selectedDay);
-
         Map<String, Object> resultData = new HashMap<>();
 
         List<TktReserveDTO> result = adminService.getTktReserve(selectedDay);
@@ -167,4 +177,72 @@ public class AdminController {
         return resultData;
     }
 
+    @PostMapping("/admin/extractPDF")
+    public void extractPDF(@RequestParam String selectedTickets, HttpServletResponse response) throws UnsupportedEncodingException {
+        // selectedTickets는 JSON 문자열로 받아옵니다.
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> ticketIds = null;
+
+        try {
+            // JSON 문자열을 List<Long>로 변환
+            ticketIds = objectMapper.readValue(selectedTickets, List.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();  // 예외 처리, 로그 출력 등 필요 시 적절하게 처리
+        }
+        // ticketIds는 이제 List<Long> 형식입니다.
+        System.out.println("선택된 티켓 ID들: " + ticketIds);
+        // PDF 생성 로직 등 처리...
+        List<TktReserveDTO> reserveDataList = new ArrayList<>();
+
+        for (String reserveId : ticketIds){
+            TktReserveDTO reserveData = adminService.getReserveById(reserveId);
+
+            if (reserveData != null){
+                reserveDataList.add(reserveData);
+            }
+        }
+
+        System.out.println("reserveDataList = " + reserveDataList);
+
+        // 데이터 가지고 thymleaf 랑 결합할 준비하기
+        Context context = new Context();
+        context.setVariable("reserveDataList",reserveDataList);
+
+        // 해당 위치 html에 데이터 가져가서 매칭 시키고 string 형태로 가져오기
+        String htmlContent = templateEngine.process("admin/pdfFile/resultPDF", context);
+
+        // PDF 파일 이름 설정
+        String filename = "ticket-detailsTest";
+        String encodedFilename = URLEncoder.encode(filename, "UTF-8");
+
+        // 응답 헤더 설정
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFilename + ".pdf");
+
+        try(OutputStream os = response.getOutputStream()){
+            ITextRenderer renderer = new ITextRenderer();
+
+            String baseUrl = FileSystems
+                    .getDefault()
+                    .getPath("src", "main", "resources")
+                    .toUri()
+                    .toURL()
+                    .toString();
+
+            renderer.getFontResolver()
+                    .addFont(
+                            new ClassPathResource("static/font/NanumGothic.ttf").getURL().toString(),
+                            BaseFont.IDENTITY_H,
+                            BaseFont.EMBEDDED
+                    );
+            renderer.setDocumentFromString(htmlContent, baseUrl);
+            renderer.layout();
+            renderer.createPDF(os);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -169,7 +169,8 @@ let page = 1;
 const fetchData = (page = 1) => {
     const selectedDay = document.getElementById('searchAttDate').value;
     const searchDept = document.getElementById('searchDept').value;
-    const searchEmpName = document.getElementById('searchEmpName').value;
+    searchEmpName = document.getElementById('searchEmpName').value;
+    const empAttTable = document.getElementById("empAttTable");
 
     fetch(`/admin/getByDateAtt?selectedDay=${encodeURIComponent(selectedDay)}&page=${page}&size=10&searchDept=${searchDept}&searchEmpName=${searchEmpName}`, {
         method: 'GET',
@@ -202,10 +203,7 @@ const fetchData = (page = 1) => {
 
             console.log("전체 사원 근태 data: ", data);
 
-            // 테이블의 tbody에 데이터를 추가
-            const empAttTable = document.getElementById("empAttTable");
             empAttTable.innerHTML = '';
-
 
             if (data.items.length == 0){
                 empAttTable.innerHTML = `<div class="notMatch">검색 조건에 맞는 사원이 없습니다.</div>`
@@ -336,6 +334,7 @@ updateAtt.addEventListener("click", () => {
     const searchEmpNameInput = document.getElementById('searchEmpName');
 
     // 처음 데이터 로드
+
     fetchData(1);
     page = 1;
 
@@ -351,11 +350,62 @@ updateAtt.addEventListener("click", () => {
         page = 1
     });
 
-    // 검색 이름 변경될 때마다 데이터 새로고침
-    searchEmpNameInput.addEventListener('input', () => {
-        fetchData(1);
-        page = 1
+    let previousValue = ""; // 이전 값 저장
+
+    function handleInput() {
+        const newValue = searchEmpNameInput.value;
+        if (newValue === previousValue) return; // 중복 호출 방지
+        previousValue = newValue;
+
+        searchEmpName = newValue;
+        console.log("입력 중 값: ", searchEmpName);
+        fetchData(1); // 데이터를 새로고침
+        page = 1;
+    }
+
+    // focus 이벤트
+    searchEmpNameInput.addEventListener('focus', () => {
+        console.log("포커스 input에 있음");
+        searchEmpNameInput.addEventListener("input", handleInput);
     });
+
+    // blur 이벤트
+    searchEmpNameInput.addEventListener('blur', () => {
+        console.log("blur 포커스 input에 없음");
+        searchEmpNameInput.removeEventListener("input", handleInput);
+    });
+
+    // let isFocused = false;
+    //
+    // // input 이벤트 핸들러 정의
+    // const handleInput = () => {
+    //     if (!isFocused) return;
+    //     searchEmpName = searchEmpNameInput.value;
+    //     console.log("입력 중 값: ", searchEmpName);
+    //     fetchData(1); // 데이터를 새로고침
+    //     page = 1
+    // };
+    //
+    // // 검색 이름 변경될 때마다 데이터 새로고침
+    // searchEmpNameInput.addEventListener('focus', () => {
+    //     isFocused = true;
+    //     console.log("포커스 input에 있음")
+    //     searchEmpNameInput.addEventListener("input",handleInput);
+    // });
+    //
+    // // 검색 이름 변경될 때마다 데이터 새로고침
+    // searchEmpNameInput.addEventListener('focusout', () => {
+    //     isFocused = false;
+    //     console.log("focusout 포커스 input에 없음")
+    //     searchEmpNameInput.removeEventListener("input",handleInput);
+    // });
+    //
+    // searchEmpNameInput.addEventListener('blur', () => {
+    //     isFocused = false;
+    //     console.log("blur 포커스 input에 없음")
+    //     searchEmpNameInput.removeEventListener("input",handleInput);
+    // });
+
 
     selectedMenu.forEach(menu => {
         menu.classList.remove("selected")

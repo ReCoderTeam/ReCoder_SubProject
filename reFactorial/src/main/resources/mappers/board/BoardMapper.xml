@@ -20,9 +20,9 @@
         SELECT
             *
         FROM
-            tbl_post AS p
-        JOIN
-            employee AS e
+            tbl_post p
+        LEFT JOIN
+            employee e
         ON
             p.emp_id = e.emp_id
         WHERE
@@ -79,13 +79,20 @@
         )
     </insert>
 
-    <!-- 투표 결과 -->
-    <select id="voteResultView" parameterType="com.ohgiraffers.refactorial.board.model.dto.VoteResultDTO">
-        select
-            *
-        from
-            tbl_vote_result
-    </select>
+    <!-- 투표 결과 생성 -->
+    <insert id="voteResult" parameterType="com.ohgiraffers.refactorial.board.model.dto.VoteResultDTO">
+        INSERT INTO tbl_vote_result (
+        emp_id,
+        item_id
+        )
+        VALUES
+        <foreach collection="voteItemList" item="item" separator=",">
+            (
+            #{item.empId},
+            #{item.itemId}
+            )
+        </foreach>
+    </insert>
 
     <!-- 게시물 상세페이지 -->
     <select id="postDetail" parameterType="String" resultMap="boardResultMap">

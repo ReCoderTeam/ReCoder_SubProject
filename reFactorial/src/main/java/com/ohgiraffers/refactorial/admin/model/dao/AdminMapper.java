@@ -30,4 +30,6 @@ public interface AdminMapper {
     Integer modifyEmpAtt(Map<String, Object> sendData);
 
     List<TktReserveDTO> getTktReserve(String selectedDay);
+
+    TktReserveDTO getReserveById(String reserveId);
 }

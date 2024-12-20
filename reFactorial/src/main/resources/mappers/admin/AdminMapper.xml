@@ -107,4 +107,18 @@
         </where>
     </select>
 
+    <select id="getReserveById" parameterType="String" resultType="com.ohgiraffers.refactorial.admin.model.dto.TktReserveDTO">
+        SELECT
+            tkt_reserv_id AS tktReserveId,
+            tkt_reserv_name AS tktReserveName,
+            tkt_reserv_phone AS tktReservePhone,
+            tkt_reserv_address AS tktReserveAddress,
+            tkt_reserv_accomp_name AS tktReserveAccomp,
+            tkt_reserv_date AS tktReserveDate
+        FROM
+            tbl_tktreserv
+        WHERE
+            tkt_reserv_id = ${reserveId}
+    </select>
+
 </mapper>

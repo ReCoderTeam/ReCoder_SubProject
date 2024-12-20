@@ -47,7 +47,7 @@
                 <div th:each="post, stat : ${postList}" style="display: flex; border-bottom: 1px solid gray; padding: 10px;">
                     <div style="width: 23%;" th:text="${postList.size() - stat.index}">게시물 번호</div>
                     <div style="width: 35%;" th:text="${post.empName}">등록자</div>
-                    <a style="width: 40%;" th:href="@{/board/postDetail(postId=${post.postId})}" th:text="${post.postTitle}">게시물 내용</a>
+                    <a style="width: 40%;" th:href="@{/board/postDetail(postId=${post.postId}, categoryCode=${categoryCode})}" th:text="${post.postTitle}">게시물 제목</a>
                     <div style="width: 30%;" th:text="${#temporals.format(post.postCreationDate, 'yyyy-MM-dd')}">날짜</div>
                 </div>
             </div>

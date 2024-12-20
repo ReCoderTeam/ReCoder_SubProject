@@ -1,0 +1,49 @@
+body{
+    font-family: "NanumGothic"
+}
+
+.mainContainer{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+
+    box-sizing: border-box;
+
+    border: solid 1px red;
+}
+
+.title{
+    width: 100%;
+    height: 10vh;
+    margin: 0;
+    margin-top: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+
+    text-align: center;
+
+    border: solid 1px blue;
+}
+
+.reserveTableBox{
+    max-height: 50vh;
+    width: 100%;
+
+    padding: 30px 10%;
+    box-sizing: border-box;
+
+    border: solid 1px green;
+}
+
+.reserveFooter{
+    width: 100%;
+    border: solid 1px yellow;
+    text-align: right;
+}
+
+

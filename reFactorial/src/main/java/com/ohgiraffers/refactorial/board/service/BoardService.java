@@ -24,7 +24,7 @@ public class BoardService {
         this.boardMapper = boardMapper;
     }
 
-    // 게시글 전체조회(자유)
+    // 게시글 전체조회
     public List<BoardDTO> postList(int categoryCode) {
 
         return boardMapper.postList(categoryCode);
@@ -73,7 +73,7 @@ public class BoardService {
         boardMapper.commentDelete(commentId);
     }
 
-    // 투표 항목 전달
+    // 투표 항목 생성
     public void optionResult(VoteItemDTO options) {
 
         boardMapper.optionResult(options);
@@ -84,9 +84,15 @@ public class BoardService {
         return boardMapper.itemView(postId);
     }
 
-    // 투표 결과 DB전달
-    public List<VoteResultDTO> voteResultView(String voteResult) {
+    // 투표 결과 생성
+    public void voteResult(List<VoteResultDTO> voteItemList) {
 
-        return boardMapper.voteResultView(voteResult);
+        boardMapper.voteResult(voteItemList);
     }
+
+//    // 투표 결과 DB전달
+//    public List<VoteResultDTO> voteResultView(String voteResult) {
+//
+//        return boardMapper.voteResultView(voteResult);
+//    }
 }

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" media="all" href="static/css/admin/pdfFile/resultPDF.css" />
+</head>
+<body>
+
+    <div class="mainContainer">
+        <h1 class="title">예약자 정보</h1>
+
+        <div class="reserveTableBox">
+            <table class="reserveTable" border="1">
+                <tr>
+                    <th>에약 날짜</th>
+                    <th>당첨자 성명</th>
+                    <th>당첨 지역</th>
+                    <th>전화번호</th>
+                    <th>동반인 성명</th>
+                </tr>
+                <tr th:each="reserve : ${reserveDataList}">
+                    <td th:text="${reserve.tktReserveDate}"></td>
+                    <td th:text="${reserve.tktReserveName}"></td>
+                    <td th:text="${reserve.tktReserveAddress}"></td>
+                    <td th:text="${reserve.tktReservePhone}"></td>
+                    <td th:text="${reserve.tktReserveAccomp}"></td>
+                </tr>
+                <tr>
+                    <td>2024-12-06</td>
+                    <td>홍길동</td>
+                    <td>서울시 강북구</td>
+                    <td>010-1111-1111</td>
+                    <td>이몽룡</td>
+                </tr>
+                <tr>
+                    <td>2024-12-06</td>
+                    <td>홍길동</td>
+                    <td>서울시 강북구</td>
+                    <td>010-1111-1111</td>
+                    <td>이몽룡</td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div class="reserveFooter">
+            <h3>서명 : 윌리웡카 (인)</h3>
+        </div>
+    </div>
+
+    <script>
+        const reserveDataList = '[[${reserveDataList}]]'
+
+        if (reserveDataList){
+            console.log("reserveDataList: ",reserveDataList)
+        }
+
+    </script>
+</body>
+</html>
