@@ -9,6 +9,7 @@
 
 <form action="#" th:action="@{/mail/sendMail}" method="post" enctype="multipart/form-data">
     <input type="hidden" name="senderEmpId" th:value="${session.LoginUserInfo.empId}"/>
+
     <div>
         <label for="emailTitle">메일 제목</label>
         <input type="text" id="emailTitle" name="emailTitle" required/>
@@ -20,11 +21,11 @@
     </div>
 
     <div>
-        <label for="receiverEmpId">수신자 사원번호</label>
+        <label for="receiverEmpIds">수신자 사원번호</label>
         <div id="selectedReceivers">
             <!-- 선택된 수신자 목록이 여기에 표시됩니다. -->
         </div>
-        <input type="text" id="receiverEmpId" name="receiverEmpId" hidden required/>
+        <input type="hidden" id="receiverEmpIds" name="receiverEmpIds" required/>
         <button type="button" data-toggle="modal" data-target="#searchItems">수신자 검색</button>
     </div>
 
@@ -119,7 +120,7 @@
     function updateSelectedReceivers() {
         const container = document.getElementById('selectedReceivers');
         container.innerHTML = '';
-        const hiddenInput = document.getElementById('receiverEmpId');
+        const hiddenInput = document.getElementById('receiverEmpIds');  // 변경된 부분
 
         selectedEmployees.forEach(function(employee) {
             const div = document.createElement('div');

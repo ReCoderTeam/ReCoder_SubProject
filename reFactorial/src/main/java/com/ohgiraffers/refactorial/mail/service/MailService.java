@@ -2,6 +2,7 @@ package com.ohgiraffers.refactorial.mail.service;
 
 import com.ohgiraffers.refactorial.mail.model.dto.MailDTO;
 import com.ohgiraffers.refactorial.mail.model.dao.MailMapper;
+import com.ohgiraffers.refactorial.mail.model.dto.MailReceiverDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +29,24 @@ public class MailService {
             emId = "EM" + String.format("%05d", (int) (Math.random() * 100000));
         } while (!generatedIds.add(emId)); // 중복이 아니면 Set에 추가
 
-
         // 공통 메일 ID 설정
         mailDTO.setEmailId(emId);
 
-        mailMapper.sendMail(mailDTO);
+        // 메일 저장
+        mailMapper.sendMail(mailDTO); // 메일 정보 저장
+
+        // 수신자 정보 저장
+        if (mailDTO.getReceiverEmpIds() != null) {
+            for (String receiverEmpId : mailDTO.getReceiverEmpIds()) {
+                MailReceiverDTO receiverDTO = new MailReceiverDTO();
+                receiverDTO.setEmailId(emId);
+                receiverDTO.setReceiverEmpId(receiverEmpId);
+                receiverDTO.setReadStatus(false); // 기본적으로 읽지 않음 상태
+                mailMapper.saveReceiver(receiverDTO); // 수신자 정보 저장
+            }
+        }
     }
+
 
 
     // 내가 보낸 메일

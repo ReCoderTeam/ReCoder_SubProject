@@ -1,5 +1,12 @@
 package com.ohgiraffers.refactorial.mail.model.dto;
 
+import lombok.*;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class MailReceiverDTO {
     private int id;                // 고유 ID
     private String emailId;            // 메일 고유 ID (참조)

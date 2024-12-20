@@ -34,16 +34,23 @@ public class MailController {
     // 메일 보내기
     @PostMapping("/sendMail")
     public String sendMail(@ModelAttribute MailDTO mailDTO, HttpSession session, Model model) {
-
         // 로그인 유저 가져오기
         LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
 
         // 발신자 정보 설정
-        String senderEmpId = loginUser.getEmpId(); // LoginUserDTO 의 필드 값을 사용
-        model.addAttribute("senderEmpId", senderEmpId);
+        String senderEmpId = loginUser.getEmpId();
+        mailDTO.setSenderEmpId(senderEmpId);  // 발신자 정보 설정
+
+        // 수신자 정보가 없을 경우 예외 처리 또는 안내
+        if (mailDTO.getReceiverEmpIds() == null || mailDTO.getReceiverEmpIds().isEmpty()) {
+            model.addAttribute("error", "수신자를 선택해주세요.");
+            return "mail/sendMail"; // 다시 메일 보내기 페이지로 이동
+        }
 
         // 메일 서비스 호출
-        // mailService.sendMail(mailDTO);
+        mailService.sendMail(mailDTO);
+
+        // 리디렉션 후 메일 보내기 화면으로 이동
         return "redirect:/mail/sendMail";
     }
 
@@ -67,10 +74,10 @@ public class MailController {
     @GetMapping("/receivedMails")
     public String receivedMails(Model model, HttpSession session) {
         LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
-        String receiverEmpId = loginUser.getEmpId();
+        String receiverEmpIds = loginUser.getEmpId();
 
         // 내가 받은 메일 목록을 모델에 추가
-        List<MailDTO> receivedMails = mailService.getReceivedMails(receiverEmpId);
+        List<MailDTO> receivedMails = mailService.getReceivedMails(receiverEmpIds);
 
         // Model receivedMails 데이터가 제대로 추가되었는지 확인
         model.addAttribute("receivedMails", receivedMails);
