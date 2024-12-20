@@ -10,5 +10,4 @@ public interface CabinetMapper {
 
     List<CabinetDTO> getAllCabinets();
 
-
 }
