@@ -21,7 +21,11 @@
 
     <div>
         <label for="receiverEmpId">수신자 사원번호</label>
-        <input type="text" id="receiverEmpId" name="receiverEmpId" data-toggle="modal" data-target="#searchItems" required/>
+        <div id="selectedReceivers">
+            <!-- 선택된 수신자 목록이 여기에 표시됩니다. -->
+        </div>
+        <input type="text" id="receiverEmpId" name="receiverEmpId" hidden required/>
+        <button type="button" data-toggle="modal" data-target="#searchItems">수신자 검색</button>
     </div>
 
     <div>
@@ -50,7 +54,7 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="confirmSelection()">선택</button>
                 </div>
             </form>
         </div>
@@ -58,6 +62,8 @@
 </div>
 
 <script>
+    const selectedEmployees = []; // 선택된 직원 목록
+
     // 처음에 직원 목록을 로드합니다.
     document.addEventListener('DOMContentLoaded', function () {
         fetchEmployees('');
@@ -71,35 +77,69 @@
 
     // 직원 목록을 fetch 로 가져오는 함수
     function fetchEmployees(searchQuery) {
-        //
         fetch(`/mail/searchReceiver?searchReceiverInput=${searchQuery}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
         })
-            .then(response => response.json())
-            .then(data => {
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
                 const table = document.getElementById('employeeList');
                 table.innerHTML = ''; // 기존 목록을 지우고
-                data.forEach(employee => {
+                data.forEach(function(employee) {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                    <td>${employee.empId}</td> <!-- empNo 필드 사용 -->
-                    <td>${employee.empName}</td> <!-- empName 필드 사용 -->
-                    <td><button type="button" onclick="selectEmployee('${employee.empId}', '${employee.empName}')">선택</button></td>
+                    <td><input type="checkbox" class="employee-checkbox" value="${employee.empId}" data-emp-name="${employee.empName}"></td>
+                    <td>${employee.empId}</td>
+                    <td>${employee.empName}</td>
                 `;
                     table.appendChild(row);
                 });
             });
     }
 
-    // 직원을 선택했을 때 호출되는 함수
-    function selectEmployee(empId, empName) {
-        document.getElementById('receiverEmpId').value = empId;
-        // 추가적으로 필요한 필드들(예: 이름, 이메일 등)을 채울 수 있습니다.
+    function confirmSelection() {
+        const checkboxes = document.querySelectorAll('.employee-checkbox:checked');
+        checkboxes.forEach(function(checkbox) {
+            const empId = checkbox.value;
+            const empName = checkbox.getAttribute('data-emp-name');
+
+            if (!selectedEmployees.some(function(emp) { return emp.empId === empId; })) {
+                selectedEmployees.push({ empId: empId, empName: empName });
+                updateSelectedReceivers();
+            }
+        });
+
         $('#searchItems').modal('hide');
     }
+
+    function updateSelectedReceivers() {
+        const container = document.getElementById('selectedReceivers');
+        container.innerHTML = '';
+        const hiddenInput = document.getElementById('receiverEmpId');
+
+        selectedEmployees.forEach(function(employee) {
+            const div = document.createElement('div');
+            div.className = 'selected-employee';
+            div.innerHTML = `${employee.empName} (${employee.empId}) <button type="button" onclick="removeReceiver('${employee.empId}')">삭제</button>`;
+            container.appendChild(div);
+        });
+
+        // 선택된 직원 ID를 숨겨진 input에 쉼표로 구분하여 설정
+        hiddenInput.value = selectedEmployees.map(function(emp) { return emp.empId; }).join(',');
+    }
+
+    function removeReceiver(empId) {
+        const index = selectedEmployees.findIndex(function(emp) { return emp.empId === empId; });
+        if (index > -1) {
+            selectedEmployees.splice(index, 1);
+            updateSelectedReceivers();
+        }
+    }
+
 </script>
 
 <!-- 부트스트랩 JS -->

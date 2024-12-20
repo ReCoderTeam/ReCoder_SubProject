@@ -44,7 +44,6 @@ public class MailController {
 
         // 메일 서비스 호출
         // mailService.sendMail(mailDTO);
-        System.out.println(mailDTO);
         return "redirect:/mail/sendMail";
     }
 
