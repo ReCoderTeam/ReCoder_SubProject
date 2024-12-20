@@ -44,7 +44,7 @@
             <div class="table-row" th:each="doc : ${documents}">
                 <div class="table-cell" th:text="${doc.rowNum}"></div>
                 <div class="table-cell" th:text="${doc.creatorName}"></div> <!-- 작성자 이름 -->
-                <div class="table-cell" th:text="${doc.title}"></div>
+                <a class="table-cell" th:href="@{'/approvals/detail/' + ${doc.pmId}}" th:text="${doc.title}"></a>
                 <div class="table-cell" th:text="${#dates.format(doc.createDate, 'yyyy-MM-dd')}"></div>
                 <div class="table-cell" th:text="${doc.status}"></div>
             </div>

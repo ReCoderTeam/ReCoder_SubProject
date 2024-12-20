@@ -79,6 +79,16 @@
         )
     </insert>
 
+    <!-- 투표항목 선택결과 조회 -->
+    <select id="getVoteResults" parameterType="com.ohgiraffers.refactorial.board.model.dto.VoteResultDTO">
+        SELECT
+            *
+        FROM
+            tbl_vote_result
+        WHERE
+            post_id = #{postId}
+    </select>
+
     <!-- 투표 결과 생성 -->
     <insert id="voteResult" parameterType="com.ohgiraffers.refactorial.board.model.dto.VoteResultDTO">
         INSERT INTO tbl_vote_result (

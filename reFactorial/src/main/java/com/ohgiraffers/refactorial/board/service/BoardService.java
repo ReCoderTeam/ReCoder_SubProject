@@ -91,8 +91,8 @@ public class BoardService {
     }
 
     // 투표 선택 결과 조회
-    public List<VoteResultDTO> getVoteResults(String voteResultId) {
+    public List<VoteResultDTO> getVoteResults(String postId) {
 
-        return boardMapper.getVoteResults(voteResultId);
+        return boardMapper.getVoteResults(postId);
     }
 }

@@ -67,8 +67,8 @@
                 <br>
                 <hr>
 
-                <form action="/board/vote" method="post" th:if="${currentCategory == 4}">
                 <!-- 투표 항목 조회 / DB에 전송 -->
+                <form action="/board/vote" method="post" th:if="${currentCategory == 4}">
                     <div>
                         <div th:each="vote :${voteView}">
                             <input type="checkbox" name="voteIdList[]" th:value="${vote.itemId}"/>
@@ -79,7 +79,32 @@
                     </div>
                     <input type="hidden" name="categoryCode" th:value="${currentCategory}"/>
                     <input type="hidden" name="postId" th:value="${postDetail.postId}"/>
+                    <input type="hidden" name="voteResults" th:value="${voteSelectResult}"/>
+                    <input type="hidden" name="voteSelectResult" th:value="${voteSelectResult}"/>
+
                 </form>
+
+                <!-- 사용자가 선택한 투표 결과를 표시 -->
+<!--                <div th:if="${voteResults != null}">-->
+<!--                    <h3>사용자가 선택한 투표 결과</h3>-->
+<!--                    <ul>-->
+<!--                        <li th:each="result : ${voteResults}" th:text="${voteResults.itemId}"></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+
+
+                <!-- 선택한 투표 결과 조회 -->
+<!--                <form action="/board/vote" method="post" th:if="${currentCategory == 4  || voteResults != null}">-->
+<!--                    <div>-->
+<!--                        <div th:each="vote :${voteResults}">-->
+<!--                            <input type="checkbox" name="voteIdList[]" th:value="${vote.empId}"/>-->
+<!--                            <label th:for="${vote.itemId}" th:text="${vote.itemId}"></label>-->
+<!--                            <hr>-->
+<!--                        </div>-->
+<!--                        <input type="hidden" name="postId" th:value="${postId}" />-->
+<!--                        <input type="hidden" name="categoryCode" th:value="${currentCategory}" />-->
+<!--                    </div>-->
+<!--                </form>-->
 
                 <!-- 목록으로 돌아가기 -->
                 <a th:href="@{/board/list(categoryCode=${postDetail.categoryCode})}"

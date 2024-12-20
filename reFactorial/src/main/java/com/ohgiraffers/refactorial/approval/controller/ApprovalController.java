@@ -572,6 +572,7 @@ public class ApprovalController {
 
 
 
+
         // 모델에 데이터 추가
         model.addAttribute("document", document);
         model.addAttribute("creatorName", creatorName);
@@ -616,14 +617,16 @@ public class ApprovalController {
                     // 승인 처리
                     approvalService.approve(pmId, currentEmpId);
 
-                    // 최초 승인자인 경우, 나머지 승인자 상태를 '진행 중'으로 변경
-                    if (!approvalService.isAllApproversApproved(pmId)) {
-                        approvalService.updateRemainingApproversToInProgress(pmId, currentEmpId);
-                        return "redirect:/approvals/inProgress"; // 진행 중 페이지로 이동
-                    } else {
-                        approvalService.updateStatusToCompleted(pmId); // 상태를 '완료'로 변경
+
+                    // 모든 승인자가 완료되었는지 확인
+                    boolean allApproved = approvalService.isAllApproversApproved(pmId);
+
+                    if (allApproved) {
                         return "redirect:/approvals/completed"; // 완료 페이지로 이동
+                    } else {
+                        return "redirect:/approvals/inProgress"; // 진행 중 페이지로 이동
                     }
+
 
 
                 case "reject":

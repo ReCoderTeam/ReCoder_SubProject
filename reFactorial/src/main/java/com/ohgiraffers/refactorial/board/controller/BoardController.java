@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -110,7 +111,7 @@ public class BoardController {
                 VoteItemDTO optionDTO = new VoteItemDTO();
                 optionDTO.setPostId(boardId);   // 게시물 ID
                 optionDTO.setItemTitle(option);   // 항목 이름
-                System.out.println("optionDTO의 값: " + optionDTO);
+//                System.out.println("optionDTO의 값: " + optionDTO);
 
                 boardService.optionResult(optionDTO);   // 투표 항목 DTO로 전달
             }
@@ -153,17 +154,26 @@ public class BoardController {
                              @RequestParam int categoryCode,
                              @RequestParam String postId,
                              HttpSession session,
-                             Model model) {
+                             RedirectAttributes rttr) {
 
 
         LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");     // 로그인한 유저의 정보를 가져옴
         List<VoteResultDTO> voteItemList = new ArrayList<>();
 
+        // 반복문을 돌려 항목을 리스트에 저장
         for(int i = 0; i < voteIdList.size(); i++){
             voteItemList.add(new VoteResultDTO(null, user.getEmpId(), voteIdList.get(i), postId));
         }
 
-        boardService.voteResult(voteItemList);  // 투표결과 DB 저장
+        boardService.voteResult(voteItemList);    // 투표결과 DB 저장
+
+        List<VoteResultDTO> voteSelectResult = boardService.getVoteResults(postId);    // 투표결과 List 형태로 가져옴
+
+        System.out.println("voteSelectResult = " + voteSelectResult);
+
+
+        // 결과 데이터를 모델에 추가하여 HTML(화면) 전달  @@@ 리다이렉트 플래시 사용 @@@
+        rttr.addFlashAttribute("voteResults", voteSelectResult);
 
         return "redirect:/board/postDetail?postId=" + postId + "&categoryCode=" + categoryCode;    // redirect 를 사용하는 이유 - postDetail에 있는 데이터 사용을 위해!
     }

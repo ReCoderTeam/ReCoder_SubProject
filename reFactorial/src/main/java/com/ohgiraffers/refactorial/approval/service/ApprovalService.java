@@ -71,8 +71,17 @@
             if (approvers != null && !approvers.isEmpty()) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("pmId", pmId);
-                params.put("approvers", approvers);
-                approvalMapper.saveApprovers(params);
+
+                // 각 승인자에 approvalOrder 값 추가
+                List<Map<String, Object>> approverListWithOrder = new ArrayList<>();
+                for (int i = 0; i < approvers.size(); i++) {
+                    Map<String, Object> approver = new HashMap<>(approvers.get(i));
+                    approver.put("approvalOrder", i + 1); // 순서를 1부터 시작하도록 설정
+                    approverListWithOrder.add(approver);
+                }
+
+                params.put("approvers", approverListWithOrder);
+                approvalMapper.insertApprover(params);
             }
         }
 
@@ -246,12 +255,36 @@
         }
 
 
+
         // 승인 처리
         public void approve(String pmId, String empId) {
+            // 1. 현재 승인자를 '승인' 상태로 업데이트
             approvalMapper.updateApprovalStatus(pmId, empId, "승인");
-            checkAndUpdateDocumentStatus(pmId); // 모든 승인 완료 시 상태 업데이트
 
+
+
+            // 2. 모든 대기 중인 승인자의 상태를 '진행 중'으로 업데이트
+            approvalMapper.updateAllPendingToInProgress(pmId);
+//            // 2. 다음 승인자 순서를 조회
+//            Integer nextOrder = approvalMapper.findNextApproverOrder(pmId);
+//
+//            // 3. 다음 승인자가 있으면 상태를 '진행 중'으로 업데이트
+//            if (nextOrder != null) {
+//                approvalMapper.updateNextApproverStatus(Map.of("pmId", pmId, "approvalOrder", nextOrder));
+//            } else {
+//                System.out.println("다음 승인자가 없습니다.");
+//            }
+
+            // 4. 모든 승인자가 완료되었는지 확인
+            boolean allApproved = approvalMapper.allApprovalsCompleted(pmId);
+            if (allApproved) {
+                approvalMapper.updateDocumentStatus(pmId, "완료");
+            } else {
+                System.out.println("아직 승인자가 남아 있습니다.");
+            }
         }
+
+
 
         // 반려 처리
         public void reject(String pmId, String empId, String reason) {
@@ -265,30 +298,7 @@
             approvalMapper.updateDocumentStatus(pmId, "완료"); // 전결 시 바로 완료 처리
         }
 
-        // 모든 승인 상태 확인 후 최종 상태 업데이트
-        private void checkAndUpdateDocumentStatus(String pmId) {
-            try {
-                List<String> statuses = approvalMapper.getAllApprovalStatuses(pmId);
 
-                if (statuses == null || statuses.isEmpty()) {
-
-                    return; // 상태가 없으면 아무 작업도 하지 않음
-                }
-
-                boolean allApproved = statuses.stream().allMatch(status -> "승인".equals(status));
-                System.out.println("All approvers approved for pmId " + pmId + ": " + allApproved);
-
-                if (allApproved) {
-                    approvalMapper.updateDocumentStatus(pmId, "완료");
-                    System.out.println("Document status updated to 완료 for pmId " + pmId);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.err.println("Error in checkAndUpdateDocumentStatus for pmId " + pmId);
-            }
-
-
-        }
 
         // 현재 사용자의 승인 순서 확인
         public int getCurrentApprovalOrder(String pmId, String empId) {
@@ -300,6 +310,17 @@
         public boolean isCurrentApprover(String pmId, String currentEmpId) {
             Integer currentOrder = approvalMapper.getApprovalOrder(pmId, currentEmpId);
             Integer requiredOrder = approvalMapper.getCurrentApprovalStep(pmId);
+            if (requiredOrder == null) {
+                requiredOrder = -1; // 기본값으로 처리
+            }
+
+            if (requiredOrder == null) {
+                System.out.println("Required Order is null for pmId: " + pmId);
+                return false; // 또는 예외 처리
+            }
+
+            System.out.println("Current Order: " + currentOrder); // 디버깅 로그
+            System.out.println("Required Order: " + requiredOrder); // 디버깅 로그
             return currentOrder != null && currentOrder.equals(requiredOrder);
         }
 
@@ -316,10 +337,32 @@
             return approvalMapper.getCompletedDocumentsCount(empId);
         }
 
-        // 진행 중 문서 조회
         public List<DocumentDTO> getInProgressDocuments(String empId, int limit, int offset) {
-            return approvalMapper.findInProgressDocuments(empId, limit, offset);
+            if (empId == null || empId.isEmpty()) {
+                throw new IllegalArgumentException("empId는 null 또는 비어있을 수 없습니다.");
+            }
+
+            // 매퍼에 전달할 파라미터 준비
+            Map<String, Object> params = new HashMap<>();
+            params.put("empId", empId);
+            params.put("limit", limit);
+            params.put("offset", offset);
+
+            // 디버깅용 로그 추가
+            System.out.println("로그인 사용자 ID: " + empId);
+
+            // 매퍼 호출 전 로그
+            System.out.println("매퍼 호출 전 전달된 파라미터: " + params);
+            // 진행 중 문서 조회
+            List<DocumentDTO> inProgressDocs = approvalMapper.findInProgressDocuments(params);
+            // 매퍼 호출 후 결과 로그
+            System.out.println("조회된 진행 중 문서: " + inProgressDocs);
+
+
+
+            return inProgressDocs;
         }
+
 
         public int getInProgressDocumentsCount(String empId) {
             return approvalMapper.countInProgressDocuments(empId);
@@ -384,10 +427,11 @@
 
 
 
-        public void updateRemainingApproversToInProgress(String pmId, String currentEmpId) {
-            approvalMapper.updateRemainingApproversToInProgress(pmId, currentEmpId);
-            System.out.println("pmId: " + pmId);
-            System.out.println("currentEmpId: " + currentEmpId);
+
+
+        public boolean isFirstApprover(String pmId, String currentEmpId) {
+            String firstApprover = approvalMapper.findFirstApprover(pmId);
+            return firstApprover != null && firstApprover.equals(currentEmpId);
         }
     }
 

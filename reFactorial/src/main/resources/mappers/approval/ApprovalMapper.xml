@@ -12,10 +12,10 @@
 
 
     <insert id="insertApprover" parameterType="map">
-        INSERT INTO tbl_approval (emp_id, pm_id, pm_status)
+        INSERT INTO tbl_approval (emp_id, pm_id, pm_status, approval_order)
         VALUES
         <foreach collection="approvers" item="approver" separator=",">
-            (#{approver}, #{pmId}, '대기 중')
+            (#{approver.empId}, #{pmId}, '대기 중', #{approver.approvalOrder})
         </foreach>
     </insert>
 
@@ -31,16 +31,22 @@
             pm.pm_title AS title,
             pm.pm_create AS createDate,
             pm.pm_category AS category,
-            pm.pm_status AS status,
+            CASE
+                WHEN ap.approval_order = (
+                    SELECT MAX(approval_order)
+                    FROM tbl_approval
+                    WHERE pm_id = pm.pm_id
+                ) THEN '진행 중'
+                ELSE ap.pm_status
+                END AS status,
             pm.pm_attachment AS attachment,
             pm.emp_id AS creator,
-            JSON_UNQUOTE(JSON_EXTRACT(pm.pm_referrer, '$')) AS referrers, -- JSON 파싱
-            GROUP_CONCAT(ap.emp_id) AS approvers -- 승인자 리스트
+            JSON_UNQUOTE(JSON_EXTRACT(pm.pm_referrer, '$')) AS referrers,
+            GROUP_CONCAT(DISTINCT ap.emp_id ORDER BY ap.approval_order) AS approvers,
             pm.pm_content AS content
         FROM
             tbl_pm pm
-                LEFT JOIN
-            tbl_approval ap ON pm.pm_id = ap.pm_id
+                LEFT JOIN tbl_approval ap ON pm.pm_id = ap.pm_id
         GROUP BY
             pm.pm_id;
     </select>
@@ -51,7 +57,7 @@
             pm.pm_title AS title,
             pm.pm_create AS createDate,
             pm.pm_category AS category,
-            pm.pm_status AS status,
+            MAX(appr.pm_status) AS status,
             pm.pm_attachment AS attachment,
             emp.emp_name AS creatorName,
             GROUP_CONCAT(DISTINCT appr.emp_id ORDER BY appr.approval_order) AS approvers,
@@ -62,19 +68,19 @@
                 LEFT JOIN tbl_approval appr ON pm.pm_id = appr.pm_id
         WHERE
             appr.pm_status = '대기 중'
-          AND appr.emp_id = #{empId}
+          AND appr.emp_id = #{empId} -- 현재 로그인한 사용자의 ID
         GROUP BY
             pm.pm_id
         ORDER BY
             pm.pm_create DESC
-            LIMIT #{limit} OFFSET #{offset}
+            LIMIT #{limit} OFFSET #{offset};
     </select>
 
     <select id="getWaitingCount" resultType="int">
         SELECT COUNT(*)
         FROM tbl_pm pm
                  INNER JOIN tbl_approval ap ON pm.pm_id = ap.pm_id
-        WHERE pm.pm_status = '대기 중'
+        WHERE ap.pm_status = '대기 중'
           AND ap.emp_id = #{empId}
     </select>
 
@@ -86,7 +92,12 @@
         INSERT INTO tbl_approval (emp_id, pm_id, pm_status, approval_order)
         VALUES
         <foreach collection="approvers" item="approver" index="index" separator=",">
-            (#{approver.empId}, #{pmId}, '대기 중', #{approver.order})
+            (#{approver.empId}, #{pmId},
+            CASE
+            WHEN #{approver.order} = 1 THEN '진행 중'
+            ELSE '대기 중'
+            END,
+            #{approver.order})
         </foreach>
     </insert>
 
@@ -105,11 +116,13 @@
         pm.pm_title AS title,
         pm.pm_create AS createDate,
         pm.pm_category AS category,
-        pm.pm_status AS status,
+        a.pm_status AS status,
         pm.pm_attachment AS attachment,
         emp.emp_name AS creatorName,
         pm.pm_referrer AS referrers
-        FROM tbl_pm pm
+        FROM
+        tbl_pm pm
+        LEFT JOIN tbl_approval a ON pm.pm_id = a.pm_id <!-- 상태 조인 -->
         LEFT JOIN employee emp ON pm.emp_id = emp.emp_id
         WHERE EXISTS (
         SELECT 1
@@ -141,18 +154,19 @@
         pm.pm_title AS title,
         pm.pm_create AS createDate,
         pm.pm_category AS category,
-        pm.pm_status AS status,
+        a.pm_status AS status,
         pm.pm_attachment AS attachment,
         emp.emp_name AS creatorName,
         pm.pm_referrer AS referrers
         FROM
         tbl_pm pm
+        LEFT JOIN tbl_approval a ON pm.pm_id = a.pm_id <!-- 상태 조인 -->
         LEFT JOIN employee emp ON pm.emp_id = emp.emp_id
         WHERE
-        pm.emp_id = #{empId}  <!-- 작성자(emp_id)로 필터링 -->
+        pm.emp_id = #{empId} <!-- 작성자(emp_id)로 필터링 -->
         ORDER BY
         pm.pm_create DESC
-        LIMIT #{limit} OFFSET #{offset}  <!-- LIMIT과 OFFSET을 사용하여 페이지네이션 처리 -->
+        LIMIT #{limit} OFFSET #{offset} <!-- LIMIT과 OFFSET을 사용하여 페이지네이션 처리 -->
 
     </select>
 
@@ -176,7 +190,7 @@
             pm.pm_title AS title,
             pm.pm_create AS createDate,
             pm.pm_category AS category,
-            pm.pm_status AS status,
+            MAX(ap.pm_status) AS status,
             pm.pm_attachment AS attachment,
             emp.emp_name AS creatorName, -- 작성자 이름
             pm.leave_type AS leaveType,
@@ -259,7 +273,7 @@
     <update id="updateApprovalStatus">
         UPDATE tbl_approval
         SET pm_status = #{status}
-        WHERE pm_id = #{pmId} AND emp_id = #{empId}
+        WHERE pm_id = #{pmId} AND emp_id = #{empId};
     </update>
 
 
@@ -292,7 +306,7 @@
             pm.pm_title AS title,
             pm.pm_create AS createDate,
             pm.pm_category AS category,
-            pm.pm_status AS status,
+            MAX(ap.pm_status) AS status,
             emp.emp_name AS creatorName,  -- 작성자 이름
             GROUP_CONCAT(ap.emp_id ORDER BY ap.approval_order ASC) AS approvers -- 승인자 정보
         FROM
@@ -300,7 +314,7 @@
                 LEFT JOIN employee emp ON pm.emp_id = emp.emp_id -- 작성자 정보
                 LEFT JOIN tbl_approval ap ON pm.pm_id = ap.pm_id -- 승인자 정보
         WHERE
-            pm.pm_status = '완료'
+            ap.pm_status = '완료'
         GROUP BY
             pm.pm_id
         ORDER BY
@@ -311,7 +325,7 @@
     <!-- 완료된 문서 개수 조회 -->
     <select id="getCompletedDocumentsCount" parameterType="string" resultType="int">
         SELECT COUNT(*)
-        FROM tbl_pm
+        FROM tbl_approval
         WHERE pm_status = '완료' AND emp_id = #{empId}
     </select>
 
@@ -319,42 +333,42 @@
     <!-- 진행 중 문서 가져오기 -->
     <select id="findInProgressDocuments" resultType="com.ohgiraffers.refactorial.approval.model.dto.DocumentDTO">
         SELECT
-            pm.pm_id AS pmId,
-            pm.pm_title AS title,
-            pm.pm_create AS createDate,
-            pm.pm_category AS category,
-            pm.pm_status AS status,
-            emp.emp_name AS creatorName
+        pm.pm_id AS pmId,
+        pm.pm_title AS title,
+        pm.pm_create AS createDate,
+        pm.pm_category AS category,
+        ap.pm_status AS status,
+        emp.emp_name AS creatorName
         FROM tbl_pm pm
-                 LEFT JOIN tbl_approval ap ON pm.pm_id = ap.pm_id
-                 LEFT JOIN employee emp ON pm.emp_id = emp.emp_id
-        WHERE ap.pm_status = '진행 중'
-          AND ap.emp_id != #{empId} -- 승인한 사람 제외
+        LEFT JOIN tbl_approval ap ON pm.pm_id = ap.pm_id
+        LEFT JOIN employee emp ON ap.emp_id = emp.emp_id
+        WHERE ap.pm_status IN ('승인', '진행 중') -- '승인'과 '진행 중' 상태 모두 가져오기
+        AND ap.emp_id = #{empId} <!-- 로그인한 사용자 기준 -->
         ORDER BY pm.pm_create DESC
-            LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- 진행 중 문서 개수 가져오기 -->
     <select id="countInProgressDocuments" resultType="int">
         SELECT COUNT(*)
-        FROM tbl_pm
+        FROM tbl_approval
         WHERE pm_status = '진행 중' AND emp_id = #{empId}
     </select>
 
 
     <!-- 반려된 문서 가져오기 -->
     <select id="findRejectedDocuments" resultType="com.ohgiraffers.refactorial.approval.model.dto.DocumentDTO">
-        SELECT *
-        FROM tbl_pm
-        WHERE pm_status = '반려' AND emp_id = #{empId}
-        ORDER BY pm_create DESC
+        SELECT p.*, a.pm_status
+        FROM tbl_pm p
+                 JOIN tbl_approval a ON p.pm_id = a.pm_id
+        WHERE a.pm_status = '반려' AND p.emp_id = #{empId}
+        ORDER BY p.pm_create DESC
             LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- 반려된 문서 개수 가져오기 -->
     <select id="countRejectedDocuments" resultType="int">
         SELECT COUNT(*)
-        FROM tbl_pm
+        FROM tbl_approval
         WHERE pm_status = '반려' AND emp_id = #{empId}
     </select>
 
@@ -409,7 +423,7 @@
     <select id="getCurrentApprovalStep" resultType="int">
         SELECT MIN(approval_order)
         FROM tbl_approval
-        WHERE pm_id = #{pmId} AND pm_status = '대기 중'
+        WHERE pm_id = #{pmId} AND pm_status IN ('대기 중', '진행 중');
     </select>
 
     <select id="getApprovers" resultType="string">
@@ -418,19 +432,47 @@
         WHERE pm_id = #{pmId}
     </select>
 
-    <update id="updateDocumentStatus">
-        UPDATE tbl_pm
-        SET pm_status = #{status}
-        WHERE pm_id = #{pmId}
-    </update>
-
-<!-- 진행 중 으로 상태를 업데이트해줌   -->
-    <update id="updateRemainingApproversToInProgress">
+    <update id="updateAllPendingToInProgress">
         UPDATE tbl_approval
         SET pm_status = '진행 중'
-        WHERE pm_id = #{pmId}
-          AND emp_id != #{currentEmpId}
-          AND pm_status = '대기 중';
+        WHERE pm_id = #{pmId} AND pm_status = '대기 중';
+    </update>
+
+
+
+    <select id="findFirstApprover" parameterType="String">
+        SELECT emp_id
+        FROM tbl_approval
+        WHERE pm_id = #{pmId} AND approval_order = 1;
+    </select>
+
+
+
+
+<!-- 모든 승인 상태를 완료로 업데이트-->
+    <update id="updateAllApprovalsToCompleted">
+        UPDATE tbl_approval
+        SET pm_status = #{status}
+        WHERE pm_id = #{pmId};
+    </update>
+
+
+    <select id="countPendingApprovers" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_approval
+        WHERE pm_id = #{pmId} AND pm_status = '대기 중';
+    </select>
+
+    <select id="allApprovalsCompleted" parameterType="String" resultType="boolean">
+        SELECT COUNT(*) = 0
+        FROM tbl_approval
+        WHERE pm_id = #{pmId} AND pm_status IN ('대기 중', '진행 중');
+    </select>
+
+    <update id="updateDocumentStatus" parameterType="map">
+        UPDATE tbl_approval
+        SET pm_status = #{status}
+        WHERE pm_id = #{pmId};
     </update>
 
 </mapper>

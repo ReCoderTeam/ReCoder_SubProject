@@ -45,5 +45,5 @@ public interface BoardMapper {
     void voteResult(List<VoteResultDTO> voteItemList);
 
     // 투표 선택 결과 조회
-    List<VoteResultDTO> getVoteResults(String voteResultId);
+    List<VoteResultDTO> getVoteResults(String postId);
 }
