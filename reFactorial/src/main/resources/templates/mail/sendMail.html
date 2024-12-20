@@ -71,6 +71,7 @@
 
     // 직원 목록을 fetch 로 가져오는 함수
     function fetchEmployees(searchQuery) {
+        //
         fetch(`/mail/searchReceiver?searchReceiverInput=${searchQuery}`, {
             method: 'POST',
             headers: {
