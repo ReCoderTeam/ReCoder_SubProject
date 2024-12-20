@@ -44,4 +44,6 @@ public interface BoardMapper {
     // 투표 결과 생성
     void voteResult(List<VoteResultDTO> voteItemList);
 
+    // 투표 선택 결과 조회
+    List<VoteResultDTO> getVoteResults(String voteResultId);
 }

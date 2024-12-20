@@ -78,6 +78,10 @@ section{
                             text-align: center;
                         }
 
+                        >div{
+                            margin-bottom: 10px;
+                        }
+
                         .random_img{
                             width: 100%;
 

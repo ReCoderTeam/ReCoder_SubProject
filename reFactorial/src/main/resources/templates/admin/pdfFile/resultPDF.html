@@ -16,32 +16,18 @@
         <div class="reserveTableBox">
             <table class="reserveTable" border="1">
                 <tr>
-                    <th>에약 날짜</th>
-                    <th>당첨자 성명</th>
-                    <th>당첨 지역</th>
-                    <th>전화번호</th>
-                    <th>동반인 성명</th>
+                    <th class="reserveDate">에약 날짜</th>
+                    <th class="reserveName" >당첨자</th>
+                    <th class="reserveRegion" >당첨 지역</th>
+                    <th class="reservePhone" >전화번호</th>
+                    <th class="reserveWithName">동반인</th>
                 </tr>
                 <tr th:each="reserve : ${reserveDataList}">
-                    <td th:text="${reserve.tktReserveDate}"></td>
-                    <td th:text="${reserve.tktReserveName}"></td>
-                    <td th:text="${reserve.tktReserveAddress}"></td>
-                    <td th:text="${reserve.tktReservePhone}"></td>
-                    <td th:text="${reserve.tktReserveAccomp}"></td>
-                </tr>
-                <tr>
-                    <td>2024-12-06</td>
-                    <td>홍길동</td>
-                    <td>서울시 강북구</td>
-                    <td>010-1111-1111</td>
-                    <td>이몽룡</td>
-                </tr>
-                <tr>
-                    <td>2024-12-06</td>
-                    <td>홍길동</td>
-                    <td>서울시 강북구</td>
-                    <td>010-1111-1111</td>
-                    <td>이몽룡</td>
+                    <td class="reserveDate" th:text="${reserve.tktReserveDate}"></td>
+                    <td class="reserveName" th:text="${reserve.tktReserveName}"></td>
+                    <td class="reserveRegion" th:text="${reserve.tktReserveAddress}"></td>
+                    <td class="reservePhone" th:text="${reserve.tktReservePhone}"></td>
+                    <td class="reserveWithName" th:text="${reserve.tktReserveAccomp}"></td>
                 </tr>
             </table>
         </div>

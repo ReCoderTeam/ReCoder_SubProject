@@ -147,24 +147,25 @@ public class BoardController {
         return "/board/postDetail";
     }
 
-    // 투표 결과를 db로 보냄
+    // 투표 결과를 DB에 저장
     @PostMapping("vote")
     public String voteResult(@RequestParam List<Integer> voteIdList,
                              @RequestParam int categoryCode,
                              @RequestParam String postId,
-                             HttpSession session) {
+                             HttpSession session,
+                             Model model) {
 
 
         LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");     // 로그인한 유저의 정보를 가져옴
         List<VoteResultDTO> voteItemList = new ArrayList<>();
 
-        for(int i=0; i<voteIdList.size(); i++){
-            voteItemList.add(new VoteResultDTO(null, user.getEmpId(), voteIdList.get(i)));
+        for(int i = 0; i < voteIdList.size(); i++){
+            voteItemList.add(new VoteResultDTO(null, user.getEmpId(), voteIdList.get(i), postId));
         }
 
-        boardService.voteResult(voteItemList);
+        boardService.voteResult(voteItemList);  // 투표결과 DB 저장
 
-        return "redirect:/board/postDetail?categoryCode=" + categoryCode + "&postId=" + postId;    // redirect 를 사용하는 이유 - postDetail에 있는 데이터 사용을 위해!
+        return "redirect:/board/postDetail?postId=" + postId + "&categoryCode=" + categoryCode;    // redirect 를 사용하는 이유 - postDetail에 있는 데이터 사용을 위해!
     }
 
     // 게시물 삭제

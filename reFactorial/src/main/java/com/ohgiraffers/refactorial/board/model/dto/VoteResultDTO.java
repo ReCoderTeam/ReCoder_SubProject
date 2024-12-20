@@ -10,8 +10,9 @@ import lombok.*;
 // 투표 결과 DTO
 public class VoteResultDTO {
 
-    private String voteResultId;    // 투표 결과 ID ()
-    private String empId;        // 투표한 사원의 ID
+    private String voteResultId;     // 투표 결과 ID ()
+    private String empId;            // 투표한 사원의 ID
     private Integer itemId;          // 투표한 항목의 ID
+    private String postId;           // 게시물 ID
 
 }

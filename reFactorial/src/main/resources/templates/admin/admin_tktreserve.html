@@ -82,7 +82,7 @@
 
                         const item = `
                             <div class="tktreserve_item">
-                                <input type="checkbox" name="select_tkt" id="select_tkt" value="${data.tktReserveId}">
+                                <input type="checkbox" name="select_tkt[]" id="select_tkt" value="${data.tktReserveId}">
                                 <div class="random_img">
                                     <img src="/images/${imgList[randomNum]}" alt="사진">
                                 </div>
@@ -94,10 +94,8 @@
                                 <div class="tkt_phone">${formatPhoneNumber(data.tktReservePhone)}</div>
                             </div>
                         `
-
-                        dataBox.innerHTML += item
-                    })
-
+                            dataBox.innerHTML += item
+                        })
                     }
                 })
         }
@@ -106,31 +104,6 @@
             getTktReserve();
         })
 
-        const extractFormBtn = document.getElementById("extractFormSubmitBtn");
-        const extractForm = document.getElementById("extractForm");
-        extractFormBtn.addEventListener("click",(e)=>{
-            e.preventDefault();
-            const selectedTickets = [];
-            const checkboxes = document.querySelectorAll("input[name='select_tkt']:checked");
-
-            checkboxes.forEach((checkbox) => {
-                selectedTickets.push(checkbox.value); // 체크된 항목의 tktReserveId 값을 배열에 저장
-            });
-
-            if (selectedTickets.length > 0) {
-                // 'selectedTickets' 배열을 폼의 값으로 바로 전달하도록 처리
-                const hiddenInput = document.createElement("input");
-                hiddenInput.type = "hidden";
-                hiddenInput.name = "selectedTickets"; // 서버에서 받을 이름
-                hiddenInput.value = JSON.stringify(selectedTickets); // 체크된 ticketId들을 JSON 형식으로 저장
-                extractForm.appendChild(hiddenInput); // 폼에 숨은 입력을 추가
-
-                extractForm.submit();
-            } else {
-                alert("선택된 예약자가 없습니다.");
-                event.preventDefault(); // 선택된 항목이 없으면 폼 제출을 막음
-            }
-        })
     </script>
 
 </body>

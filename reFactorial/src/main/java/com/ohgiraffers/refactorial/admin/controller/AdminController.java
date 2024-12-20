@@ -160,6 +160,8 @@ public class AdminController {
         return result;
     }
 
+
+
     // 예약자 관리 페이지
     @GetMapping("tktreserve")
     public String adminTktreserve(){ return "/admin/admin_tktreserve"; }
@@ -178,26 +180,22 @@ public class AdminController {
     }
 
     @PostMapping("/admin/extractPDF")
-    public void extractPDF(@RequestParam String selectedTickets, HttpServletResponse response) throws UnsupportedEncodingException {
+    public void extractPDF(@RequestParam List<String> select_tkt ,HttpServletResponse response) throws UnsupportedEncodingException {
         // selectedTickets는 JSON 문자열로 받아옵니다.
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<String> ticketIds = null;
 
-        try {
-            // JSON 문자열을 List<Long>로 변환
-            ticketIds = objectMapper.readValue(selectedTickets, List.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();  // 예외 처리, 로그 출력 등 필요 시 적절하게 처리
-        }
-        // ticketIds는 이제 List<Long> 형식입니다.
-        System.out.println("선택된 티켓 ID들: " + ticketIds);
+        System.out.println("select_tkt = " + select_tkt);
+
+
         // PDF 생성 로직 등 처리...
         List<TktReserveDTO> reserveDataList = new ArrayList<>();
 
-        for (String reserveId : ticketIds){
+        for (String reserveId : select_tkt){
             TktReserveDTO reserveData = adminService.getReserveById(reserveId);
 
             if (reserveData != null){
+
+                reserveData.setTktReservePhone(reserveData.getTktReservePhone().replaceAll("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3"));
+
                 reserveDataList.add(reserveData);
             }
         }

@@ -90,9 +90,9 @@ public class BoardService {
         boardMapper.voteResult(voteItemList);
     }
 
-//    // 투표 결과 DB전달
-//    public List<VoteResultDTO> voteResultView(String voteResult) {
-//
-//        return boardMapper.voteResultView(voteResult);
-//    }
+    // 투표 선택 결과 조회
+    public List<VoteResultDTO> getVoteResults(String voteResultId) {
+
+        return boardMapper.getVoteResults(voteResultId);
+    }
 }

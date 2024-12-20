@@ -67,8 +67,8 @@
                 <br>
                 <hr>
 
-                <form action="/board/vote" method="post">
-                <!-- 투표 항목 조회 -->
+                <form action="/board/vote" method="post" th:if="${currentCategory == 4}">
+                <!-- 투표 항목 조회 / DB에 전송 -->
                     <div>
                         <div th:each="vote :${voteView}">
                             <input type="checkbox" name="voteIdList[]" th:value="${vote.itemId}"/>
@@ -80,8 +80,6 @@
                     <input type="hidden" name="categoryCode" th:value="${currentCategory}"/>
                     <input type="hidden" name="postId" th:value="${postDetail.postId}"/>
                 </form>
-
-                <!-- 투표결과 -->
 
                 <!-- 목록으로 돌아가기 -->
                 <a th:href="@{/board/list(categoryCode=${postDetail.categoryCode})}"

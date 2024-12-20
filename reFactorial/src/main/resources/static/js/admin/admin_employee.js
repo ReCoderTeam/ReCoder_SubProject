@@ -5,12 +5,15 @@ const registeEmp = document.querySelector("#registeEmp");
 const updateAtt = document.querySelector("#updateAtt");
 
 let sendDept = 0;
+let PreSendSearchEmpName = ''; // 직전 값
 let sendSearchEmpName = '';
 
 let searchDept = null;
 let searchEmpName = null;
 
 let randomStr = 'P';
+
+// 정보수정 꺼
 
 document.addEventListener("DOMContentLoaded", function () {
     menuMainBox.innerHTML = `
@@ -130,11 +133,19 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchEmployeeList(sendDept,sendSearchEmpName)
     })
 
-    searchEmpName.addEventListener("input" , () =>{
-        console.log("searchEmpId : ",searchEmpName.value)
-        sendSearchEmpName = searchEmpName.value
-        console.log("sendDept : ",sendDept, " sendSearchEmpName : ",sendSearchEmpName)
-        fetchEmployeeList(sendDept,sendSearchEmpName)
+    // input 이벤트 조정하기
+    let debounceTimeout;
+
+    searchEmpName.addEventListener("input", (event) => {
+        clearTimeout(debounceTimeout); // 이전 타이머 취소
+        debounceTimeout = setTimeout(() => {
+            sendSearchEmpName = event.target.value;
+            if (PreSendSearchEmpName !== sendSearchEmpName) { // 이전 값과 다르면 fetch 실행
+                console.log(`Fetching data for: ${PreSendSearchEmpName}`);
+                fetchEmployeeList(sendDept, sendSearchEmpName);
+                PreSendSearchEmpName = sendSearchEmpName;
+            }
+        }, 300); // fetch 실행
     })
 })
 
@@ -165,11 +176,14 @@ modifyEmpInfo.addEventListener("click", () => {
 // 근태 수정
 let page = 1;
 
+// 근태 수정 꺼
+let preValue = ""; // 직전 값
+let presentValue = ""; // 현재 입력 값
+
 // fetchData 함수는 전역에서 사용할 수 있도록 밖으로 이동
-const fetchData = (page = 1) => {
+const fetchData = (page = 1, searchEmpName) => {
     const selectedDay = document.getElementById('searchAttDate').value;
     const searchDept = document.getElementById('searchDept').value;
-    searchEmpName = document.getElementById('searchEmpName').value;
     const empAttTable = document.getElementById("empAttTable");
 
     fetch(`/admin/getByDateAtt?selectedDay=${encodeURIComponent(selectedDay)}&page=${page}&size=10&searchDept=${searchDept}&searchEmpName=${searchEmpName}`, {
@@ -195,7 +209,7 @@ const fetchData = (page = 1) => {
                     pageButton.textContent = i;
                     pageButton.addEventListener('click', () => {
                         page = i
-                        fetchData(page);  // 해당 페이지 데이터 가져오기
+                        fetchData(page, presentValue);  // 해당 페이지 데이터 가져오기
                     });
                     pagination.appendChild(pageButton);
                 }
@@ -335,76 +349,35 @@ updateAtt.addEventListener("click", () => {
 
     // 처음 데이터 로드
 
-    fetchData(1);
+    fetchData(1, presentValue);
     page = 1;
 
     // 날짜가 변경될 때마다 데이터 새로고침
     searchAttDateInput.addEventListener('change', () => {
-        fetchData(1);
+        fetchData(1, presentValue);
         page = 1
     });
 
     // 검색 부서 변경될 때마다 데이터 새로고침
     searchDeptInput.addEventListener('change', () => {
-        fetchData(1);
+        fetchData(1, presentValue);
         page = 1
     });
 
-    let previousValue = ""; // 이전 값 저장
+    // input 이벤트 조정하기
+    let debounceTimeout;
 
-    function handleInput() {
-        const newValue = searchEmpNameInput.value;
-        if (newValue === previousValue) return; // 중복 호출 방지
-        previousValue = newValue;
-
-        searchEmpName = newValue;
-        console.log("입력 중 값: ", searchEmpName);
-        fetchData(1); // 데이터를 새로고침
-        page = 1;
-    }
-
-    // focus 이벤트
-    searchEmpNameInput.addEventListener('focus', () => {
-        console.log("포커스 input에 있음");
-        searchEmpNameInput.addEventListener("input", handleInput);
-    });
-
-    // blur 이벤트
-    searchEmpNameInput.addEventListener('blur', () => {
-        console.log("blur 포커스 input에 없음");
-        searchEmpNameInput.removeEventListener("input", handleInput);
-    });
-
-    // let isFocused = false;
-    //
-    // // input 이벤트 핸들러 정의
-    // const handleInput = () => {
-    //     if (!isFocused) return;
-    //     searchEmpName = searchEmpNameInput.value;
-    //     console.log("입력 중 값: ", searchEmpName);
-    //     fetchData(1); // 데이터를 새로고침
-    //     page = 1
-    // };
-    //
-    // // 검색 이름 변경될 때마다 데이터 새로고침
-    // searchEmpNameInput.addEventListener('focus', () => {
-    //     isFocused = true;
-    //     console.log("포커스 input에 있음")
-    //     searchEmpNameInput.addEventListener("input",handleInput);
-    // });
-    //
-    // // 검색 이름 변경될 때마다 데이터 새로고침
-    // searchEmpNameInput.addEventListener('focusout', () => {
-    //     isFocused = false;
-    //     console.log("focusout 포커스 input에 없음")
-    //     searchEmpNameInput.removeEventListener("input",handleInput);
-    // });
-    //
-    // searchEmpNameInput.addEventListener('blur', () => {
-    //     isFocused = false;
-    //     console.log("blur 포커스 input에 없음")
-    //     searchEmpNameInput.removeEventListener("input",handleInput);
-    // });
+    searchEmpNameInput.addEventListener("input", (event) => {
+        clearTimeout(debounceTimeout); // 이전 타이머 취소
+        debounceTimeout = setTimeout(() => {
+            presentValue = event.target.value;
+            if (preValue !== presentValue) { // 이전 값과 다르면 fetch 실행
+                console.log(`Fetching data for: ${presentValue}`);
+                fetchData(1, presentValue);
+                preValue = presentValue;
+            }
+        }, 300); // fetch 실행
+    })
 
 
     selectedMenu.forEach(menu => {

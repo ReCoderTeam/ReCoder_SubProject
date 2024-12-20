@@ -83,13 +83,15 @@
     <insert id="voteResult" parameterType="com.ohgiraffers.refactorial.board.model.dto.VoteResultDTO">
         INSERT INTO tbl_vote_result (
         emp_id,
-        item_id
+        item_id,
+        post_id
         )
         VALUES
         <foreach collection="voteItemList" item="item" separator=",">
             (
             #{item.empId},
-            #{item.itemId}
+            #{item.itemId},
+            #{item.postId}
             )
         </foreach>
     </insert>
