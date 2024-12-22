@@ -13,6 +13,69 @@
   <link rel="stylesheet" href="/css/common/footer.css">
   <link rel="stylesheet" href="/css/common/style.css">
   <link rel="stylesheet" href="/css/booking/booking.css">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+    }
+
+    .sidebar {
+      width: 20%; /* 사이드바 너비 */
+      padding: 20px; /* 내부 여백 */
+      overflow-y: auto; /* 사이드바 내용이 넘칠 경우 스크롤 */
+      border-right: 1px solid black; /* 오른쪽 경계선 */
+    }
+
+    .sidebar-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: #000;
+      margin-bottom: 15px;
+      margin-top: 46px;
+      text-align: center;
+    }
+
+    .sidebar ul {
+      margin-top: 10px;
+      list-style: none;
+      padding: 0;
+      text-align: center;
+    }
+
+    .sidebar li {
+      position: relative;
+      padding: 10px 0;
+      cursor: pointer;
+    }
+
+    .sidebar li::after {
+      content: '';
+      display: block;
+      width: 35%;
+      height: 1px;
+      background-color: black;
+      margin: 5px auto 0;
+    }
+
+    .sidebar li:last-child::after {
+      display: none;
+    }
+
+    .sidebar li:hover {
+      font-family: 'Noto Sans KR', Arial, sans-serif;
+      color: #5C1915;
+      font-weight: 1000;
+    }
+  </style>
 
 </head>
 <body>

@@ -13,34 +13,56 @@
     <link rel="stylesheet" href="/css/mail/sendMail.css">
 </head>
 <body>
-<h1>메일 보내기</h1>
-
-<form action="#" th:action="@{/mail/sendMail}" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="senderEmpId" th:value="${session.LoginUserInfo.empId}"/>
-
-    <div>
-        <label for="emailTitle">메일 제목</label>
-        <input type="text" id="emailTitle" name="emailTitle" required/>
+<header th:replace="~{/common/header::headerFragment}"></header>
+<section>
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-title">사내 메일</div>
+        <ul>
+            <li th:onclick="|location.href='@{/user/mail}'|">전체 메일</li>
+            <li th:onclick="|location.href='@{/mail/sentMails}'|">보낸 메일</li>
+            <li th:onclick="|location.href='@{/mail/receivedMails}'|">받은 메일</li>
+            <li th:onclick="|location.href='@{/mail/mailBin}'|">휴지통</li>
+        </ul>
     </div>
 
-    <div>
-        <label for="emailContent">메일 내용</label>
-        <textarea id="emailContent" name="emailContent" required></textarea>
-    </div>
 
-    <div>
-        <label for="receiverEmpIds">수신자 사원번호</label>
-        <div id="selectedReceivers">
-            <!-- 선택된 수신자 목록이 여기에 표시됩니다. -->
-        </div>
-        <input type="hidden" id="receiverEmpIds" name="receiverEmpIds" required/>
-        <button type="button" data-toggle="modal" data-target="#searchItems">수신자 검색</button>
-    </div>
+    <div class="form-container">
+        <form id="sendMailForm" th:action="@{/mail/sendMail}" method="post">
 
-    <div>
-        <button type="submit">메일 보내기</button>
+            <div class="sendMail_topBox">
+
+                <!-- 제출 버튼 -->
+                <div class="button-group">
+                    <button type="submit" class="submit-btn">등 록</button>
+                </div>
+
+                <!-- 제목 -->
+                <div class="form-group">
+                    <label for="emailTitle">제목:</label>
+                    <input type="text" id="emailTitle" name="emailTitle">
+                </div>
+
+                <!-- 분류 -->
+                <div class="form-group">
+                    <label for="receiverEmpIds">수신자:</label>
+                    <div id="selectedReceivers">
+                        <!-- 선택된 수신자 목록이 여기에 표시됩니다. -->
+                    </div>
+                    <input type="hidden" id="receiverEmpIds" name="receiverEmpIds" required/>
+                    <button type="button" data-toggle="modal" data-target="#searchItems">수신자 검색</button>
+                </div>
+
+                <!-- 내용 -->
+                <div class="form-group content">
+                    <label for="emailContent">내용:</label>
+                    <textarea id="emailContent" name="emailContent"></textarea>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 
 <div class="modal fade" id="searchItems" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -69,6 +91,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script>
     const selectedEmployees = []; // 선택된 직원 목록
@@ -155,5 +179,8 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+</section>
+<footer th:replace="~{/common/footer::footerFragment}"></footer>
+
 </body>
 </html>
