@@ -43,7 +43,6 @@ public class BoardController {
         model.addAttribute("currentCategory", categoryCode);    // 게시판 사이드바에 값 전달
 
         return "/board/list";   // html 페이지로 이동
-
     }
 
     // 게시물 등록 페이지로 이동

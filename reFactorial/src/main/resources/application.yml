@@ -41,3 +41,6 @@ server:
         max-file-size: 100MB  # 업로드할 수 있는 단일 파일의 최대 크기
         max-request-size: 100MB  # 전체 요청 크기의 최대 크기
 
+
+weather:
+  api-key: e7056fa76f6a6b7d8be7d23179c66858

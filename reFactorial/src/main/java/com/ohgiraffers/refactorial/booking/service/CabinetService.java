@@ -21,4 +21,8 @@ public class CabinetService {
     public List<CabinetDTO> getAllCabinets() {
         return cabinetMapper.getAllCabinets();
     }
+
+    public CabinetDTO getCabinetInfo(String roomNo) {
+        return cabinetMapper.getCabinetInfo(roomNo);
+    }
 }

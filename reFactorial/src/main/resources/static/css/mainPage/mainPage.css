@@ -131,7 +131,71 @@ section{
             }
 
             .WeatherAPIBox{
-                border: solid 1px red;
+                border: solid 1px rgba(79, 79, 79, 40%);
+                box-shadow: 3px 3px 5px rgba(79, 79, 79, 40%);
+                border-radius: 10px;
+
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+
+                background-color: rgba(230,230,230,0.25);
+
+                .weatherImg,.weatherTemp {
+                    width: 100%;
+                    height: 100%;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: end;
+                }
+
+                .weatherImg img{
+                    height: 100%;
+                    aspect-ratio: 1 / 1;
+                }
+
+                .weatherTemp{
+                    display: flex;
+                    align-items: center;
+                    height: fit-content;
+                    justify-content: start;
+
+                    div:first-child{
+                        align-self: start;
+                        color: #023e8a;
+                        font-size: 1.5em;
+                        margin-right: 10px;
+
+                        span:last-child{
+                            border: solid 2.5px #023e8a;
+                        }
+                    }
+
+                    div:last-child{
+                        color: #d62828;
+                        font-size: 2em;
+
+                        span:last-child{
+                            border: solid 2.5px #d62828;
+                        }
+                    }
+
+                    div{
+                        display: flex;
+                        align-items: center;
+
+                        span{
+                            align-self: start;
+                            border-radius: 50%;
+                            display: inline-block;
+
+                            width: 5px;
+                            height: 5px;
+                        }
+                    }
+                }
+
             }
         }
 

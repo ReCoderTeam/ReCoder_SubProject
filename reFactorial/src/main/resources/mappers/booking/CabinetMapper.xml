@@ -12,9 +12,17 @@
         <result property="roomLocation" column="room_location"/>
     </resultMap>
 
-    <select id="getAllCabinets" resultType="com.ohgiraffers.refactorial.booking.model.dto.CabinetDTO" resultMap="CabinetResultMap">
+    <select id="getAllCabinets" resultMap="CabinetResultMap">
         select * from tbl_cabinet
     </select>
 
+    <select id="getCabinetInfo" parameterType="string" resultMap="CabinetResultMap">
+        SELECT
+            *
+        FROM
+            tbl_cabinet
+        WHERE
+            ConferenceRoom_no = #{roomNo}
+    </select>
 
 </mapper>

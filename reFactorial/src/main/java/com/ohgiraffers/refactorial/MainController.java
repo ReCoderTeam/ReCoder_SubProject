@@ -38,16 +38,15 @@ public class MainController {
     }
 
     
-    @GetMapping("/user/booking")
+    @GetMapping("/booking")
     public String showReservations(HttpSession session , Model model) {
 
-        List<ReservationDTO> allReservations = reservationService.getAllReservations();
-        model.addAttribute("allReservations", allReservations); // 전체 예약 정보 추가
-
+        // 회의실 목록 가져오기
         List<CabinetDTO> allCabinets = cabinetService.getAllCabinets();
+
         model.addAttribute("cabinets",allCabinets);
 
-        return "/booking/booking"; // 예약 페이지로 반환
+        return "/booking/booking";
     }
 
     @GetMapping("/user/inquiry")

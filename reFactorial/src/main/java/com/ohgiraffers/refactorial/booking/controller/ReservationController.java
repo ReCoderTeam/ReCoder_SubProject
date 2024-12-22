@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,14 +23,6 @@ public class ReservationController {
     @Autowired
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
-    }
-
-    // 회의실을 선택하여 예약 폼을 띄우는 메서드
-    @GetMapping("/bookingForm")
-    public String showBookingForm(@RequestParam("roomNo") String roomNo, Model model) {
-        // Ensure roomNo is passed correctly to the booking form page
-        model.addAttribute("roomNo", roomNo);
-        return "/booking/bookingForm";
     }
 
     @GetMapping("/booking/bookingList")

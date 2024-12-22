@@ -13,6 +13,7 @@
     <link rel="stylesheet" th:href="@{/css/common/header.css}">
     <link rel="stylesheet" th:href="@{/css/common/footer.css}">
     <link rel="stylesheet" th:href="@{/css/common/style.css}">
+<<<<<<< HEAD
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -21,93 +22,100 @@
             const endTimeSelect = document.getElementById('reservationEndTime');
             const reservationDateInput = document.getElementById('reservationDate');
             const roomNoInput = document.getElementById('conferenceRoomNo');
+=======
+<!--    <script>-->
+<!--        document.addEventListener('DOMContentLoaded', function () {-->
+<!--            const reservationForm = document.querySelector('.reserve-form');-->
+<!--            const startTimeSelect = document.getElementById('reservationStartTime');-->
+<!--            const endTimeSelect = document.getElementById('reservationEndTime');-->
+<!--            const reservationDateInput = document.getElementById('reservationDate');-->
+<!--            const roomNoInput = document.getElementById('conferenceRoomNo');-->
+>>>>>>> fc17f72011b0bd2ac600022d55ed9a38ae171afa
 
-            // 'roomNo'를 숨은 필드로 추가하여 폼 전송 시 함께 보내도록 함
-            const roomNoField = document.createElement('input');
-            roomNoField.type = 'hidden';
-            roomNoField.name = 'roomNo';
-            roomNoField.value = roomNoInput ? roomNoInput.value : '';
-            reservationForm.appendChild(roomNoField);
+<!--            // 'roomNo'를 숨은 필드로 추가하여 폼 전송 시 함께 보내도록 함-->
+<!--            const roomNoField = document.createElement('input');-->
+<!--            roomNoField.type = 'hidden';-->
+<!--            roomNoField.name = 'roomNo';-->
+<!--            roomNoField.value = roomNoInput ? roomNoInput.value : '';-->
+<!--            reservationForm.appendChild(roomNoField);-->
 
-            reservationForm.addEventListener('submit', async function (event) {
-                event.preventDefault();
+<!--            reservationForm.addEventListener('submit', async function (event) {-->
+<!--                event.preventDefault();-->
 
-                // Get input values
-                const startTime = startTimeSelect.value;
-                const endTime = endTimeSelect.value;
-                const reservationDate = reservationDateInput.value;
-                const roomNo = roomNoInput ? roomNoInput.value : null;
+<!--                // Get input values-->
+<!--                const startTime = startTimeSelect.value;-->
+<!--                const endTime = endTimeSelect.value;-->
+<!--                const reservationDate = reservationDateInput.value;-->
+<!--                const roomNo = roomNoInput ? roomNoInput.value : null;-->
 
-                // Validation
-                if (!roomNo) {
-                    alert('회의실 번호를 확인할 수 없습니다. 다시 시도해주세요.');
-                    return;
-                }
+<!--                // Validation-->
+<!--                if (!roomNo) {-->
+<!--                    alert('회의실 번호를 확인할 수 없습니다. 다시 시도해주세요.');-->
+<!--                    return;-->
+<!--                }-->
 
-                if (!reservationDate || !startTime || !endTime) {
-                    alert('모든 예약 정보를 입력해주세요.');
-                    return;
-                }
+<!--                if (!reservationDate || !startTime || !endTime) {-->
+<!--                    alert('모든 예약 정보를 입력해주세요.');-->
+<!--                    return;-->
+<!--                }-->
 
-                // Prevent start time equal to end time
-                if (startTime === endTime) {
-                    alert('시작 시간과 종료 시간이 같을 수 없습니다. 다른 종료 시간을 선택해 주세요.');
-                    return;
-                }
+<!--                // Prevent start time equal to end time-->
+<!--                if (startTime === endTime) {-->
+<!--                    alert('시작 시간과 종료 시간이 같을 수 없습니다. 다른 종료 시간을 선택해 주세요.');-->
+<!--                    return;-->
+<!--                }-->
 
-                // Convert time to comparable numbers (HH:MM format -> number)
-                const startTimeInMinutes = convertTimeToMinutes(startTime);
-                const endTimeInMinutes = convertTimeToMinutes(endTime);
+<!--                // Convert time to comparable numbers (HH:MM format -> number)-->
+<!--                const startTimeInMinutes = convertTimeToMinutes(startTime);-->
+<!--                const endTimeInMinutes = convertTimeToMinutes(endTime);-->
 
-                if (startTimeInMinutes >= endTimeInMinutes) {
-                    alert('종료 시간은 시작 시간 이후여야 합니다.');
-                    return;
-                }
+<!--                if (startTimeInMinutes >= endTimeInMinutes) {-->
+<!--                    alert('종료 시간은 시작 시간 이후여야 합니다.');-->
+<!--                    return;-->
+<!--                }-->
 
-                try {
-                    const response = await fetch('/api/reservations');
-
-
-                    if (!response.ok) {
-                        throw new Error(`API 호출 실패: ${response.statusText}`);
-                    }
-
-                    const existingReservations = await response.json();
-
-                    // Check for conflicts with existing reservations for the same room and date
-                    const isConflict = existingReservations.some(reservation => {
-                        return reservation.reservationDate === reservationDate &&
-                            reservation.roomNo === roomNo &&
-                            (
-                                (startTimeInMinutes >= convertTimeToMinutes(reservation.reservationStartTime) && startTimeInMinutes < convertTimeToMinutes(reservation.reservationEndTime)) ||
-                                (endTimeInMinutes > convertTimeToMinutes(reservation.reservationStartTime) && endTimeInMinutes <= convertTimeToMinutes(reservation.reservationEndTime)) ||
-                                (startTimeInMinutes <= convertTimeToMinutes(reservation.reservationStartTime) && endTimeInMinutes >= convertTimeToMinutes(reservation.reservationEndTime))
-                            );
-                    });
-
-                    if (isConflict) {
-                        // 리디렉션을 제대로 수행하려면 예약 폼이 아닌 예약 수정 폼으로 이동해야 하므로
-                        alert('선택한 날짜와 시간에 이미 예약이 존재합니다. 다른 시간을 선택해주세요.');
-                        window.location.href = `booking/bookingForm.html`;
-                        return;
-                    } else {
-                        reservationForm.submit(); // 예약이 충돌하지 않으면 폼 제출
-                    }
-                } catch (error) {
-                    console.error('오류 발생:', error);
-                    alert('예약 확인 중 문제가 발생했습니다');
-                }
-            });
-
-            // Helper function to convert time (HH:MM) to minutes
-            function convertTimeToMinutes(time) {
-                const [hours, minutes] = time.split(':').map(Number);
-                return hours * 60 + minutes;
-            }
-        });
-    </script>
+<!--                try {-->
+<!--                    const response = await fetch('/api/reservations');-->
 
 
+<!--                    if (!response.ok) {-->
+<!--                        throw new Error(`API 호출 실패: ${response.statusText}`);-->
+<!--                    }-->
+
+<!--                    const existingReservations = await response.json();-->
+
+<!--                    // Check for conflicts with existing reservations for the same room and date-->
+<!--                    const isConflict = existingReservations.some(reservation => {-->
+<!--                        return reservation.reservationDate === reservationDate &&-->
+<!--                            reservation.roomNo === roomNo &&-->
+<!--                            (-->
+<!--                                (startTimeInMinutes >= convertTimeToMinutes(reservation.reservationStartTime) && startTimeInMinutes < convertTimeToMinutes(reservation.reservationEndTime)) ||-->
+<!--                                (endTimeInMinutes > convertTimeToMinutes(reservation.reservationStartTime) && endTimeInMinutes <= convertTimeToMinutes(reservation.reservationEndTime)) ||-->
+<!--                                (startTimeInMinutes <= convertTimeToMinutes(reservation.reservationStartTime) && endTimeInMinutes >= convertTimeToMinutes(reservation.reservationEndTime))-->
+<!--                            );-->
+<!--                    });-->
+
+<!--                    if (isConflict) {-->
+<!--                        // 리디렉션을 제대로 수행하려면 예약 폼이 아닌 예약 수정 폼으로 이동해야 하므로-->
+<!--                        alert('선택한 날짜와 시간에 이미 예약이 존재합니다. 다른 시간을 선택해주세요.');-->
+<!--                        window.location.href = `booking/bookingForm.html`;-->
+<!--                        return;-->
+<!--                    } else {-->
+<!--                        reservationForm.submit(); // 예약이 충돌하지 않으면 폼 제출-->
+<!--                    }-->
+<!--                } catch (error) {-->
+<!--                    console.error('오류 발생:', error);-->
+<!--                    alert('예약 확인 중 문제가 발생했습니다');-->
+<!--                }-->
+<!--            });-->
+
+<!--            // Helper function to convert time (HH:MM) to minutes-->
+<!--            function convertTimeToMinutes(time) {-->
+<!--                const [hours, minutes] = time.split(':').map(Number);-->
+<!--                return hours * 60 + minutes;-->
+<!--            }-->
+<!--        });-->
+<!--    </script>-->
 
     <style>
         html, body {
@@ -203,151 +211,292 @@
             margin-top:2px;
         }
 
+        .main-content-wrap {
+            height: 80vh; /* 가상의 창 높이 설정 */
+            overflow-y: auto; /* 스크롤 가능 */
+            flex: 1; /* 남은 공간을 차지 */
+            padding: 20px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+        }
+
+        .room-img-content-flex {
+            display: flex;
+            align-items: flex-start;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px; /* 여백 추가 */
+            background-color: #f9f9f9; /* 배경색 추가 */
+        }
+
+        .room-img-content {
+            padding-left: 5px;
+            align-self: center;
+            margin-left: 20px;
+            margin-right: 20px; /* 오른쪽 여백 조정 */
+        }
+
+        .room-text-content {
+            flex: 1;
+            margin-bottom: 10px;
+        }
+
+        .room-img-content-flex img {
+            width: 200px; /* 이미지 너비 조정 */
+            height: auto; /* 자동 높이 */
+            border-radius: 8px;
+            display: block;
+        }
+
+        .room-img-content-flex div {
+            max-width: 55%; /* 텍스트 컨텐츠의 최대 너비 설정 */
+        }
+
+        .room-img-content-flex h3 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .room-img-content-flex p {
+            font-size: 16px;
+            color: #666;
+        }
+
     </style>
 
 </head>
 <body>
-<header th:replace="~{/common/header::headerFragment}"></header>
-<section>
-    <div class="container">
-        <div class="sidebar">
-            <div class="sidebar-title">회의실 목록</div>
-            <ul>
-                <li th:onclick="|location.href='@{/user/booking}'|">예약 하기</li>
-                <li th:onclick="|location.href='@{/booking/bookingList}'|">예약 내역</li>
-            </ul>
-        </div>
-
-        <div class="main-content-wrap">
-            <div class="main-content" id="roomList">
-                <!-- JavaScript 로 회의실 정보가 추가됩니다. -->
+    <header th:replace="~{/common/header::headerFragment}"></header>
+    <section>
+        <div class="container">
+            <div class="sidebar">
+                <div class="sidebar-title">회의실 목록</div>
+                <ul>
+                    <li th:onclick="|location.href='@{/user/booking}'|">예약 하기</li>
+                    <li th:onclick="|location.href='@{/booking/bookingList}'|">예약 내역</li>
+                </ul>
             </div>
 
-
-            <form action="/reserve" method="post" class="reserve-form">
-                <input type="hidden" id="conferenceRoomNo" name="conferenceRoomNo" th:value="${roomNo}">
-                <input type="hidden" name="empId" th:value="${session.LoginUserInfo.empId}">
-                <br>
-                <label for="reservationDate">예약날짜:</label>
-                <input type="date" id="reservationDate" name="reservationDate" required>
-                <br>
-                <label for="reservationStartTime">시작시간:</label>
-                <select id="reservationStartTime" name="reservationStartTime" required>
-                    <option value="10:00">10:00</option>
-                    <option value="11:00">11:00</option>
-                    <option value="12:00">12:00</option>
-                    <option value="13:00">13:00</option>
-                    <option value="14:00">14:00</option>
-                    <option value="15:00">15:00</option>
-                    <option value="16:00">16:00</option>
-                    <option value="17:00">17:00</option>
-                    <option value="18:00">18:00</option>
-                </select>
-                <br>
-                <label for="reservationEndTime">종료시간:</label>
-                <select id="reservationEndTime" name="reservationEndTime" required>
-                    <option value="10:00">10:00</option>
-                    <option value="11:00">11:00</option>
-                    <option value="12:00">12:00</option>
-                    <option value="13:00">13:00</option>
-                    <option value="14:00">14:00</option>
-                    <option value="15:00">15:00</option>
-                    <option value="16:00">16:00</option>
-                    <option value="17:00">17:00</option>
-                    <option value="18:00">18:00</option>
-                </select>
-                <br>
-                <button type="submit">예약</button>
-            </form>
-        </div>
-    </div>
-</section>
-<footer th:replace="~{/common/footer::footerFragment}"></footer>
-<script>
-    //  <div class="main-content" id="roomList"> 에 대한 정보를 가져오는 자바스크립트 코드
-    document.addEventListener('DOMContentLoaded', function () {
-        // URL에서 쿼리 파라미터 가져오기
-        const urlParams = new URLSearchParams(window.location.search);
-        const roomNo = urlParams.get('roomNo');
-
-        // 회의실 데이터 배열
-        const rooms = [
-            {
-                roomNo: 101,
-                name: "제 1 회의실",
-                location: "4F 홍보부 옆",
-                facilities: "화이트 보드, 빔 프로젝트",
-                imageUrl: "/images/회의실1.jpeg"
-            },
-            {
-                roomNo: 202,
-                name: "제 2 회의실",
-                location: "4F 홍보부 옆",
-                facilities: "화이트 보드, 빔 프로젝트",
-                imageUrl: "/images/회의실2.jpg"
-            },
-            {
-                roomNo: 403,
-                name: "제 3 회의실",
-                location: "4F 홍보부 옆",
-                facilities: "화이트 보드, 빔 프로젝트",
-                imageUrl: "/images/회의실3.jpg"
-            },
-            {
-                roomNo: 504,
-                name: "제 4 회의실",
-                location: "4F 홍보부 옆",
-                facilities: "화이트 보드, 빔 프로젝트",
-                imageUrl: "/images/회의실4.jpg"
-            },
-            {
-                roomNo: 805,
-                name: "제 5 회의실",
-                location: "4F 홍보부 옆",
-                facilities: "화이트 보드, 빔 프로젝트",
-                imageUrl: "/images/회의실5.jpg"
-            }
-        ];
-
-        // 해당 회의실 정보 찾기
-        const room = rooms.find(r => r.roomNo == roomNo);
-
-        // 회의실 정보가 존재하는 경우에만 표시
-        if (room) {
-            const roomListElement = document.getElementById('roomList');
-            roomListElement.innerHTML = `
+            <div class="main-content-wrap">
+                <div class="main-content" id="roomList">
+                    <!-- JavaScript 로 회의실 정보가 추가됩니다. -->
                     <div class="room-img-content-flex">
                         <div class="room-img-content">
-                            <img src="${room.imageUrl}" alt="${room.name}">
+                            <img th:src="|/images/${cabinet.conferenceRoomNo}.jpg|" alt="${room.name}">
                         </div>
                         <div class="room-text-content">
-                            <h3>${room.name}</h3>
-                            <p>위치 : ${room.location}</p>
-                            <p>구성 : ${room.facilities}</p>
+                            <h3 th:text="${cabinet.roomName}"></h3>
+                            <p th:text="|위치 : ${cabinet.roomLocation}|"></p>
+                            <p th:text="|구성 : ${cabinet.fixtures}|"></p>
                         </div>
                     </div>
-                `;
-            // 회의실 번호를 입력 폼에 설정
-            document.getElementById('conferenceRoomNo').value = room.roomNo;
-        } else {
-            // 회의실 정보가 없을 경우 메시지 표시
-            document.getElementById('roomList').innerHTML = '<p>선택한 회의실 정보가 없습니다.</p>';
-        }
-    });
-</script>
-<script>
-    //  <div class="main-content" id="roomList"> 에 대한 정보를 css로 꾸며주는 코드
-    document.addEventListener('DOMContentLoaded', function() {
-        // CSS 스타일을 담을 style 태그 생성
-        const style = document.createElement('style');
-        style.innerHTML = `
-                .main-content-wrap {
-                    height: 80vh; /* 가상의 창 높이 설정 */
-                    overflow-y: auto; /* 스크롤 가능 */
-                    flex: 1; /* 남은 공간을 차지 */
-                    padding: 20px;
-                }
+                </div>
 
+
+<!--                <form action="/reserve" method="post" class="reserve-form">-->
+<!--                    <input type="hidden" id="conferenceRoomNo" name="conferenceRoomNo" th:value="${roomNo}">-->
+<!--                    <input type="hidden" name="empId" th:value="${session.LoginUserInfo.empId}">-->
+<!--                    <br>-->
+<!--                    <label for="reservationDate">예약날짜:</label>-->
+<!--                    <input type="date" id="reservationDate" name="reservationDate" required>-->
+<!--                    <br>-->
+<!--                    <label for="reservationStartTime">시작시간:</label>-->
+<!--                    <select id="reservationStartTime" name="reservationStartTime" required>-->
+<!--                        <option value="10:00">10:00</option>-->
+<!--                        <option value="11:00">11:00</option>-->
+<!--                        <option value="12:00">12:00</option>-->
+<!--                        <option value="13:00">13:00</option>-->
+<!--                        <option value="14:00">14:00</option>-->
+<!--                        <option value="15:00">15:00</option>-->
+<!--                        <option value="16:00">16:00</option>-->
+<!--                        <option value="17:00">17:00</option>-->
+<!--                        <option value="18:00">18:00</option>-->
+<!--                    </select>-->
+<!--                    <br>-->
+<!--                    <label for="reservationEndTime">종료시간:</label>-->
+<!--                    <select id="reservationEndTime" name="reservationEndTime" required>-->
+<!--                        <option value="10:00">10:00</option>-->
+<!--                        <option value="11:00">11:00</option>-->
+<!--                        <option value="12:00">12:00</option>-->
+<!--                        <option value="13:00">13:00</option>-->
+<!--                        <option value="14:00">14:00</option>-->
+<!--                        <option value="15:00">15:00</option>-->
+<!--                        <option value="16:00">16:00</option>-->
+<!--                        <option value="17:00">17:00</option>-->
+<!--                        <option value="18:00">18:00</option>-->
+<!--                    </select>-->
+<!--                    <br>-->
+<!--                    <button type="submit">예약</button>-->
+<!--                </form>-->
+            </div>
+        </div>
+    </section>
+    <footer th:replace="~{/common/footer::footerFragment}"></footer>
+<!--    <script>-->
+<!--        //  <div class="main-content" id="roomList"> 에 대한 정보를 가져오는 자바스크립트 코드-->
+<!--        document.addEventListener('DOMContentLoaded', function () {-->
+<!--            // URL에서 쿼리 파라미터 가져오기-->
+<!--            const urlParams = new URLSearchParams(window.location.search);-->
+<!--            const roomNo = urlParams.get('roomNo');-->
+<!--    -->
+<!--            // 회의실 데이터 배열-->
+<!--            const rooms = [-->
+<!--                {-->
+<!--                    roomNo: 101,-->
+<!--                    name: "제 1 회의실",-->
+<!--                    location: "4F 홍보부 옆",-->
+<!--                    facilities: "화이트 보드, 빔 프로젝트",-->
+<!--                    imageUrl: "/images/회의실1.jpeg"-->
+<!--                },-->
+<!--                {-->
+<!--                    roomNo: 202,-->
+<!--                    name: "제 2 회의실",-->
+<!--                    location: "4F 홍보부 옆",-->
+<!--                    facilities: "화이트 보드, 빔 프로젝트",-->
+<!--                    imageUrl: "/images/회의실2.jpg"-->
+<!--                },-->
+<!--                {-->
+<!--                    roomNo: 403,-->
+<!--                    name: "제 3 회의실",-->
+<!--                    location: "4F 홍보부 옆",-->
+<!--                    facilities: "화이트 보드, 빔 프로젝트",-->
+<!--                    imageUrl: "/images/회의실3.jpg"-->
+<!--                },-->
+<!--                {-->
+<!--                    roomNo: 504,-->
+<!--                    name: "제 4 회의실",-->
+<!--                    location: "4F 홍보부 옆",-->
+<!--                    facilities: "화이트 보드, 빔 프로젝트",-->
+<!--                    imageUrl: "/images/회의실4.jpg"-->
+<!--                },-->
+<!--                {-->
+<!--                    roomNo: 805,-->
+<!--                    name: "제 5 회의실",-->
+<!--                    location: "4F 홍보부 옆",-->
+<!--                    facilities: "화이트 보드, 빔 프로젝트",-->
+<!--                    imageUrl: "/images/회의실5.jpg"-->
+<!--                }-->
+<!--            ];-->
+<!--    -->
+<!--            // 해당 회의실 정보 찾기-->
+<!--            const room = rooms.find(r => r.roomNo == roomNo);-->
+<!--    -->
+<!--            // 회의실 정보가 존재하는 경우에만 표시-->
+<!--            if (room) {-->
+<!--                const roomListElement = document.getElementById('roomList');-->
+<!--                roomListElement.innerHTML = `-->
+<!--                        <div class="room-img-content-flex">-->
+<!--                            <div class="room-img-content">-->
+<!--                                <img src="${room.imageUrl}" alt="${room.name}">-->
+<!--                            </div>-->
+<!--                            <div class="room-text-content">-->
+<!--                                <h3>${room.name}</h3>-->
+<!--                                <p>위치 : ${room.location}</p>-->
+<!--                                <p>구성 : ${room.facilities}</p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    `;-->
+<!--                // 회의실 번호를 입력 폼에 설정-->
+<!--                document.getElementById('conferenceRoomNo').value = room.roomNo;-->
+<!--            } else {-->
+<!--                // 회의실 정보가 없을 경우 메시지 표시-->
+<!--                document.getElementById('roomList').innerHTML = '<p>선택한 회의실 정보가 없습니다.</p>';-->
+<!--            }-->
+<!--        });-->
+<!--    </script>-->
+<!--    <script>-->
+<!--        //  <div class="main-content" id="roomList"> 에 대한 정보를 css로 꾸며주는 코드-->
+<!--        document.addEventListener('DOMContentLoaded', function() {-->
+<!--            // CSS 스타일을 담을 style 태그 생성-->
+<!--            const style = document.createElement('style');-->
+<!--            style.innerHTML = `-->
+<!--                    .main-content-wrap {-->
+<!--                        height: 80vh; /* 가상의 창 높이 설정 */-->
+<!--                        overflow-y: auto; /* 스크롤 가능 */-->
+<!--                        flex: 1; /* 남은 공간을 차지 */-->
+<!--                        padding: 20px;-->
+<!--                    }-->
+<!--    -->
+<!--                    .main-content {-->
+<!--                        display: flex;-->
+<!--                        flex-direction: column;-->
+<!--                        align-content: center;-->
+<!--                    }-->
+<!--    -->
+<!--                    .room-img-content-flex {-->
+<!--                        display: flex;-->
+<!--                        align-items: flex-start;-->
+<!--                        border: 1px solid #ccc;-->
+<!--                        border-radius: 8px;-->
+<!--                        padding: 10px;-->
+<!--                        margin-bottom: 20px; /* 여백 추가 */-->
+<!--                        background-color: #f9f9f9; /* 배경색 추가 */-->
+<!--                    }-->
+<!--    -->
+<!--                    .room-img-content {-->
+<!--                        padding-left: 5px;-->
+<!--                        align-self: center;-->
+<!--                        margin-left: 20px;-->
+<!--                        margin-right: 20px; /* 오른쪽 여백 조정 */-->
+<!--                    }-->
+<!--    -->
+<!--                    .room-text-content {-->
+<!--                        flex: 1;-->
+<!--                        margin-bottom: 10px;-->
+<!--                    }-->
+<!--    -->
+<!--                    .room-img-content-flex img {-->
+<!--                        width: 200px; /* 이미지 너비 조정 */-->
+<!--                        height: auto; /* 자동 높이 */-->
+<!--                        border-radius: 8px;-->
+<!--                        display: block;-->
+<!--                    }-->
+<!--    -->
+<!--                    .room-img-content-flex div {-->
+<!--                        max-width: 55%; /* 텍스트 컨텐츠의 최대 너비 설정 */-->
+<!--                    }-->
+<!--    -->
+<!--                    .room-img-content-flex h3 {-->
+<!--                        font-size: 24px;-->
+<!--                        color: #333;-->
+<!--                    }-->
+<!--    -->
+<!--                    .room-img-content-flex p {-->
+<!--                        font-size: 16px;-->
+<!--                        color: #666;-->
+<!--                    }-->
+<!--                `;-->
+<!--    -->
+<!--            // 생성한 스타일을 head에 추가-->
+<!--            document.head.appendChild(style);-->
+<!--        });-->
+<!--    </script>-->
+<!--    <script>-->
+<!--        // 오늘날짜 이후로 예약하는 자바스크립트 코드-->
+<!--        document.addEventListener('DOMContentLoaded', function() {-->
+<!--            const reservationDateInput = document.getElementById('reservationDate');-->
+<!--    -->
+<!--            // 오늘 날짜를 YYYY-MM-DD 형식으로 가져오기-->
+<!--            const today = new Date();-->
+<!--            const dd = String(today.getDate()).padStart(2, '0');-->
+<!--            const mm = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1-->
+<!--            const yyyy = today.getFullYear();-->
+<!--            const formattedToday = `${yyyy}-${mm}-${dd}`;-->
+<!--    -->
+<!--            // 예약 날짜 입력 필드의 최소값을 오늘 날짜로 설정-->
+<!--            reservationDateInput.setAttribute('min', formattedToday);-->
+<!--        });-->
+<!--    </script>-->
+
+<script>
+    const cabinet = '[[${cabinet}]]'
+
+<<<<<<< HEAD
                 .main-content {
                     display: flex;
                     flex-direction: column;
@@ -417,7 +566,10 @@
         // 예약 날짜 입력 필드의 최소값을 오늘 날짜로 설정
         reservationDateInput.setAttribute('min', formattedToday);
     });
+=======
+    console.log("cabinet",cabinet)
+>>>>>>> fc17f72011b0bd2ac600022d55ed9a38ae171afa
 </script>
 
-
-
+</body>
+</html>

@@ -41,7 +41,7 @@ public class SecurityConfig {
     private AuthService authService;
 
     @Bean
-    public SecurityFilterChain configureFillter(HttpSecurity http) throws Exception{
+    public SecurityFilterChain configureFilter(HttpSecurity http) throws Exception{
 
         http.authorizeHttpRequests(auth ->{
             // permitAll() : 허가 받지 않은 사용자들도 접근 할 수 있는 URL

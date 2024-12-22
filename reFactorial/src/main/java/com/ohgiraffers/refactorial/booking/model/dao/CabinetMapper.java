@@ -9,5 +9,6 @@ import java.util.List;
 public interface CabinetMapper {
 
     List<CabinetDTO> getAllCabinets();
-
+    
+    CabinetDTO getCabinetInfo(String roomNo);
 }

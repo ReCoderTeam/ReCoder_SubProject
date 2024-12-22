@@ -41,6 +41,30 @@ if (errorMsg) {
     })
 }
 
+// 입력 값 없이 로그인 시도 시에 막기
+const loginBoxForm = document.querySelector(".loginBox");
+const loginBtn = document.querySelector("#loginBtn")
+loginBtn.addEventListener("click",(e)=>{
+    e.preventDefault();
+
+    const inputIdValue = document.querySelector("#member_id").value
+    const inputPwdValue = document.querySelector("#member_pwd").value
+
+    if (inputIdValue.trim().length === 0 || inputPwdValue.trim().length === 0){
+        errorP.forEach(errorPtag => {
+            errorPtag.classList.add("error");
+            errorPtag.textContent = "입력 값을 넣어주세요";
+        })
+    } else {
+        errorP.forEach(errorPtag => {
+            loginBoxForm.submit();
+            errorPtag.classList.remove("error");
+            errorPtag.textContent = '';
+        })
+    }
+
+})
+
 // 사원번호 저장 관련 쿠기 존재여부 확인
 window.onload = function () {
     const savedMemberId = getCookie("member_id");
