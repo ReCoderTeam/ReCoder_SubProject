@@ -31,24 +31,23 @@
         VALUES (#{emailId}, #{receiverEmpId}, #{readStatus})
     </insert>
 
-    <!-- 내가 보낸 메일 조회 -->
     <select id="getSentMails" resultMap="MailResultMap">
-            SELECT
-            m.email_id,
-            m.email_title,
-            m.email_content,
-            m.sent_date,
-            m.trash_status,
-            m.sender_emp_id,
-            mr.receiver_emp_id
-            FROM
-            tbl_mail m
-            JOIN
-            tbl_mail_receivers mr ON m.email_id = mr.email_id
-            WHERE
-            m.sender_emp_id = #{senderEmpId} AND m.trash_status = 0
-            ORDER BY
-            m.sent_date DESC;
+        SELECT
+        m.email_id,
+        m.email_title,
+        m.email_content,
+        m.sent_date,
+        m.trash_status,
+        m.sender_emp_id,
+        mr.receiver_emp_id
+        FROM
+        tbl_mail m
+        JOIN
+        tbl_mail_receivers mr ON m.email_id = mr.email_id
+        WHERE
+        m.sender_emp_id = #{senderEmpId} AND m.trash_status = 0
+        ORDER BY
+        m.sent_date DESC;
     </select>
 
 

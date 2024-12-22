@@ -153,6 +153,16 @@
       <div class="table-cell">제목</div>
       <div class="table-cell">작성일</div>
     </div>
+
+    <div>
+      <div th:each="mail, stat : ${receivedMails}" style="display: flex; border-bottom: 1px solid gray; padding: 10px;">
+        <!-- 발신자 -->
+        <div style="width: 35%;" th:text="${mail.receiverEmpId}">수신자</div>
+        <!-- 제목 -->
+        <a style="width: 40%;" th:href="@{'/mail/detail'(emailId=${mail.emailId})}" th:text="${mail.emailTitle}">제목</a>
+        <!-- 날짜 -->
+        <div style="width: 30%;" th:text="${#temporals.format(mail.sentDate, 'yyyy-MM-dd')}">날짜</div>
+      </div>
   </div>
 </div>
 <!--  <h1>내가 보낸 메일</h1>-->
