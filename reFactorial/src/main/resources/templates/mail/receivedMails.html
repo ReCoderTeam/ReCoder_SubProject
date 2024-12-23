@@ -152,6 +152,23 @@
             <div class="table-cell">작성일</div>
         </div>
 
+        <table border="1">
+            <thead>
+            <tr>
+                <th>메일 제목</th>
+                <th>발송일</th>
+                <th>발신자</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mail : ${receivedMails}">
+                <td th:text="${mail.emailTitle}"></td>
+                <td th:text="${mail.sentDate}"></td>
+                <td th:text="${mail.senderEmpId}"></td>
+            </tr>
+            </tbody>
+        </table>
+
     <div>
         <div th:each="mail, stat : ${receivedMails}" style="display: flex; border-bottom: 1px solid gray; padding: 10px;">
             <!-- 수신자 -->
@@ -164,22 +181,6 @@
     </div>
     </div>
 </div>
-<table border="1">
-    <thead>
-    <tr>
-        <th>메일 제목</th>
-        <th>발송일</th>
-        <th>발신자</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="mail : ${receivedMails}">
-        <td th:text="${mail.emailTitle}"></td>
-        <td th:text="${mail.sentDate}"></td>
-        <td th:text="${mail.senderEmpId}"></td>
-    </tr>
-    </tbody>
-</table>
 </section>
 <footer th:replace="~{/common/footer::footerFragment}"></footer>
 </body>
