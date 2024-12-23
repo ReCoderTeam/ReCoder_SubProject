@@ -21,4 +21,6 @@ public interface MailMapper {
     // 내가 받은 메일 읽기
     List<MailDTO> getReceivedMails(String receiverEmpId);
 
+    // 수신자 가져오기
+    List<String> getReceiverEmpIds(String emailId);
 }

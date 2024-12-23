@@ -2,7 +2,8 @@ package com.ohgiraffers.refactorial.mail.model.dto;
 
 import lombok.*;
 
-import java.sql.Date;
+import java.util.Date;
+
 
 @NoArgsConstructor
 @AllArgsConstructor

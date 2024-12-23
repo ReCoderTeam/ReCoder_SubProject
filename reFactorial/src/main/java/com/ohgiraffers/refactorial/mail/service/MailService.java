@@ -59,12 +59,25 @@ public class MailService {
     public List<MailDTO> getSentMails(String senderEmpId) {
         List<MailDTO> sentMails = mailMapper.getSentMails(senderEmpId);
 
+        // 각 메일에 대한 수신자 정보 추가
+        for (MailDTO mailDTO : sentMails) {
+            List<String> receiverEmpIds = mailMapper.getReceiverEmpIds(mailDTO.getEmailId());
+            mailDTO.setReceiverEmpIds(receiverEmpIds);
+        }
+
         return sentMails;
     }
 
     // 내가 받은 메일
     public List<MailDTO> getReceivedMails(String receiverEmpId) {
         List<MailDTO> receivedMails = mailMapper.getReceivedMails(receiverEmpId);
+
+        // 각 메일에 대한 수신자 정보 추가
+        for (MailDTO mailDTO : receivedMails) {
+            List<String> receiverEmpIds = mailMapper.getReceiverEmpIds(mailDTO.getEmailId());
+            mailDTO.setReceiverEmpIds(receiverEmpIds);
+        }
+
         return receivedMails;
     }
 }

@@ -84,4 +84,10 @@ public class MailController {
 
         return "/mail/receivedMails";
     }
+
+    // 메일 상세 페이지
+    @GetMapping("/mailDetail")
+    public String mailDetail(Model model) {
+        return "/mail/mailDetail";
+    }
 }

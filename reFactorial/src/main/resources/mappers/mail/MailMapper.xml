@@ -31,33 +31,26 @@
         VALUES (#{emailId}, #{receiverEmpId}, #{readStatus})
     </insert>
 
+    <!--내가 보낸 메일-->
     <select id="getSentMails" resultMap="MailResultMap">
-        SELECT
-        m.email_id,
-        m.email_title,
-        m.email_content,
-        m.sent_date,
-        m.trash_status,
-        m.sender_emp_id,
-        mr.receiver_emp_id
-        FROM
-        tbl_mail m
-        JOIN
-        tbl_mail_receivers mr ON m.email_id = mr.email_id
-        WHERE
-        m.sender_emp_id = #{senderEmpId} AND m.trash_status = 0
-        ORDER BY
-        m.sent_date DESC;
+        SELECT *
+        FROM tbl_mail
+        WHERE sender_emp_id = #{senderEmpId}
     </select>
 
-
-    <!-- 내가 받은 메일 조회 -->
+    <!--내가 받은 메일-->
     <select id="getReceivedMails" resultMap="MailResultMap">
-        SELECT
-        *
-        FROM tbl_mail m JOIN tbl_mail_receivers mr on m.email_id = m.email_id
-        WHERE mr.receiver_emp_id = #{receiverEmpId} AND m.trash_status = 0
-        ORDER BY m.sent_date DESC;
+        SELECT *
+        FROM tbl_mail m
+        INNER JOIN tbl_mail_receivers mr ON m.email_id = mr.email_id
+        WHERE mr.receiver_emp_id = #{receiverEmpId}
+    </select>
+
+    <!-- 내가 보낸 메일의 수신자 사원 ID 가져오기 -->
+    <select id="getReceiverEmpIds" resultType="java.lang.String">
+        SELECT receiver_emp_id
+        FROM tbl_mail_receivers
+        WHERE email_id = #{emailId}
     </select>
 
 
