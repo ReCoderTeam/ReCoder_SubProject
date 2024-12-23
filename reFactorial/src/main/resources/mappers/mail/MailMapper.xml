@@ -35,7 +35,7 @@
     <select id="getSentMails" resultMap="MailResultMap">
         SELECT *
         FROM tbl_mail
-        WHERE sender_emp_id = #{senderEmpId}
+        WHERE sender_emp_id = #{senderEmpId} AND trash_status = 0
     </select>
 
     <!--내가 받은 메일-->
@@ -43,7 +43,7 @@
         SELECT *
         FROM tbl_mail m
         INNER JOIN tbl_mail_receivers mr ON m.email_id = mr.email_id
-        WHERE mr.receiver_emp_id = #{receiverEmpId}
+        WHERE mr.receiver_emp_id = #{receiverEmpId}  AND trash_status = 0
     </select>
 
     <!-- 내가 보낸 메일의 수신자 사원 ID 가져오기 -->
@@ -53,5 +53,25 @@
         WHERE email_id = #{emailId}
     </select>
 
+    <!-- 메일의 상세 페이지 -->
+    <select id="getMailDetail" resultMap="MailResultMap">
+        SELECT *
+        FROM tbl_mail
+        WHERE email_id = #{emailId} AND trash_status = 0
+    </select>
+
+    <!-- 받은 메일의 휴지통 -->
+    <select id="getReceivedMailsBin" resultMap="MailResultMap">
+        SELECT *
+        FROM tbl_mail m
+        INNER JOIN tbl_mail_receivers mr ON m.email_id = mr.email_id
+        WHERE mr.receiver_emp_id = #{receiverEmpId}  AND trash_status = 1
+    </select>
+    <!-- 보낸 메일의 휴지통 -->
+    <select id="" resultMap="MailResultMap">
+        SELECT *
+        FROM tbl_mail
+        WHERE sender_emp_id = #{senderEmpId} AND trash_status = 1
+    </select>
 
 </mapper>

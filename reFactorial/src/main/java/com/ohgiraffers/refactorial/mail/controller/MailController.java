@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -17,7 +18,6 @@ import java.util.List;
 public class MailController {
 
     private MailService mailService;
-
 
     @Autowired
     public MailController(MailService mailService) {
@@ -86,8 +86,58 @@ public class MailController {
     }
 
     // 메일 상세 페이지
-    @GetMapping("/mailDetail")
-    public String mailDetail(Model model) {
+    @GetMapping("/detail")
+    public String mailDetail(@RequestParam("emailId") String emailId, Model model) {
+        MailDTO mailDetail = mailService.getMailDetail(emailId);
+        model.addAttribute("mailDetail", mailDetail);
         return "/mail/mailDetail";
+    }
+
+    // 답신 페이지로 이동
+    @GetMapping("/reply")
+    public String showReplyPage(@RequestParam("emailId") String emailId, Model model) {
+        MailDTO originalMail = mailService.getMailDetail(emailId);
+
+        if (originalMail == null) {
+            throw new IllegalArgumentException("해당 이메일이 존재하지 않습니다.");
+        }
+
+        model.addAttribute("originalMail", originalMail);
+        return "/mail/replyMail"; // 템플릿 경로 확인
+    }
+
+    // 메일 답신
+    @PostMapping("/reply")
+    public String replyMail(@ModelAttribute MailDTO mailDTO, HttpSession session) {
+        // 로그인 유저 가져오기
+        LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
+
+        // 발신자 정보 설정 (로그인한 사용자)
+        mailDTO.setSenderEmpId(loginUser.getEmpId());
+
+        // 수신자 설정 (원본 메일의 발신자가 수신자가 됨)
+        String receiverEmpId = mailDTO.getReceiverEmpIds().get(0); // 원본 메일의 발신자를 수신자로 설정
+        mailDTO.setReceiverEmpIds(Arrays.asList(receiverEmpId));
+
+        // 메일 서비스 호출 (답신 메일 보내기)
+        mailService.sendMail(mailDTO);
+
+        return "redirect:/mail/sentMails"; // 답신 후 보낸 메일 목록으로 리디렉션
+    }
+
+    // 휴지통 보기
+    @GetMapping("/mailBin")
+    public String viewMailBin(Model model, HttpSession session) {
+        LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
+        String receiverEmpIds = loginUser.getEmpId();
+        String senderEmpId = loginUser.getEmpId();
+
+        List<MailDTO> receivedMailsBin = mailService.getReceivedMailsBin(receiverEmpIds);
+        model.addAttribute("receivedMailsBin", receivedMailsBin);
+
+        List<MailDTO> sentMailsBin = mailService.getSentMailsBin(senderEmpId);
+        model.addAttribute("sentMailsBin", sentMailsBin);
+
+        return "/mail/mailBin";
     }
 }

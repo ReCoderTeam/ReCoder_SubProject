@@ -80,4 +80,17 @@ public class MailService {
 
         return receivedMails;
     }
+
+
+    public List<MailDTO> getReceivedMailsBin(String receiverEmpIds) {
+        return mailMapper.getReceivedMailsBin(receiverEmpIds);
+    }
+
+    public List<MailDTO> getSentMailsBin(String senderEmpId) {
+        return mailMapper.getSentMailsBin(senderEmpId);
+    }
+
+    public MailDTO getMailDetail(String emailId) {
+        return mailMapper.getMailDetail(emailId);
+    }
 }

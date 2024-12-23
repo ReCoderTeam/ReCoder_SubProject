@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>replyMail</title>
+  <!--폰트 적용-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/common/header.css">
+  <link rel="stylesheet" href="/css/common/footer.css">
+  <link rel="stylesheet" href="/css/common/style.css">
+
+</head>
+<body>
+<header th:replace="~{/common/header::headerFragment}"></header>
+<section>
+  <div class="container">
+    <form id="replyMailForm" th:action="@{/mail/reply}" method="post">
+      <div class="form-group">
+        <label for="emailTitle">제목:</label>
+        <input type="text" id="emailTitle" name="emailTitle" th:value="'Re: ' + ${originalMail.emailTitle}" required/>
+      </div>
+      <div class="form-group">
+        <label for="receiverEmpIds">수신자:</label>
+        <input type="text" id="receiverEmpIds" name="receiverEmpIds"
+               th:value="${originalMail != null ? originalMail.senderEmpId : ''}" readonly/>
+      </div>
+      <div class="form-group">
+        <label for="emailContent">내용:</label>
+        <textarea id="emailContent" name="emailContent" required></textarea>
+        <p>---------------------- Original Message ----------------------</p>
+        <p th:text="${originalMail.emailContent}"></p> <!-- 원본 메일 내용 -->
+      </div>
+      <div class="button-group">
+        <button type="submit">답신 보내기</button>
+      </div>
+    </form>
+  </div>
+</section>
+<footer th:replace="~{/common/footer::footerFragment}"></footer>
+</body>
+</html>

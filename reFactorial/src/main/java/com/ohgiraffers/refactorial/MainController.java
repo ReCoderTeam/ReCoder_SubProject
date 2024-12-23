@@ -4,6 +4,8 @@ import com.ohgiraffers.refactorial.booking.model.dto.CabinetDTO;
 import com.ohgiraffers.refactorial.booking.model.dto.ReservationDTO;
 import com.ohgiraffers.refactorial.booking.service.CabinetService;
 import com.ohgiraffers.refactorial.booking.service.ReservationService;
+import com.ohgiraffers.refactorial.mail.model.dto.MailDTO;
+import com.ohgiraffers.refactorial.mail.service.MailService;
 import com.ohgiraffers.refactorial.user.model.dto.LoginUserDTO;
 import com.ohgiraffers.refactorial.user.model.dto.UserDTO;
 import com.ohgiraffers.refactorial.user.model.service.MemberService;
@@ -22,6 +24,8 @@ public class MainController {
     private MemberService memberService;
     @Autowired
     private CabinetService cabinetService;
+    @Autowired
+    private MailService mailService;
 
 
     @GetMapping("/")
@@ -97,7 +101,16 @@ public class MainController {
     }
 
     @GetMapping("/user/mail")
-    public String mailPage(){
+    public String mailPage(Model model , HttpSession session){
+        LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
+        String receiverEmpIds = loginUser.getEmpId();
+        String senderEmpId = loginUser.getEmpId();
+
+        List<MailDTO> receivedMails = mailService.getReceivedMails(receiverEmpIds);
+        model.addAttribute("receivedMails", receivedMails);
+
+        List<MailDTO> sentMails = mailService.getSentMails(senderEmpId);
+        model.addAttribute("sentMails", sentMails);
         return "/mail/mailMain";
     }
 

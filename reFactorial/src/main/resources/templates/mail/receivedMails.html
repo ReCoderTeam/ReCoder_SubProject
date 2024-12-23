@@ -42,12 +42,13 @@
             <div class="table-cell">작성일</div>
         </div>
 
+        <!-- Table Body -->
         <div>
             <div th:each="mails : ${receivedMails}" style="display: flex; border-bottom: 1px solid gray; padding: 10px;">
                 <!-- 수신자 -->
                 <div style="width: 35%;" th:text="${mails.senderEmpId}">수신자</div>
                 <!-- 제목 -->
-                <a style="width: 40%;" th:href="@{'/mail/mailDetail'(emailId=${mails.emailId})}" th:text="${mails.emailTitle}">제목</a>
+                <a style="width: 40%;" th:href="@{'/mail/detail?emailId=' + ${mails.emailId}}" th:text="${mails.emailTitle}">제목</a>
                 <!-- 날짜 -->
                 <div style="width: 30%;" th:text="${#dates.format(mails.sentDate, 'yyyy-MM-dd')}">날짜</div>
             </div>

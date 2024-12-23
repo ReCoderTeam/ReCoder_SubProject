@@ -3,6 +3,7 @@ package com.ohgiraffers.refactorial.mail.model.dao;
 import com.ohgiraffers.refactorial.mail.model.dto.MailDTO;
 import com.ohgiraffers.refactorial.mail.model.dto.MailReceiverDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,4 +24,11 @@ public interface MailMapper {
 
     // 수신자 가져오기
     List<String> getReceiverEmpIds(String emailId);
+
+    // 상세페이지
+    MailDTO getMailDetail(String emailId);
+
+    // 휴지통 불러오기
+    List<MailDTO> getReceivedMailsBin(String receiverEmpIds);
+    List<MailDTO> getSentMailsBin(String senderEmpId);
 }

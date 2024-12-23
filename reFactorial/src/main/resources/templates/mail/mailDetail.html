@@ -4,8 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>mailDetail</title>
-</head>
-<body>
+    <!--폰트 적용-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="/css/common/header.css">
+    <link rel="stylesheet" href="/css/common/footer.css">
+    <link rel="stylesheet" href="/css/common/style.css">
+    <link rel="stylesheet" href="/css/mail/mailDetail.css">
+
+</head>
+
+<body>
+<header th:replace="~{/common/header::headerFragment}"></header>
+<section>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-title">사내 메일</div>
+            <ul>
+                <li th:onclick="|location.href='@{/user/mail}'|">전체 메일</li>
+                <li th:onclick="|location.href='@{/mail/sentMails}'|">보낸 메일</li>
+                <li th:onclick="|location.href='@{/mail/receivedMails}'|">받은 메일</li>
+                <li th:onclick="|location.href='@{/mail/mailBin}'|">휴지통</li>
+            </ul>
+        </div>
+
+        <div class="top-bar">
+            <button type="button" th:onclick="|location.href='@{/mail/reply(emailId=${mailDetail.emailId})}'|">
+                답신 하기
+            </button>
+            <button type="button" onclick="deleteMail('${mailDetail.emailId}')">삭제하기</button>
+        </div>
+
+        <script>
+            function deleteMail(emailId) {
+                fetch('/mail/deleteMail?emailId=' + emailId, {
+                    method: 'POST',
+                }).then(() => {
+                    location.href = '/mail/receivedMails'; // 받은 메일 목록으로 이동
+                });
+            }
+        </script>
+
+        <!-- Mail Detail Section -->
+        <div class="mail-detail">
+            <h2 th:text="${mailDetail.emailTitle}"></h2>  <!-- 이메일 제목 -->
+            <div class="mail-meta">
+                <span>보낸사람: <span th:text="${mailDetail.senderEmpId}"></span></span> <!-- 발신자 -->
+                <span>보낸 날짜: <span th:text="${#dates.format(mailDetail.sentDate, 'yyyy-MM-dd')}"></span></span> <!-- 발송 날짜 -->
+            </div>
+            <div class="mail-content">
+                <p th:text="${mailDetail.emailContent}"></p> <!-- 메일 내용 -->
+            </div>
+        </div>
+    </div>
+</section>
+<footer th:replace="~{/common/footer::footerFragment}"></footer>
 </body>
 </html>
