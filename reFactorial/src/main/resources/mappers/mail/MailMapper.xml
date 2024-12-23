@@ -68,7 +68,7 @@
         WHERE mr.receiver_emp_id = #{receiverEmpId}  AND trash_status = 1
     </select>
     <!-- 보낸 메일의 휴지통 -->
-    <select id="" resultMap="MailResultMap">
+    <select id="getSentMailsBin" resultMap="MailResultMap">
         SELECT *
         FROM tbl_mail
         WHERE sender_emp_id = #{senderEmpId} AND trash_status = 1
