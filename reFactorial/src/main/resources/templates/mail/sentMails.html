@@ -155,9 +155,9 @@
     </div>
 
     <div>
-      <div th:each="mail, stat : ${receivedMails}" style="display: flex; border-bottom: 1px solid gray; padding: 10px;">
+      <div th:each="mail : ${sentMails}" style="display: flex; border-bottom: 1px solid gray; padding: 10px;">
         <!-- 발신자 -->
-        <div style="width: 35%;" th:text="${mail.receiverEmpId}">수신자</div>
+        <div style="width: 35%;" th:text="${mail.receiverEmpId}">발신자</div>
         <!-- 제목 -->
         <a style="width: 40%;" th:href="@{'/mail/detail'(emailId=${mail.emailId})}" th:text="${mail.emailTitle}">제목</a>
         <!-- 날짜 -->
@@ -165,23 +165,6 @@
       </div>
   </div>
 </div>
-<!--  <h1>내가 보낸 메일</h1>-->
-<!--    <table border="1">-->
-<!--      <thead>-->
-<!--      <tr>-->
-<!--        <th>메일 제목</th>-->
-<!--        <th>발송일</th>-->
-<!--        <th>수신자</th>-->
-<!--      </tr>-->
-<!--      </thead>-->
-<!--      <tbody>-->
-<!--      <tr th:each="mail : ${sentMails}">-->
-<!--        <td th:text="${mail.emailTitle}"></td>-->
-<!--        <td th:text="${mail.sentDate}"></td>-->
-<!--        <td th:text="${mail.receiverEmpId}"></td>-->
-<!--      </tr>-->
-<!--      </tbody>-->
-<!--</table>-->
 </div>
 </section>
 <footer th:replace="~{/common/footer::footerFragment}"></footer>
