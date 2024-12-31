@@ -42,5 +42,10 @@ public interface MailMapper {
     // 휴지통으로 이동하기
     void updateTrashStatus(Map<String, Object> params);
 
+
+    int getTotalSendMailDocuments(String empId);
+
+    List<MailDTO> getSendMailDocuments(Map<String, Object> params);
+
     MailDTO getReplyMailDetail(String emailId);
 }

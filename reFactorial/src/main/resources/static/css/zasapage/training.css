@@ -88,7 +88,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /*max-height: calc(100vh - 235px);  !* ⭐ 오른쪽숫자가 커질수록 메인컨텐츠 하단부분이 위로올라감*!*/
+    max-height: calc(100vh - 235px);  /* ⭐ 오른쪽숫자가 커질수록 메인컨텐츠 하단부분이 위로올라감*/
 }
 
 .quiz-card {
@@ -229,7 +229,13 @@ html, body {
     height: auto; /* 비율 유지 */
     object-fit: cover; /* 이미지가 잘릴 경우 적절히 표시 */
     transform: rotate(315deg); /* 45도 회전 */
+    transition: transform 0.3s ease, scale 0.3s ease; /* 부드러운 확대/축소 효과 추가 */
 
+}
+
+.oompa-loompa:hover img {
+    scale: 1.1; /* 호버 시 10% 확대 */
+    transform: rotate(315deg); /* 회전각도 그대로 유지 */
 }
 
 .oompa-loompa-character {

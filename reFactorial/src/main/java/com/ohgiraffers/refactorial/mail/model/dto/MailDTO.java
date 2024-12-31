@@ -30,6 +30,7 @@ public class MailDTO {
 
     private List<MultipartFile> mailfile;
     private List<String> mailfileNames;  // 파일명만 저장하는 리스트
+    private int rowNum;
 
 }
 

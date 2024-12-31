@@ -151,6 +151,31 @@ public class MailService {
         return mailMapper.getReceiverEmpIds(emailId);
     }
 
+
+    public List<MailDTO> getSendMailDocuments(String empId, int limit, int offset,int currentPage) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("empId", empId);
+        params.put("limit", limit);
+        params.put("offset", offset);
+
+        List<MailDTO> documents = mailMapper.getSendMailDocuments(params);
+
+        int totalDocuments = mailMapper.getTotalSendMailDocuments(empId);
+        int totalPages = (int) Math.ceil((double) totalDocuments / limit);
+
+        int startNumber = (totalPages - currentPage) * limit + 1;
+        for (int i = 0; i < documents.size(); i++) {
+            documents.get(i).setRowNum(startNumber + (documents.size() - 1 - i));
+        }
+
+        return documents;
+    }
+
+
+    public int getTotalSendMailDocuments(String empId) {
+        return mailMapper.getTotalSendMailDocuments(empId);
+    }
+
     public MailDTO getReplyMailDetail(String emailId) {
         return mailMapper.getReplyMailDetail(emailId);
     }

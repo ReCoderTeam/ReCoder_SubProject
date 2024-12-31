@@ -218,6 +218,7 @@
             pm.pm_create AS createDate,
             pm.pm_category AS category,
             MAX(ap.pm_status) AS status,
+            pm.emp_id AS creator,
             pm.pm_attachment AS attachment,
             emp.emp_name AS creatorName, -- 작성자 이름
             pm.leave_type AS leaveType,

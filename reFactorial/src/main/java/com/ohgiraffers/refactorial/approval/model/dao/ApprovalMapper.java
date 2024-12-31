@@ -48,13 +48,7 @@ public interface ApprovalMapper {
     // 파일
     FileDTO findFilesByPmId(String pmId);
 
-    void insertFile(FileDTO file);
 
-    void deleteFileByFileId(int fileId);
-
-    FileDTO findFileByFileId(int fileId);
-
-    FileDTO findFileByFileName(String fileName);
 
     List<DocumentDTO> getWaitingDocuments(Map<String, Object> params);
 
@@ -63,7 +57,7 @@ public interface ApprovalMapper {
 
 
 
-    List<String> getAllApprovalStatuses(@Param("pmId") String pmId);
+
 
     Integer getApprovalOrder(@Param("pmId") String pmId,
                              @Param("empId") String empId);

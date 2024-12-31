@@ -40,7 +40,7 @@ public class BoardController {
 //        LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");   // 로그인한 유저 정보를 가져옴
 
         // 페이지네이션
-        int limit = 10; // 한 페이지당 문서 수
+        int limit = 15; // 한 페이지당 문서 수
         int totalBoardList = boardService.getBoardListCount(categoryCode); // 전체 게시글 개수 가져오기
         int totalPages = totalBoardList > 0 ? (int) Math.ceil((double) totalBoardList / limit) : 1; // 총 페이지 수
 
@@ -373,13 +373,40 @@ public class BoardController {
     // 댓글 삭제
     @GetMapping("commentDelete")
     @ResponseBody   // 화면 이동이 아닌 데이터만 넘겨주기 위해 사용
-    public List<CommentDTO> commentDelete(@RequestParam int commentId, @RequestParam String postId) {
+    public List<CommentDTO> commentDelete(@RequestParam int commentId, @RequestParam String postId, HttpSession session) {
 
         // 댓글을 삭제하는 기능
         boardService.commentDelete(commentId);
 
+        // 댓글 리스트 가져옴
+        List<CommentDTO> commentList = boardService.commentView(postId);
+
+        LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");
+
+        // 좋아요 카운트
+        for (int i = 0; i < commentList.size(); i++) {
+
+            CommentDTO commentDTO = commentList.get(i);
+            commentDTO.setLoginUserEmpId(user.getEmpId());
+            int commentLikesCount = boardService.commentLikesCount(commentDTO);
+
+            // DTO 에서 좋아요 갯수를 카운트함
+            commentDTO.setLikeCount(commentLikesCount);
+
+            // 본인 투표여부
+            int isMyLike = boardService.isMyLike(commentDTO);
+
+            // 만약 좋아요를 눌렀으면 true, 아니면 false
+            if (isMyLike > 0) {
+                commentDTO.setMyLike(true);
+            } else {
+                commentDTO.setMyLike(false);
+            }
+
+        }
+
         // 화면에 댓글 리스트 형태로 가져옴
-        return boardService.commentView(postId);
+        return commentList;
     }
 
     //  좋아요 조회

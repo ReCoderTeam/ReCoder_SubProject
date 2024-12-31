@@ -149,7 +149,7 @@
                                 <div class="commentWriter" th:text="${comment.empName}">등록자</div>
                                 <div class="commentContent" th:text="${comment.commentContent}">댓글 내용</div>
 
-                                <!-- 좋아요 -->
+                                <!-- 좋아요(추천수) -->
                                 <form class="commentLike" action="/board/commentLikesInsert" method="post">
                                     <button type="submit">
 <!--                                        <img th:if="${comment.likeCount} == 0" src="../../static/images/heart-regular.svg"/>-->
@@ -260,23 +260,37 @@
         const commentId = confirmDeleteBtn.getAttribute('data-comment-id');
         const postId = confirmDeleteBtn.getAttribute('data-post-id');
 
-
         // 서버로 삭제 요청
-        fetch(`http://localhost:8080/board/commentDelete?commentId=${commentId}&postId=${postId}`)
+        fetch(`/board/commentDelete?commentId=${commentId}&postId=${postId}`)
             .then((response) => response.json())
             .then((data) => {
 
-                const commentListArea = document.querySelector('#comment-list');
+                const commentListArea = document.querySelector('.comment-item-box');
                 let commentList = '';
                 let empId = document.querySelector('#empId').value;
 
+                console.log(data)
+
                 // 새로운 댓글 리스트를 생성
                 data.forEach((item) => {
+                    const date = new Date(item.commentCreationDate);
+
+                    date.setDate(date.getDate() + 1);  // 현재 날짜에 하루를 추가(날짜를 삭제하면 하루가 줄어들어서 기능 추가)
+
+                    const formattedDate = date.toISOString().slice(0, 10); // "YYYY-MM-DD"
+
                     commentList += `
-                    <div style="display: flex; border-bottom: 1px solid gray; padding: 10px;">
-                        <div style='width: 35%;'>${item.empName}</div>
-                        <div style='width: 30%;'>${item.commentContent}</div>
-                        <div style='width: 30%;'>${item.commentCreationDate}</div>
+
+                    <div class="comment-item">
+                        <div class="commentWriter">${item.empName}</div>
+                        <div class="commentContent">${item.commentContent}</div>
+                        <div class="commentLike">
+                               <button type="submit">
+                                    <img src="${item.myLike ? '/images/full-heart-solid.svg' : '/images/heart-regular.svg'}" />
+                                    <div>${item.likeCount}</div>
+                                </button>
+                        </div>
+                        <div class="commentDate">${formattedDate}</div>
                     `
                     if(empId === item.empId) {
                         commentList += `
@@ -287,6 +301,7 @@
                         `
                     }
     commentList += `</div>`;
+
                 });
 
                 // 댓글 리스트 업데이트

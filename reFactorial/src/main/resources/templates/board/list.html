@@ -43,7 +43,7 @@
                 <!-- 유저일 시 공지,이벤트 게시판 등록버튼 숨김 / 관리자는 모두 나옴 -->
                 <th:block th:if="${LoginUserInfo != null and (categoryCode == 2 or categoryCode == 3 or categoryCode == 4)
                 and LoginUserInfo.viewAuth.getRole() == 'USER' or
-                LoginUserInfo.viewAuth.getRole() == 'ADMIN'}">
+                LoginUserInfo.viewAuth.getRole() == ''}">
                     <button type="button" th:onclick="|location.href='@{freeBoardRegist(categoryCode=${categoryCode})}'|">
                         등 록
                     </button>

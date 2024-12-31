@@ -597,7 +597,6 @@
          * 연차/반차 처리 메서드
          */
         private void processLeaveIfApplicable(String pmId, String empId) {
-
             DocumentDTO document = approvalService.getDocumentById(pmId);
 
             if (document != null) {
@@ -605,30 +604,31 @@
                 LocalDate leaveDate = document.getLeaveDate();
                 BigDecimal deduction = BigDecimal.ZERO;
 
-
+                // 문서 작성자(결제 신청자) ID 가져오기
+                String creatorId = document.getCreator();
 
                 if ("연차".equals(leaveType)) {
                     deduction = BigDecimal.ONE; // 연차는 -1
-
                 } else if ("반차".equals(leaveType)) {
                     deduction = new BigDecimal("0.5"); // 반차는 -0.5
-
                 }
 
                 if (deduction.compareTo(BigDecimal.ZERO) > 0) {
-                    LoginUserDTO user = userMapper.findUserById(empId);
+                    // 결제 신청자 기준으로 연차 업데이트
+                    approvalService.updateEmployeeLeave(creatorId, deduction, leaveType);
 
+                    // 근태 기록 생성
+                    AttendanceDTO attendanceDTO = new AttendanceDTO();
+                    attendanceDTO.setEmpId(creatorId);
+                    attendanceDTO.setAttDate(leaveDate);
+                    attendanceDTO.setAttTime(LocalTime.of(9, 0)); // 기본 출근 시간
+                    attendanceDTO.setAttStatus(leaveType.equals("연차") ? "연차" : "반차");
 
-                    approvalService.updateEmployeeLeave(empId, deduction, leaveType);
-
-                    // 업데이트된 정보 다시 조회
-                    LoginUserDTO updatedUser = userMapper.findUserById(empId);
-
+                    approvalService.insertAttendanceRecord(attendanceDTO);
                 }
             } else {
                 System.out.println("문서 정보가 없습니다.");
             }
-
         }
 
 
