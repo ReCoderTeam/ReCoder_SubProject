@@ -68,10 +68,10 @@ public class MailController {
             mailService.sendMail(mailDTO, mailFileList);  // 메일 전송과 수신자 정보 저장
         } catch (Exception e) {
             model.addAttribute("error", "메일 전송 중 오류가 발생했습니다.");
-            return "mail/sendMail";
+            return "redirect:/mail/receivedMails";
         }
 
-        return "redirect:/mail/sendMail";  // 메일 전송 후 리다이렉트
+        return "redirect:/mail/receivedMails";  // 메일 전송 후 리다이렉트
     }
 
     //내가 보낸 메일 읽기
@@ -89,7 +89,7 @@ public class MailController {
         model.addAttribute("currentItemPage", "sentMails");
 
         return "mail/sentMails";
-        
+
     }
 
     // 받은 메일 페이지

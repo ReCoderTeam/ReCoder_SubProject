@@ -42,7 +42,8 @@
                     <h2 th:text="${inquiryDetail.iqrTitle}"></h2> <!-- 문의 제목 -->
 
                     <div class="inquiry-meta">
-                        <span>답변상태: <span th:text="${inquiryDetail.answerDetail != null ? inquiryDetail.answerDetail : '없음'}"></span></span>
+                        <span th:if="${inquiryDetail.answerStatus == false}">답변대기중</span>
+                        <span th:if="${inquiryDetail.answerStatus == true}">답변완료</span>
                         <span>작성시간: <span th:text="${#temporals.format(inquiryDetail.iqrCreationDate)}"></span></span>
 
                     </div>
