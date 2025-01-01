@@ -89,8 +89,7 @@ public class MailController {
         model.addAttribute("currentItemPage", "sentMails");
 
         return "mail/sentMails";
-
-        // 기타목록
+        
     }
 
     // 받은 메일 페이지
