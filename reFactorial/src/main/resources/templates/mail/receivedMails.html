@@ -13,13 +13,12 @@
     <link rel="stylesheet" href="/css/mail/receivedMails.css">
     <script src="/js/mail/boldHover.js" defer></script>
     <link rel="stylesheet" href="/css/mail/boldHover.css">
-
     <style>
         .bold{
-            font-weight: bold;
+            font-weight:bold;
+            color : #5c1915;
         }
     </style>
-
 
 </head>
 <body>
@@ -71,7 +70,7 @@
             <div class="table-row">
 
                 <!-- 보낸 사람 -->
-                <div class="table-cell" th:text="${receivedMail.receiverEmpName}"></div>
+                <div class="table-cell" th:text="${receivedMail.senderEmpName}"></div>
 
                 <!-- 제목, 클릭 시 mailDetail 로 이동 -->
                 <div class="table-cell">
@@ -79,7 +78,7 @@
                 </div>
 
                 <!-- 작성일 -->
-                <div class="table-cell" th:text="${#temporals.format(receivedMail.sentDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                <div class="table-cell" th:text="${#temporals.format(receivedMail.sentDate, 'yyyy-MM-dd a h:mm:ss')}"></div>
             </div>
         </div>
 

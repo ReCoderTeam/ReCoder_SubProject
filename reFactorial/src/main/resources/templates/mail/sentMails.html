@@ -13,13 +13,12 @@
     <link rel="stylesheet" href="/css/mail/sentMails.css">
     <link rel="stylesheet" href="/css/mail/boldHover.css">
     <script src="/js/mail/boldHover.js" defer></script>
-
     <style>
-        .bold {
-            font-weight: bold;
+        .bold{
+            font-weight:bold;
+            color : #5c1915;
         }
     </style>
-
 
 </head>
 <body>
@@ -65,7 +64,8 @@
             <div th:if="${#lists.isEmpty(sentMails)}" class="no-mails">
                 <span>보낸 메일 없음</span>
             </div>
-            <div th:each="sentMail : ${sentMails}">
+
+            <div th:each="sentMail : ${sentMailsEmployee}">
                 <div class="table-row">
 
                     <!-- 받는 사람 -->
