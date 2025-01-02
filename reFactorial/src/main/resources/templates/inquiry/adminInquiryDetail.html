@@ -65,13 +65,20 @@
             </div>
 
             <div>
-                <form method="POST" action="/admin/adminInquiryAnswer">
-                    <textarea id="answerDetail" class="answerDetail" name="answerDetail" placeholder="답변을 입력하세요..."
-                              th:disabled="${adminInquiries.answerDetail != null}"></textarea>
+                <form method="POST" action="/admin/adminInquiryDetail" onsubmit="disableSubmitButton(event)">
+        <textarea id="answerDetail" class="answerDetail" name="answerDetail" placeholder="답변을 입력하세요..."
+                  th:disabled="${adminInquiries.answerDetail != null}"></textarea>
                     <input type="hidden" name="iqrValue" th:value="${adminInquiries.iqrValue}"/>
-                    <button type="submit">답변하기</button>
+                    <button type="submit" id="submitButton" th:disabled="${adminInquiries.answerDetail != null}">답변하기</button>
                 </form>
             </div>
+
+            <script>
+                function disableSubmitButton(event) {
+                    const submitButton = document.getElementById('submitButton');
+                    submitButton.disabled = true;  // 클릭 후 비활성화
+                }
+            </script>
 
             <div th:each="file : ${attachmentFileList}"> <!-- 파일 첨부 -->
                 <a class="attachmentFile" th:href="@{/files/downLoad(fileId=${file.fileId})}" th:text="${file.originFileName}">첨부 파일</a>
@@ -86,6 +93,8 @@
         </div>
 
 </section>
+
+
 
 <footer th:replace="~{common/footer::footerFragment}"></footer>
 </body>

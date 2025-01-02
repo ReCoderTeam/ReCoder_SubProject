@@ -17,8 +17,9 @@
     <link rel="stylesheet" th:href="@{/css/inquiry/inquiryList.css}">
 
     <style>
-        .bold{
+        .bold {
             font-weight: bold;
+            color : #5c1915;
         }
     </style>
 
@@ -70,7 +71,7 @@
                             <a th:href="@{'/inquiry/detail'(iqrValue=${sentInquiry.iqrValue})}" th:text="${sentInquiry.iqrTitle}"></a>
                         </div>
                         <!-- 작성일 -->
-                        <div class="table-cell" th:text="${sentInquiry.iqrCreationDate}"></div>
+                        <div class="table-cell" th:text="${#temporals.format(sentInquiry.iqrCreationDate)}"></div>
                         <!-- 상태 -->
                         <div class="table-cell">
                             <span th:if="${sentInquiry.answerStatus == false}">답변대기중</span>
