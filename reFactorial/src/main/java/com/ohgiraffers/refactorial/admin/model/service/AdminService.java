@@ -137,7 +137,11 @@ public class AdminService {
         if (maxId == null || maxId.isEmpty()) {
             return "FAB001";
         }
+
         int newIdNum = Integer.parseInt(maxId.substring(3)) + 1;
+
+        System.out.println("String.format(\"FAB%03d\", newIdNum); = " + String.format("FAB%03d", newIdNum));
+
         return String.format("FAB%03d", newIdNum);
     }
 
