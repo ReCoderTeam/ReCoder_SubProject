@@ -582,4 +582,12 @@
         )
         ]]>
     </update>
+
+    <select id="getRejectReason" parameterType="string" resultType="String">
+        SELECT reason
+        FROM tbl_approval
+        WHERE pm_id = #{pmId}
+          AND reason IS NOT NULL
+            LIMIT 1;
+    </select>
 </mapper>
