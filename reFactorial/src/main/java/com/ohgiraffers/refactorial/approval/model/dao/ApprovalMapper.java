@@ -140,4 +140,6 @@ public interface ApprovalMapper {
     void updatePreviousApproversToRejected(String pmId, String empId);
 
     void updateAllApprovalStatusesToRejected(Map<String, Object> params);
+
+    String getRejectReason(String pmId);
 }

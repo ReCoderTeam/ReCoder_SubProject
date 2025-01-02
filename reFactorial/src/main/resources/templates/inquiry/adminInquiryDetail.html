@@ -34,13 +34,13 @@
             <ul class="sideMenuUl">
                 <li class="menu-item"
                     th:onclick="|location.href='@{/admin/adminInquiryList}'|"
-                    th:classappend="${currentPage == 'adminInquiryList'} ? 'bold' : ''">전체 조회</li>
+                    th:classappend="${currentPageItem == 'adminInquiryList'} ? 'bold' : ''">전체 조회</li>
                 <li class="menu-item"
                     th:onclick="|location.href='@{/admin/adminInquiryNoAnswerList}'|"
-                    th:classappend="${currentPage == 'adminInquiryNoAnswerList'} ? 'bold' : ''">미답변</li>
+                    th:classappend="${currentPageItem == 'adminInquiryNoAnswerList'} ? 'bold' : ''">미답변</li>
                 <li class="menu-item"
                     th:onclick="|location.href='@{/admin/adminInquiryAnswerList}'|"
-                    th:classappend="${currentPage == 'adminInquiryAnswerList'} ? 'bold' : ''">답변완료</li>
+                    th:classappend="${currentPageItem == 'adminInquiryAnswerList'} ? 'bold' : ''">답변완료</li>
             </ul>
         </div>
 
@@ -53,7 +53,7 @@
                 <div class="inquiry-meta">
                     <span>답변 상태 : </span><span th:if="${adminInquiries.answerStatus == false}">답변대기중</span>
                     <span th:if="${adminInquiries.answerStatus == true}">답변완료</span>
-                    <span>작성시간: <span th:text="${#temporals.format(adminInquiries.iqrCreationDate)}"></span></span>
+                    <span>작성시간: <span th:text="${#temporals.format(adminInquiries.iqrCreationDate, 'yyyy-MM-dd a h:mm:ss')}"></span></span>
                 </div>
             </div>
 
@@ -93,9 +93,6 @@
                 <a class="attachmentFile" th:href="@{/files/downLoad(fileId=${file.fileId})}" th:text="${file.originFileName}">첨부 파일</a>
             </div>
 
-            <div class="back-button">
-                <a href="/admin/adminInquiryList">목록으로 돌아가기</a>
-            </div>
             </div>
 
         </div>

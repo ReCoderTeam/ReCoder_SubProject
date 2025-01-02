@@ -101,7 +101,7 @@ public class MailController {
         int totalMails = mailService.getSentMailsCount(senderEmpId);
 
         // 전체 페이지 수 계산
-        int totalPages = (int) Math.ceil((double) totalMails / limit);
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalMails / limit));
 
         // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
         int startNumber = (totalPages - currentPage) * limit + 1;
@@ -152,7 +152,7 @@ public class MailController {
         int totalMails = mailEmployeeService.getReceivedMailsCount(receiverEmpId);
 
         // 전체 페이지 수 계산
-        int totalPages = (int) Math.ceil((double) totalMails / limit);
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalMails / limit));
 
         // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
         int startNumber = (totalPages - currentPage) * limit + 1;
@@ -195,43 +195,4 @@ public class MailController {
         return "mail/mailDetail";
     }
 
-    // 메일 휴지통 페이지
-    @GetMapping("/detailBin")
-    public String mailDetailBin(@RequestParam("emailId") String emailId, Model model) {
-        MailDTO mailDetailBin = mailService.getMailDetailBin(emailId);
-        model.addAttribute("mailDetailBin", mailDetailBin);
-        return "mail/mailDetailBin";
-    }
-
-    // 휴지통 보기
-    @GetMapping("/mailBin")
-    public String viewMailBin(Model model, HttpSession session) {
-        LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
-        String senderEmpId = loginUser.getEmpId();
-
-        List<MailDTO> sentMailsBin = mailService.getSentMailsBin(senderEmpId);
-        model.addAttribute("sentMailsBin", sentMailsBin);
-
-        return "mail/mailBin";
-    }
-
-    // 휴지통으로 보내기
-//    @PostMapping("/moveToTrash")
-//    public String moveToTrash(@RequestParam("emailId") String emailId,
-//                              @RequestParam("receiverEmpId") String receiverEmpId
-//                              ) {
-//        // 특정 수신자에 대해 휴지통으로 이동
-//        if (receiverEmpId != null && !receiverEmpId.isEmpty()) {
-//            mailService.moveToTrash(emailId, Collections.singletonList(receiverEmpId));
-//        }
-//        return "redirect:/mail/mailBin"; // 휴지통 페이지로 리디렉션
-//    }
-
-    @PostMapping("/removeToTrash")
-    public String removeToTrash(@RequestParam("emailId") String emailId) {
-        // 메일을 휴지통으로 보내는 서비스 호출
-        mailService.removeToTrash(emailId);
-
-        return "redirect:/mail/mailBin"; // 휴지통 페이지로 리디렉션
-    }
 }

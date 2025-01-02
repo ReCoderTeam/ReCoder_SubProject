@@ -160,7 +160,7 @@ public class MainController {
 
     @GetMapping("/user/inquiry")
     public String showInquiryPageForUser(Model model) {
-        model.addAttribute("currentPage", "inquiry"); // 1:1 문의하기 페이지
+        model.addAttribute("currentPageItem", "inquiry"); // 1:1 문의하기 페이지
         return "inquiry/sendInquiry";
     }
 

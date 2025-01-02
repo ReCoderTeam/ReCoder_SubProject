@@ -11,15 +11,7 @@
     <link rel="stylesheet" href="/css/common/footer.css">
     <link rel="stylesheet" href="/css/common/style.css">
     <link rel="stylesheet" href="/css/mail/sendMail.css">
-    <link rel="stylesheet" href="/css/mail/boldHover.css">
-    <script src="/js/mail/boldHover.js"></script>
-    <script src="/js/mail/sendMail.js"></script>
-    <style>
-        .bold{
-            font-weight:bold;
-            color : #5c1915;
-        }
-    </style>
+
 </head>
 <body>
 <header th:replace="~{common/header::headerFragment}"></header>
@@ -29,7 +21,6 @@
         <div class="sidebar">
             <div class="sidebar-title">사내 메일</div>
             <ul>
-<!--                <li th:onclick="|location.href='@{/user/mail}'|">전체 메일</li>-->
                 <li class="menu-item"
                     th:onclick="|location.href='@{/mail/sentMails}'|"
                     th:classappend="${currentPageItem == 'sentMails'} ? 'bold' : ''">
@@ -40,7 +31,6 @@
                     th:classappend="${currentPageItem == 'receivedMails'} ? 'bold' : ''">
                     받은 메일
                 </li>
-<!--                <li th:onclick="|location.href='@{/mail/mailBin}'|">휴지통</li>-->
             </ul>
         </div>
 
@@ -80,23 +70,12 @@
                         <button type="button" class="custom-button" data-toggle="modal" data-target="#searchItems">회원검색</button>
                     </div>
 
+
                     <!-- 내용 -->
                     <div class="form-group content">
                         <label for="emailContent">내용:</label>
                         <textarea id="emailContent" name="emailContent" required></textarea>
                     </div>
-
-                    <script>
-                        document.getElementById('sendMailForm').addEventListener('submit', function(event) {
-                            const receiverEmpIds = document.getElementById('receiverEmpIds').value;
-                            if (!receiverEmpIds.trim()) {
-                                event.preventDefault(); // 폼 제출 막기
-                                alert('수신자를 선택해주세요.');
-                            }
-                        });
-                    </script>
-
-
                 </div>
             </form>
         </div>
@@ -138,6 +117,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
 </section>
 <footer th:replace="~{common/footer::footerFragment}"></footer>
+<script src="/js/mail/sendMail.js"></script>
 
 </body>
 </html>

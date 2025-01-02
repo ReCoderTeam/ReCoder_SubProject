@@ -31,7 +31,7 @@ public class AdminInquiryController {
 public String getAllInquiries(Model model) {
     List<InquiryDTO> getAllInquiries = adminInquiryService.getAllInquiries();
     model.addAttribute("getAllInquiries", getAllInquiries);
-    model.addAttribute("currentPage", "adminInquiryList"); // 현재 페이지 설정
+    model.addAttribute("currentPageItem", "adminInquiryList"); // 현재 페이지 설정
     return "inquiry/adminInquiryList";
 }
 
@@ -40,7 +40,7 @@ public String getAllInquiries(Model model) {
     public String getAllNoAnswerInquires(Model model) {
         List<InquiryDTO> getAllNoAnswerInquires = adminInquiryService.getAllNoAnswerInquires();
         model.addAttribute("getAllNoAnswerInquires", getAllNoAnswerInquires);
-        model.addAttribute("currentPage", "adminInquiryNoAnswerList"); // 현재 페이지 설정
+        model.addAttribute("currentPageItem", "adminInquiryNoAnswerList"); // 현재 페이지 설정
         return "inquiry/adminInquiryNoAnswerList";
     }
 
@@ -49,7 +49,7 @@ public String getAllInquiries(Model model) {
     public String getAllAnswerInquires(Model model) {
         List<InquiryDTO> getAllAnswerList = adminInquiryService.getAllAnswerList();
         model.addAttribute("getAllAnswerList", getAllAnswerList);
-        model.addAttribute("currentPage", "adminInquiryAnswerList"); // 현재 페이지 설정
+        model.addAttribute("currentPageItem", "adminInquiryAnswerList"); // 현재 페이지 설정
         return "inquiry/adminInquiryAnswerList";
     }
     // 문의 상세 조회
@@ -67,18 +67,6 @@ public String getAllInquiries(Model model) {
         model.addAttribute("adminInquiries", adminInquiries);
         return "inquiry/adminInquiryDetail";
     }
-
-    // 답변 등록
-//    @PostMapping("/admin/adminInquiryAnswer")
-//    @ResponseBody
-//    public String answerInquiry(@RequestParam("iqrValue") String iqrValue, @RequestParam("answerDetail") String answerDetail) {
-//        System.out.println("iqrValue: " + iqrValue);
-//        System.out.println("answerDetail: " + answerDetail);
-//
-//        boolean success = adminInquiryService.answerInquiry(iqrValue, answerDetail);
-//        System.out.println("답변 등록 성공 여부: " + success); // 추가 로그
-//        return success ? "success" : "fail";
-//    }
 
     @PostMapping("/admin/adminInquiryAnswer")
     public ModelAndView answerInquiry(

@@ -209,3 +209,8 @@ html, body {
 .custom-button:hover {
     background-color: #0056b3;
 }
+
+.bold{
+    font-weight: bold;
+    color : #5c1915;
+}

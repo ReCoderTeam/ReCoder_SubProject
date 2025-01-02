@@ -98,31 +98,6 @@ public class MailService {
     }
 
 
-    // 휴지통 보낸 메일 받은 메일
-    public List<MailDTO> getReceivedMailsBin(String receiverEmpIds) {
-        List<MailDTO> receivedMailsBin = mailMapper.getReceivedMailsBin(receiverEmpIds);
-
-        // 각 메일에 대한 수신자 정보 추가
-        for (MailDTO mailDTO : receivedMailsBin) {
-            List<String> receiverEmpIdsBin = mailMapper.getReceiverEmpIds(mailDTO.getEmailId());
-            mailDTO.setReceiverEmpIds(receiverEmpIdsBin);
-        }
-
-        return receivedMailsBin;
-    }
-
-    // 수정된 getSentMailsBin 메서드
-    public List<MailDTO> getSentMailsBin(String senderEmpId) {
-        List<MailDTO> sentMailsBin = mailMapper.getSentMailsBin(senderEmpId);
-
-        // 각 메일에 대한 수신자 정보 추가
-        for (MailDTO mailDTO : sentMailsBin) {
-            List<String> receiverEmpIdsBin = mailMapper.getReceiverEmpIds(mailDTO.getEmailId());
-            mailDTO.setReceiverEmpIds(receiverEmpIdsBin);
-        }
-
-        return sentMailsBin;
-    }
 
     // 상세 페이지
     public MailDTO getMailDetail(String emailId) {
@@ -134,32 +109,6 @@ public class MailService {
         return mailDetail;
     }
 
-    // 휴지통으로 보내기
-    // 서비스에서 메일을 각 수신자별로 휴지통으로 보낼 수 있도록 변경
-    public void moveToTrash(String emailId, List<String> receiverEmpIds) {
-        // 각 수신자에 대해 개별적으로 trash_status 업데이트
-        for (String receiverEmpId : receiverEmpIds) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("emailId", emailId);
-            params.put("trashStatus", 1); // 휴지통으로 이동
-            params.put("receiverEmpId", receiverEmpId); // 특정 수신자 ID
-            mailMapper.updateTrashStatus(params); // DB 업데이트 호출
-        }
-    }
-
-
-
-
-    // 휴지통 상세 페이지
-    public MailDTO getMailDetailBin(String emailId) {
-
-        return mailMapper.getMailDetailBin(emailId);
-    }
-
-    // 휴지통 복구하기
-    public void removeToTrash(String emailId) {
-        mailMapper.updateTrashRemove(emailId,0); // trashStatus 를 0로 변경 (휴지통으로 이동)
-    }
 
     public List<String> getReceiverEmpIds(String emailId) {
         return mailMapper.getReceiverEmpIds(emailId);

@@ -96,63 +96,6 @@
     </select>
 
 
-    <!-- 휴지통 메일의 상세 페이지-->
-    <select id="getMailDetailBin" resultMap="MailResultMap">
-        SELECT *
-        FROM tbl_mail
-        WHERE email_id = #{emailId}
-    </select>
-
-    <select id="getReplyMailDetail" resultMap="MailResultMap">
-        SELECT
-        m.email_id,
-        m.email_title,
-        m.email_content,
-        m.sent_date,
-        m.sender_emp_id,
-        mr.receiver_emp_id,
-        e.emp_name AS receiver_emp_name
-        FROM
-        tbl_mail m
-        JOIN
-        tbl_mail_receivers mr ON m.email_id = mr.email_id
-        JOIN
-        employee e ON mr.receiver_emp_id = e.emp_id
-        WHERE
-        m.email_id = #{emailId}
-    </select>
-
-    <!-- 휴지통으로 이동 -->
-    <!-- 특정 수신자에 대해 휴지통 이동 -->
-    <update id="updateTrashStatus" parameterType="map">
-        UPDATE tbl_mail_receivers
-        SET trash_status = #{trashStatus}
-        WHERE email_id = #{emailId}
-        AND receiver_emp_id = #{receiverEmpId} <!-- 특정 수신자에 대해서만 업데이트 -->
-    </update>
-
-    <!-- 휴지통에서 복구하기-->
-    <update id="updateTrashRemove" parameterType="java.lang.String">
-        UPDATE tbl_mail_receivers
-        SET trash_status = 0
-        WHERE email_id = #{emailId}
-    </update>
-
-    <!--받은 메일 보낸 메일 휴지통에서 불러오기-->
-    <select id="getReceivedMailsBin" resultMap="MailResultMap">
-        SELECT m.*, mr.receiver_emp_id
-        FROM tbl_mail m
-        INNER JOIN tbl_mail_receivers mr ON m.email_id = mr.email_id
-        WHERE mr.trash_status = 1
-    </select>
-    <select id="getSentMailsBin" resultMap="MailResultMap">
-        SELECT m.*, mr.receiver_emp_id
-        FROM tbl_mail m
-        INNER JOIN tbl_mail_receivers mr ON m.email_id = mr.email_id
-        WHERE mr.trash_status = 1
-    </select>
-
-
     <!-- 페이지네이션을 위한 새로운 쿼리 -->
     <select id="getSentMailsPaginated" resultType="com.ohgiraffers.refactorial.mail.model.dto.MailDTO">
         SELECT

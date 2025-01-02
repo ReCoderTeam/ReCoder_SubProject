@@ -1,8 +1,3 @@
-const voteView = '[[${voteView}]]'
-
-
-const attachmentFileList = '[[${attachmentFileList}]]'
-
 const noAttachment = document.querySelector(".noAttachment");
 
 if (noAttachment) {
