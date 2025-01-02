@@ -497,6 +497,10 @@
 
             return approvalMapper.findApprovableDocuments(params);
         }
+
+        public String getRejectReason(String pmId) {
+            return approvalMapper.getRejectReason(pmId);
+        }
     }
 
 
