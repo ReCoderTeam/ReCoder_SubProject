@@ -34,12 +34,18 @@
         <div class="sideMenu">
             <div class="sideTitle">1:1 문의</div>
 
-                <ul class="sideMenuUl">
-                    <li class="menu-item" th:onclick="|location.href='@{/admin/adminInquiryList}'|">전체 조회</li>
-                    <li class="menu-item" th:onclick="|location.href='@{/admin/adminInquiryNoAnswerList}'|">미답변</li>
-                    <li class="menu-item" th:onclick="|location.href='@{/admin/adminInquiryList}'|">답변완료</li>
-                </ul>
-            </div>
+            <ul class="sideMenuUl">
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/admin/adminInquiryList}'|"
+                    th:classappend="${currentPage == 'adminInquiryList'} ? 'bold' : ''">전체 조회</li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/admin/adminInquiryNoAnswerList}'|"
+                    th:classappend="${currentPage == 'adminInquiryNoAnswerList'} ? 'bold' : ''">미답변</li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/admin/adminInquiryAnswerList}'|"
+                    th:classappend="${currentPage == 'adminInquiryAnswerList'} ? 'bold' : ''">답변완료</li>
+            </ul>
+        </div>
 
         <!-- Inquiry Detail Section Inside rightBox -->
         <div class="inquiry-container">
@@ -64,19 +70,25 @@
                 </div>
             </div>
 
+            <!-- 답변 입력 폼 -->
+            <!-- 답변하기 폼: 답변이 완료되면 textarea와 버튼 숨기기 -->
             <div>
-                <form method="POST" action="/admin/adminInquiryDetail" onsubmit="disableSubmitButton(event)">
-        <textarea id="answerDetail" class="answerDetail" name="answerDetail" placeholder="답변을 입력하세요..."
-                  th:disabled="${adminInquiries.answerDetail != null}"></textarea>
-                    <input type="hidden" name="iqrValue" th:value="${adminInquiries.iqrValue}"/>
-                    <button type="submit" id="submitButton" th:disabled="${adminInquiries.answerDetail != null}">답변하기</button>
+                <form method="POST" action="/admin/adminInquiryAnswer" onsubmit="disableSubmitButton(event)">
+                <textarea id="answerDetail" class="answerDetail" name="answerDetail" placeholder="답변을 입력하세요..."
+                  th:disabled="${adminInquiries.answerDetail != null}"
+                  th:style="${adminInquiries.answerDetail != null} ? 'display:none;' : ''" required></textarea>
+                    <input type="hidden" name="iqrValue" th:value="${adminInquiries.iqrValue}" />
+                    <button type="submit" id="submitButton"
+                            th:disabled="${adminInquiries.answerDetail != null}"
+                            th:style="${adminInquiries.answerDetail != null} ? 'display:none;' : ''">답변하기</button>
                 </form>
             </div>
 
             <script>
                 function disableSubmitButton(event) {
-                    const submitButton = document.getElementById('submitButton');
-                    submitButton.disabled = true;  // 클릭 후 비활성화
+                    // textarea와 버튼을 숨김
+                    document.getElementById("answerDetail").style.display = 'none';
+                    document.getElementById("submitButton").style.display = 'none';
                 }
             </script>
 

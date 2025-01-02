@@ -73,7 +73,7 @@
                             <a th:href="@{'/admin/adminInquiryDetail'(iqrValue=${inquiry.iqrValue})}" th:text="${inquiry.iqrTitle}"></a>
                         </div>
                         <!-- 작성일 -->
-                        <div class="table-cell" th:text="${inquiry.iqrCreationDate}"></div>
+                        <div class="table-cell" th:text="${#temporals.format(inquiry.iqrCreationDate)}"></div>
                         <!-- 문의자-->
                         <div class="table-cell" th:text="${inquiry.empName}"></div>
                         <!-- 상태 -->

@@ -25,8 +25,16 @@
             <div class="sidebar-title">사내 메일</div>
             <ul>
 <!--                <li th:onclick="|location.href='@{/user/mail}'|">전체 메일</li>-->
-                <li th:onclick="|location.href='@{/mail/sentMails}'|">보낸 메일</li>
-                <li th:onclick="|location.href='@{/mail/receivedMails}'|">받은 메일</li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/mail/sentMails}'|"
+                    th:classappend="${currentPageItem == 'sentMails'} ? 'bold' : ''">
+                    보낸 메일
+                </li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/mail/receivedMails}'|"
+                    th:classappend="${currentPageItem == 'receivedMails'} ? 'bold' : ''">
+                    받은 메일
+                </li>
 <!--                <li th:onclick="|location.href='@{/mail/mailBin}'|">휴지통</li>-->
             </ul>
         </div>
@@ -51,8 +59,11 @@
                 <div class="mail-content">
                     <p th:text="${mailDetail.emailContent}"></p> <!-- 메일 내용 -->
                 </div>
-                <div th:each="file : ${attachmentFileList}">
-                    <a class="attachmentFile" th:href="@{/files/downLoad(fileId=${file.fileId})}" th:text="${file.originFileName}">첨부 파일</a>
+
+                <div class="mail-file-Border" th:if="${attachmentFileList != null and attachmentFileList.size() > 0}">
+                    <div th:each="file : ${attachmentFileList}">
+                        <a class="attachmentFile" th:href="@{/files/downLoad(fileId=${file.fileId})}" th:text="${file.originFileName}">첨부 파일</a>
+                    </div>
                 </div>
             </div>
 

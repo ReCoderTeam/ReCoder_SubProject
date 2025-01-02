@@ -50,7 +50,18 @@
     text-decoration: underline; /* 호버 시 밑줄 표시 */
 }
 
-.no-inquiries{
+/* 테이블 본문에 세로 스크롤 추가 */
+.table-body {
+    max-height: 400px; /* 원하는 높이로 설정 */
+    overflow-y: auto; /* 세로 스크롤 추가 */
+}
+
+.no-adminInquiries{
+    text-align:center;
     margin-top:50px;
-    text-align: center;
+}
+
+.bold {
+    font-weight: bold;
+    color : #5c1915;
 }

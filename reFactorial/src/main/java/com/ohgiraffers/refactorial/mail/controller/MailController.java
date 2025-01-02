@@ -45,7 +45,7 @@ public class MailController {
     public String sendMail(@ModelAttribute MailDTO mailDTO,
                            @RequestParam("mailFiles") List<MultipartFile> mailFileList,
                            HttpSession session,
-                           Model model) throws IOException {
+                           Model model) {
 
         // 로그인 유저 가져오기
         LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
@@ -68,10 +68,10 @@ public class MailController {
             mailService.sendMail(mailDTO, mailFileList);  // 메일 전송과 수신자 정보 저장
         } catch (Exception e) {
             model.addAttribute("error", "메일 전송 중 오류가 발생했습니다.");
-            return "redirect:/mail/receivedMails";
+            return "redirect:/mail/sentMails";
         }
 
-        return "redirect:/mail/receivedMails";  // 메일 전송 후 리다이렉트
+        return "redirect:/mail/sentMails";  // 메일 전송 후 리다이렉트
     }
 
     //내가 보낸 메일 읽기
@@ -190,6 +190,7 @@ public class MailController {
         }
 
         model.addAttribute("mailDetail", mailDetail);
+        model.addAttribute("currentPageItem","mailDetail");
         model.addAttribute("mailReceiver", mailReceiver);
         return "mail/mailDetail";
     }

@@ -50,7 +50,8 @@
         employee e ON mr.receiver_emp_id = e.emp_id
         WHERE
         m.email_id = #{emailId}
-        ORDER BY m.sent_date
+        ORDER BY m.sent_date DESC
+
     </select>
 
     <!--내가 받은 메일-->
@@ -61,7 +62,7 @@
         JOIN employee e on e.emp_id = mr.receiver_emp_id
         WHERE mr.receiver_emp_id = #{receiverEmpId}
         AND mr.trash_status = 0
-        ORDER BY m.sent_date
+        ORDER BY m.sent_date DESC
     </select>
 
     <!-- 내가 보낸 메일의 수신자 사원 ID 가져오기 -->
