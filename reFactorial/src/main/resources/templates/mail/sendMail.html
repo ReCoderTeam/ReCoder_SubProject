@@ -86,6 +86,16 @@
                         <textarea id="emailContent" name="emailContent" required></textarea>
                     </div>
 
+                    <script>
+                        document.getElementById('sendMailForm').addEventListener('submit', function(event) {
+                            const receiverEmpIds = document.getElementById('receiverEmpIds').value;
+                            if (!receiverEmpIds.trim()) {
+                                event.preventDefault(); // 폼 제출 막기
+                                alert('수신자를 선택해주세요.');
+                            }
+                        });
+                    </script>
+
 
                 </div>
             </form>
