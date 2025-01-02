@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>adminInquiryList</title>
+    <title>adminNoAnswerInquiryList</title>
 
     <!-- 폰트 적용 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,83 +14,13 @@
     <link rel="stylesheet" th:href="@{/css/common/footer.css}">
     <link rel="stylesheet" th:href="@{/css/admin/common/admin_style.css}">
     <link rel="stylesheet" th:href="@{/css/admin/common/admin_circleBtn.css}">
+    <link rel="stylesheet" th:href="@{/css/inquiry/adminInquiryNoAnswerList.css}">
     <!-- 여기 까지 -->
 
     <!-- CSS 파일 연결 -->
     <link rel="stylesheet" th:href="@{/css/common/header.css}">
     <link rel="stylesheet" th:href="@{/css/common/footer.css}">
     <link rel="stylesheet" th:href="@{/css/common/style.css}">
-
-    <style>
-        /* 테이블 컨테이너 설정 */
-        .table-container {
-            display: flex;
-            flex-direction: column; /* 세로 정렬 */
-            width: 100%; /* 테이블 전체 너비 */
-        }
-
-        /* 테이블 헤더 스타일 */
-        .table-header {
-            display: flex; /* 가로 정렬 */
-            justify-content: space-between; /* 셀 간의 공간을 균등 배분 */
-            font-weight: bold; /* 굵은 글씨 */
-            background-color: #f5f5f5; /* 연한 배경색 */
-            padding: 10px 0; /* 내부 여백 */
-            border-bottom: 2px solid #ccc; /* 테이블 헤더 하단 경계선 */
-        }
-
-        /* 테이블 행 스타일 */
-        .table-row {
-            display: flex; /* 가로 정렬 */
-            justify-content: space-between; /* 셀 간의 공간을 균등 배분 */
-            padding: 10px 0; /* 내부 여백 */
-            border-bottom: 1px solid #ddd; /* 행 하단 경계선 */
-        }
-
-        /* 셀 스타일 */
-        .table-cell {
-            flex: 1; /* 셀 너비를 균등 분배 */
-            text-align: center; /* 텍스트 중앙 정렬 */
-            padding: 8px; /* 내부 여백 */
-        }
-
-        /* 행의 배경색 번갈아 표시 */
-        .table-row:nth-child(even) {
-            background-color: #fafafa;
-        }
-
-        .table-row:nth-child(odd) {
-            background-color: #fff;
-        }
-
-        /* 링크 스타일 */
-        .table-cell a {
-            text-decoration: none; /* 링크 밑줄 제거 */
-            color: #007BFF; /* 파란색 */
-            font-weight: bold;
-        }
-
-        .table-cell a:hover {
-            text-decoration: underline; /* 호버 시 밑줄 표시 */
-        }
-
-        .no-adminInquiries{
-            text-align:center;
-            margin-top:50px;
-        }
-
-        /* 테이블 본문에 세로 스크롤 추가 */
-        .table-body {
-            max-height: 400px; /* 원하는 높이로 설정 */
-            overflow-y: auto; /* 세로 스크롤 추가 */
-        }
-
-    </style>
-    <style>
-        .bold{
-            font-weight: bold;
-        }
-    </style>
 
 </head>
 <body>
@@ -142,7 +72,7 @@
                             <a th:href="@{'/admin/adminInquiryDetail'(iqrValue=${inquiry.iqrValue})}" th:text="${inquiry.iqrTitle}"></a>
                         </div>
                         <!-- 작성일 -->
-                        <div class="table-cell" th:text="${inquiry.iqrCreationDate}"></div>
+                        <div class="table-cell" th:text="${#temporals.format(inquiry.iqrCreationDate)}"></div>
                         <!-- 문의자-->
                         <div class="table-cell" th:text="${inquiry.empName}"></div>
                         <!-- 상태 -->

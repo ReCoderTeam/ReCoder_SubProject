@@ -26,6 +26,7 @@
         SELECT *
         FROM tbl_inquiry i JOIN employee e ON e.emp_id = i.emp_id
         WHERE e.emp_id = #{empId}
+        ORDER BY i.iqr_creationDate DESC
     </select>
 
     <!--  문의 세부 사항  -->

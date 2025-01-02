@@ -1,6 +1,7 @@
 package com.ohgiraffers.refactorial.inquiry.service;
 
 import com.ohgiraffers.refactorial.inquiry.model.dao.AdminInquiryMapper;
+import com.ohgiraffers.refactorial.inquiry.model.dao.InquiryMapper;
 import com.ohgiraffers.refactorial.inquiry.model.dto.InquiryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,11 +11,13 @@ import java.util.List;
 @Service
 public class AdminInquiryService {
 
+    private final InquiryMapper inquiryMapper;
     private AdminInquiryMapper adminInquiryMapperr;
 
     @Autowired
-    public AdminInquiryService(AdminInquiryMapper adminInquiryMapperr) {
+    public AdminInquiryService(AdminInquiryMapper adminInquiryMapperr, InquiryMapper inquiryMapper) {
         this.adminInquiryMapperr = adminInquiryMapperr;
+        this.inquiryMapper = inquiryMapper;
     }
 
     // 모든 문의 가져오기

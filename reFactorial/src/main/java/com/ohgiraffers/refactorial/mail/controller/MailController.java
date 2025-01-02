@@ -45,7 +45,7 @@ public class MailController {
     public String sendMail(@ModelAttribute MailDTO mailDTO,
                            @RequestParam("mailFiles") List<MultipartFile> mailFileList,
                            HttpSession session,
-                           Model model) throws IOException {
+                           Model model) {
 
         // 로그인 유저 가져오기
         LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
@@ -68,10 +68,10 @@ public class MailController {
             mailService.sendMail(mailDTO, mailFileList);  // 메일 전송과 수신자 정보 저장
         } catch (Exception e) {
             model.addAttribute("error", "메일 전송 중 오류가 발생했습니다.");
-            return "mail/sendMail";
+            return "redirect:/mail/sentMails";
         }
 
-        return "redirect:/mail/sendMail";  // 메일 전송 후 리다이렉트
+        return "redirect:/mail/sentMails";  // 메일 전송 후 리다이렉트
     }
 
     //내가 보낸 메일 읽기
@@ -94,6 +94,8 @@ public class MailController {
 
         // 보낸 메일 목록 조회
         List<MailDTO> sentMails = mailService.getSentMails(senderEmpId, limit, offset);
+        // 보낸 메일 목록을 모델에 추가
+        List<MailDTO> sentMailsEmployee = mailEmployeeService.getSentMails(senderEmpId);
 
         // 전체 보낸 메일 수 조회
         int totalMails = mailService.getSentMailsCount(senderEmpId);
@@ -119,10 +121,10 @@ public class MailController {
         model.addAttribute("prevPage", prevPage);
         model.addAttribute("nextPage", nextPage);
         model.addAttribute("currentItemPage", "sentMails");
+        model.addAttribute("sentMailsEmployee",sentMailsEmployee);
 
         return "mail/sentMails";
     }
-
     // 받은 메일 페이지
     @GetMapping("/receivedMails")
     public String receivedMails(
@@ -188,6 +190,7 @@ public class MailController {
         }
 
         model.addAttribute("mailDetail", mailDetail);
+        model.addAttribute("currentPageItem","mailDetail");
         model.addAttribute("mailReceiver", mailReceiver);
         return "mail/mailDetail";
     }
@@ -213,16 +216,16 @@ public class MailController {
     }
 
     // 휴지통으로 보내기
-    @PostMapping("/moveToTrash")
-    public String moveToTrash(@RequestParam("emailId") String emailId,
-                              @RequestParam("receiverEmpId") String receiverEmpId
-                              ) {
-        // 특정 수신자에 대해 휴지통으로 이동
-        if (receiverEmpId != null && !receiverEmpId.isEmpty()) {
-            mailService.moveToTrash(emailId, Collections.singletonList(receiverEmpId));
-        }
-        return "redirect:/mail/mailBin"; // 휴지통 페이지로 리디렉션
-    }
+//    @PostMapping("/moveToTrash")
+//    public String moveToTrash(@RequestParam("emailId") String emailId,
+//                              @RequestParam("receiverEmpId") String receiverEmpId
+//                              ) {
+//        // 특정 수신자에 대해 휴지통으로 이동
+//        if (receiverEmpId != null && !receiverEmpId.isEmpty()) {
+//            mailService.moveToTrash(emailId, Collections.singletonList(receiverEmpId));
+//        }
+//        return "redirect:/mail/mailBin"; // 휴지통 페이지로 리디렉션
+//    }
 
     @PostMapping("/removeToTrash")
     public String removeToTrash(@RequestParam("emailId") String emailId) {

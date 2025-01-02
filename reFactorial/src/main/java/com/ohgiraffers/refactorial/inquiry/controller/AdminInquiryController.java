@@ -10,7 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class AdminInquiryController {
@@ -86,14 +88,14 @@ public String getAllInquiries(Model model) {
         boolean success = adminInquiryService.answerInquiry(iqrValue, answerDetail);
 
         if (success) {
-            return new ModelAndView("redirect:/admin/adminInquiryDetail?iqrValue=" + iqrValue);
+            ModelAndView mav = new ModelAndView("redirect:/admin/adminInquiryDetail?iqrValue=" + iqrValue);
+            mav.addObject("answerDetail", answerDetail);  // 답변 내용 추가
+            return mav;
         } else {
             ModelAndView mav = new ModelAndView("inquiry/adminInquiryDetail");
             mav.addObject("error", "답변 등록에 실패했습니다.");
             return mav;
         }
     }
-
-    // 미답변 문의
 
 }

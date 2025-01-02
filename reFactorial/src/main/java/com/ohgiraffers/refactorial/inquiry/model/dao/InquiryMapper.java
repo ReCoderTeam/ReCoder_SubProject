@@ -21,4 +21,5 @@ public interface InquiryMapper {
     // 문의 삭제 메소드 추가
     void deleteInquiry(String iqrValue);
 
+    InquiryDTO findByIqrValue(String iqrValue);
 }
