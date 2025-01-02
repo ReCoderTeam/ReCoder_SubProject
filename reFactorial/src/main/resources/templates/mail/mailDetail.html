@@ -60,7 +60,7 @@
                     <p th:text="${mailDetail.emailContent}"></p> <!-- 메일 내용 -->
                 </div>
 
-                <div class="mail-file-Border" th:if="${attachmentFileList != null and attachmentFileList.size() > 0}">
+                <div class="mail-file-Border">
                     <div th:each="file : ${attachmentFileList}">
                         <a class="attachmentFile" th:href="@{/files/downLoad(fileId=${file.fileId})}" th:text="${file.originFileName}">첨부 파일</a>
                     </div>

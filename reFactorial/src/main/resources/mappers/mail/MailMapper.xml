@@ -84,6 +84,7 @@
         FROM tbl_mail m
         JOIN employee emp1 ON m.sender_emp_id = emp1.emp_id
         WHERE m.email_id = #{emailId}
+        ORDER BY m.sent_date DESC
     </select>
 
     <select id="getMailReceivers" resultType="string">
