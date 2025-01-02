@@ -101,7 +101,7 @@ public class MailController {
         int totalMails = mailService.getSentMailsCount(senderEmpId);
 
         // 전체 페이지 수 계산
-        int totalPages = (int) Math.ceil((double) totalMails / limit);
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalMails / limit));
 
         // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
         int startNumber = (totalPages - currentPage) * limit + 1;
@@ -152,7 +152,7 @@ public class MailController {
         int totalMails = mailEmployeeService.getReceivedMailsCount(receiverEmpId);
 
         // 전체 페이지 수 계산
-        int totalPages = (int) Math.ceil((double) totalMails / limit);
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalMails / limit));
 
         // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
         int startNumber = (totalPages - currentPage) * limit + 1;

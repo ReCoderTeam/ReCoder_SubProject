@@ -81,7 +81,7 @@
 
             List<DocumentDTO> myDocuments = approvalService.getCompletedDocuments(loggedInEmpId, limit, offset);
             int totalDocuments = approvalService.getCompletedDocumentsCount(loggedInEmpId);
-            int totalPages = (int) Math.ceil((double) totalDocuments / limit);
+            int totalPages = Math.max(1, (int) Math.ceil((double) totalDocuments / limit));
 
             // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
             int startNumber = (totalPages - currentPage) * limit + 1;
@@ -118,7 +118,7 @@
 
             List<DocumentDTO> inProgressDocuments = approvalService.getInProgressDocuments(loggedInEmpId, limit, offset);
             int totalDocuments = approvalService.getInProgressDocumentsCount(loggedInEmpId);
-            int totalPages = (int) Math.ceil((double) totalDocuments / limit);
+            int totalPages = Math.max(1, (int) Math.ceil((double) totalDocuments / limit));
 
             // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
             int startNumber = (totalPages - currentPage) * limit + 1;
@@ -156,7 +156,7 @@
 
             List<DocumentDTO> rejectedDocuments  = approvalService.getRejectedDocuments(loggedInEmpId, limit, offset);
             int totalDocuments = approvalService.getInProgressDocumentsCount(loggedInEmpId);
-            int totalPages = (int) Math.ceil((double) totalDocuments / limit);
+            int totalPages = Math.max(1, (int) Math.ceil((double) totalDocuments / limit));
 
             // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
             int startNumber = (totalPages - currentPage) * limit + 1;
@@ -381,7 +381,7 @@
 
             List<DocumentDTO> myDocuments = approvalService.getReferenceDocuments(loggedInEmpId, limit, offset);
             int totalDocuments = approvalService.getTotalReferenceDocuments(loggedInEmpId);
-            int totalPages = (int) Math.ceil((double) totalDocuments / limit);
+            int totalPages = Math.max(1, (int) Math.ceil((double) totalDocuments / limit));
 
             // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
             int startNumber = (totalPages - currentPage) * limit + 1;
@@ -420,7 +420,7 @@
 
             List<DocumentDTO> myDocuments = approvalService.getMyDocuments(loggedInEmpId, limit, offset);
             int totalDocuments = approvalService.getMyDocumentsCount(loggedInEmpId);
-            int totalPages = (int) Math.ceil((double) totalDocuments / limit);
+            int totalPages = Math.max(1, (int) Math.ceil((double) totalDocuments / limit));
 
             // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
             int startNumber = (totalPages - currentPage) * limit + 1;
