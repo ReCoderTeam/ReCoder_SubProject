@@ -38,7 +38,7 @@ public class MailController {
     @GetMapping("/sendMail")
     public String showSendMailPage() {
 
-        return "/mail/sendMail";
+        return "mail/sendMail";
     }
 
     @PostMapping("/sendMail")
