@@ -84,14 +84,6 @@
                 </form>
             </div>
 
-            <script>
-                function disableSubmitButton(event) {
-                    // textarea와 버튼을 숨김
-                    document.getElementById("answerDetail").style.display = 'none';
-                    document.getElementById("submitButton").style.display = 'none';
-                }
-            </script>
-
             <div th:each="file : ${attachmentFileList}"> <!-- 파일 첨부 -->
                 <a class="attachmentFile" th:href="@{/files/downLoad(fileId=${file.fileId})}" th:text="${file.originFileName}">첨부 파일</a>
             </div>
@@ -104,7 +96,7 @@
 </section>
 
 
-
+<script src="/js/inquiry/adminInquiryDetail.js" defer></script>
 <footer th:replace="~{common/footer::footerFragment}"></footer>
 </body>
 </html>
