@@ -65,7 +65,7 @@
 
                 <!-- 제목, 클릭 시 mailDetail 로 이동 -->
                 <div class="table-cell">
-                    <a th:href="@{'/mail/detail'(emailId=${receivedMail.emailId})}" th:text="${receivedMail.emailTitle}"></a>
+                    <a th:href="@{'mail/detail'(emailId=${receivedMail.emailId})}" th:text="${receivedMail.emailTitle}"></a>
                 </div>
 
                 <!-- 작성일 -->
