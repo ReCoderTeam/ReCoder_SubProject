@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class AdminInquiryService {
 
-    private final InquiryMapper inquiryMapper;
+    private InquiryMapper inquiryMapper;
     private AdminInquiryMapper adminInquiryMapperr;
 
     @Autowired
