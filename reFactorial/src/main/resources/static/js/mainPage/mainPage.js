@@ -25,37 +25,46 @@ window.onload = function () {
 
     let lat;
     let lon;
-    navigator.geolocation.getCurrentPosition((position) => {
-        lat = position.coords.latitude;
-        lon = position.coords.longitude;
-        console.log("latitude : ",position.coords.latitude," longitude : ", position.coords.longitude);
 
-        fetch("/api/weather-key", {
-            method: "GET"
-        }).then(response => response.text())
-            .then(key =>{
-                console.log("api key : ",key)
+    // 경도
+    lon = 126.937256;
 
-                if (key){
-                    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}`,{
-                        method: 'GET'
-                    }).then(response => response.json())
-                        .then(data =>{
-                            console.log("날씨 데이터 : ", data)
+    // 위도
+    lat = 37.556318;
+    // console.log("latitude : ",position.coords.latitude," longitude : ", position.coords.longitude);
 
-                            const maxTemp = data.main.temp_max;
-                            const minTemp = data.main.temp_min;
-                            const icon = data.weather[0].icon;
+    fetch("/api/weather-key", {
+        method: "GET"
+    }).then(response => response.text())
+        .then(key =>{
+            console.log("api key : ",key)
 
-                            setWeather(maxTemp,minTemp,icon)
-                        })
-                } else {
-                    console.log("api key 없음")
-                }
+            if (key){
+                fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}`,{
+                    method: 'GET'
+                }).then(response => response.json())
+                    .then(data =>{
+                        console.log("날씨 데이터 : ", data)
 
-            });
+                        const maxTemp = data.main.temp_max;
+                        const minTemp = data.main.temp_min;
+                        const icon = data.weather[0].icon;
 
-    });
+                        setWeather(maxTemp,minTemp,icon)
+                    })
+            } else {
+                console.log("api key 없음")
+            }
+
+        });
+
+
+    // navigator.geolocation.getCurrentPosition((position) => {
+    //     // lat = position.coords.latitude;
+    //     // lon = position.coords.longitude;
+    //
+    //
+    // });
 
     const profileImg = document.querySelector(".profileImg img");
 

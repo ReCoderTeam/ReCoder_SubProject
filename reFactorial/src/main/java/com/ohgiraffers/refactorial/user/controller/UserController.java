@@ -184,12 +184,6 @@ public class UserController {
 
         Map<String , Object> returnResult = new HashMap<>();
 
-        if (searchResult > 0){
-            System.out.println("출석체크가 이미 되었습니다");
-        } else {
-            System.out.println("아직 출석체크 안함");
-        }
-
         returnResult.put("result", searchResult);
 
         return returnResult;

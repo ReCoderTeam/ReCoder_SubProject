@@ -218,6 +218,10 @@
         margin-left: 10px;
         cursor: pointer;
         height: 35px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .form-group button:hover,
@@ -257,10 +261,6 @@
     /* 휴가 유형 드롭다운 */
     #leaveTypeDropdown {
         display: none;
-    }
-
-    #leaveTypeDropdown label {
-        margin-left: 73px;
     }
 
     /* 오류 메시지 */

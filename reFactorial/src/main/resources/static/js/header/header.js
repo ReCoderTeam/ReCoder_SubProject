@@ -2,9 +2,6 @@ console.log("js파일 연결")
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    console.log("header 정보");
-    console.log("LoginUserInfo : ", LoginUserInfo)
-
     var userIcon = document.querySelector('.headerIconBox .myPage');
 
     // 요소가 존재하는지 확인

@@ -22,7 +22,6 @@ public class CommonController {
         LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");
 
         if (user == null) {
-            System.out.println("No user information in session, returning default");
             return new LoginUserDTO();
         }
 

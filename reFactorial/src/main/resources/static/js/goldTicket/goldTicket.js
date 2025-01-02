@@ -22,7 +22,7 @@ personList.forEach(person =>{
         const addressInfo = e.currentTarget.dataset.address
 
         // 클릭에 따라 데이터 가져오기 위해 fetch 를 사용 (외부 API 사용이기 때문에 controller 따로 생성해서 사용)
-        const response = await fetch(`http://localhost:8080/proxy/geocode?query=${addressInfo}`)
+        const response = await fetch(`http://125.129.201.45:9696/proxy/geocode?query=${addressInfo}`)
 
         if (response.ok) {
             const data = await response.json(); // 응답을 JSON으로 변환
