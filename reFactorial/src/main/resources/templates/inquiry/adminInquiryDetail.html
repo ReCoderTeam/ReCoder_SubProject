@@ -56,7 +56,7 @@
                 <div class="inquiry-meta">
                     <span>답변 상태 : </span><span th:if="${adminInquiries.answerStatus == false}">답변대기중</span>
                     <span th:if="${adminInquiries.answerStatus == true}">답변완료</span>
-                    <span>작성시간: <span th:text="${#temporals.format(adminInquiries.iqrCreationDate)}"></span></span>
+                    <span>작성시간: <span th:text="${#temporals.format(adminInquiries.iqrCreationDate, 'yyyy-MM-dd a h:mm:ss')}"></span></span>
                 </div>
             </div>
 
