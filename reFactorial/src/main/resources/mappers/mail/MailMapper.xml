@@ -51,9 +51,7 @@
         WHERE
         m.email_id = #{emailId}
         ORDER BY m.sent_date DESC
-
     </select>
-
     <!--내가 받은 메일-->
     <select id="getReceivedMails" resultMap="MailResultMap">
         SELECT *
