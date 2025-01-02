@@ -155,7 +155,7 @@
             int offset = (currentPage - 1) * limit;
 
             List<DocumentDTO> rejectedDocuments  = approvalService.getRejectedDocuments(loggedInEmpId, limit, offset);
-            int totalDocuments = approvalService.getInProgressDocumentsCount(loggedInEmpId);
+            int totalDocuments = approvalService.getRejectedDocumentsCount(loggedInEmpId);
             int totalPages = Math.max(1, (int) Math.ceil((double) totalDocuments / limit));
 
             // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
@@ -509,7 +509,7 @@
 
 
             // 반려자인지 확인하고 반려 이유 가져오기
-            String rejectReason = approvalService.getRejectReasonByApprover(pmId, currentEmpId);
+            String rejectReason = approvalService.getRejectReason(pmId);
 
 
 
