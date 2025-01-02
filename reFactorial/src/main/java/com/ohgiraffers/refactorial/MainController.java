@@ -140,6 +140,7 @@ public class MainController {
 
                 mailWithSenderList.add(mailWithDate);
             }
+
             System.out.println("mailWithSenderList: " + mailWithSenderList);
 
             model.addAttribute("receivedMails", mailWithSenderList);

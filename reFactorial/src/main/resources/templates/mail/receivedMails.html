@@ -14,14 +14,6 @@
     <script src="/js/mail/boldHover.js" defer></script>
     <link rel="stylesheet" href="/css/mail/boldHover.css">
 
-    <style>
-        .bold{
-            font-weight: bold;
-            color : #5c1915;
-        }
-    </style>
-
-
 </head>
 <body>
 <header th:replace="~{common/header::headerFragment}"></header>
@@ -72,7 +64,7 @@
             <div class="table-row">
 
                 <!-- 보낸 사람 -->
-                <div class="table-cell" th:text="${receivedMail.receiverEmpName}"></div>
+                <div class="table-cell" th:text="${receivedMail.senderEmpName}"></div>
 
                 <!-- 제목, 클릭 시 mailDetail 로 이동 -->
                 <div class="table-cell">

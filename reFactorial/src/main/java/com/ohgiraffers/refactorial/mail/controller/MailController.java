@@ -94,6 +94,8 @@ public class MailController {
 
         // 보낸 메일 목록 조회
         List<MailDTO> sentMails = mailService.getSentMails(senderEmpId, limit, offset);
+        // 보낸 메일 목록을 모델에 추가
+        List<MailDTO> sentMailsEmployee = mailEmployeeService.getSentMails(senderEmpId);
 
         // 전체 보낸 메일 수 조회
         int totalMails = mailService.getSentMailsCount(senderEmpId);
@@ -119,6 +121,7 @@ public class MailController {
         model.addAttribute("prevPage", prevPage);
         model.addAttribute("nextPage", nextPage);
         model.addAttribute("currentItemPage", "sentMails");
+        model.addAttribute("sentMailsEmployee",sentMailsEmployee);
 
         return "mail/sentMails";
     }
