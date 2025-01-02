@@ -38,7 +38,7 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         String memberId = user.getEmpId();
 
-        System.out.println("LoginUserInfo = " + user);
+//        System.out.println("LoginUserInfo = " + user);
 
         // 사번 저장 관려
         if (rememberMe) {

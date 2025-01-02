@@ -26,8 +26,6 @@ public class SharedWorkService {
     // 업무 저장
     public void saveSharedWork(SharedWorkDTO sharedWork) {
 
-        System.out.println("sharedWork 서비스 = " + sharedWork);
-
         sharedWorkMapper.saveSharedWork(sharedWork);
     }
 

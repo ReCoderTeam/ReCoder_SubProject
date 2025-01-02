@@ -64,7 +64,6 @@ public class UploadFileService {
             file.transferTo(new File(filePath));
 
             List<UploadFileDTO> existList = uploadMapper.findFileByMappingId(mappingId);
-            System.out.println("existList = " + existList);
 
             if (existList != null &&
                     (mappingId.startsWith("C") || mappingId.startsWith("D") ||
@@ -77,12 +76,6 @@ public class UploadFileService {
             }
 
             int uploadResult = uploadMapper.addFile(uploadFile);
-
-            if (uploadResult > 0) {
-                System.out.println("파일이 저장되었습니다.");
-            } else {
-                System.out.println("파일 저장에 실패 했습니다.");
-            }
         }
 
     }

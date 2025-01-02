@@ -142,8 +142,8 @@ function showLeaveTypeDropdown() {
     const leaveDate = document.getElementById('leaveDate');
 
     if (category === "category3") {  // 휴가 신청서 선택 시
-        leaveTypeDropdown.style.display = 'block';  // 드롭다운 보이기
-        leaveDate.style.display = 'block';
+        leaveTypeDropdown.style.display = 'flex';  // 드롭다운 보이기
+        leaveDate.style.display = 'flex';
     } else {
         leaveTypeDropdown.style.display = 'none';  // 다른 카테고리 선택 시 드롭다운 숨기기
         leaveDate.style.display = 'none';
