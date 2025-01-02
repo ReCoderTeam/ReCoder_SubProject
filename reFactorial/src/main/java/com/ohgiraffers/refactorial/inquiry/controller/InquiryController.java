@@ -33,7 +33,7 @@ public class InquiryController {
     // 문의 작성 페이지로 이동
     @GetMapping("/sendInquiry")
     public String showInquiryPage(Model model) {
-        model.addAttribute("currentPage", "inquiry"); // 1:1 문의하기 페이지
+        model.addAttribute("currentPageItem", "inquiry"); // 1:1 문의하기 페이지
         return "inquiry/sendInquiry";
     }
 
@@ -50,7 +50,7 @@ public class InquiryController {
         List<InquiryDTO> sentInquiries = inquiryService.sentInquiries(senderEmpId);
 
         model.addAttribute("sentInquiries", sentInquiries);
-        model.addAttribute("currentPage", "inquiryList"); // 문의 내역 페이지
+        model.addAttribute("currentPageItem", "inquiryList"); // 문의 내역 페이지
 
         return "inquiry/inquiryList";
     }

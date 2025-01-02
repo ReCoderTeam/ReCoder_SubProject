@@ -27,12 +27,12 @@
             <ul>
                 <li class="menu-item"
                     th:onclick="|location.href='@{/user/inquiry}'|"
-                    th:classappend="${currentPage == 'inquiry'} ? 'bold' : ''">
+                    th:classappend="${currentPageItem == 'inquiry'} ? 'bold' : ''">
                     1:1 문의하기
                 </li>
                 <li class="menu-item"
                     th:onclick="|location.href='@{/inquiry/inquiryList}'|"
-                    th:classappend="${currentPage == 'inquiryList'} ? 'bold' : ''">
+                    th:classappend="${currentPageItem == 'inquiryList'} ? 'bold' : ''">
                     문의 내역
                 </li>
             </ul>

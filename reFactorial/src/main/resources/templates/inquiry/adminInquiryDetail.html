@@ -37,13 +37,13 @@
             <ul class="sideMenuUl">
                 <li class="menu-item"
                     th:onclick="|location.href='@{/admin/adminInquiryList}'|"
-                    th:classappend="${currentPage == 'adminInquiryList'} ? 'bold' : ''">전체 조회</li>
+                    th:classappend="${currentPageItem == 'adminInquiryList'} ? 'bold' : ''">전체 조회</li>
                 <li class="menu-item"
                     th:onclick="|location.href='@{/admin/adminInquiryNoAnswerList}'|"
-                    th:classappend="${currentPage == 'adminInquiryNoAnswerList'} ? 'bold' : ''">미답변</li>
+                    th:classappend="${currentPageItem == 'adminInquiryNoAnswerList'} ? 'bold' : ''">미답변</li>
                 <li class="menu-item"
                     th:onclick="|location.href='@{/admin/adminInquiryAnswerList}'|"
-                    th:classappend="${currentPage == 'adminInquiryAnswerList'} ? 'bold' : ''">답변완료</li>
+                    th:classappend="${currentPageItem == 'adminInquiryAnswerList'} ? 'bold' : ''">답변완료</li>
             </ul>
         </div>
 
