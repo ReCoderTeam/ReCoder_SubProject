@@ -398,7 +398,7 @@
             model.addAttribute("totalPages", totalPages);
             model.addAttribute("prevPage", prevPage);
             model.addAttribute("nextPage", nextPage);
-            return "/approvals/referenceDocuments";
+            return "approvals/referenceDocuments";
         }
 
 
