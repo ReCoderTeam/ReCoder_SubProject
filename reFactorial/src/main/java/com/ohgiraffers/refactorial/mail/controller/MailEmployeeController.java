@@ -30,7 +30,6 @@ public class MailEmployeeController {
         if (searchReceiverInput != null && !searchReceiverInput.isEmpty()) {
             return mailEmployeeService.searchMailEmployees(searchReceiverInput);
         } else {
-            System.out.println("수신자검색" + mailEmployeeService.getAllMailEmployees());
             return mailEmployeeService.getAllMailEmployees(); // 모든 직원 목록을 반환하는 메서드
         }
     }
