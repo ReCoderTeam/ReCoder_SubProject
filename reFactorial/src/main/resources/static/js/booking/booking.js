@@ -120,7 +120,11 @@ const roomNo = urlSearch.get('roomNo')
 
 // yyyy-MM-dd
 function dateFormate(data){
-    const result = `${data.getFullYear()}-${data.getMonth() + 1}-${data.getDate()}`
+    const year = data.getFullYear();
+    const month = String(data.getMonth() + 1).padStart(2, '0'); // 월을 두 자리로
+    const date = String(data.getDate()).padStart(2, '0'); // 일을 두 자리로
+
+    const result = `${year}-${month}-${date}`
 
     return result
 }
