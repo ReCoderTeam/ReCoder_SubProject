@@ -11,14 +11,7 @@
     <link rel="stylesheet" href="/css/common/footer.css">
     <link rel="stylesheet" href="/css/common/style.css">
     <link rel="stylesheet" href="/css/mail/receivedMails.css">
-    <script src="/js/mail/boldHover.js" defer></script>
-    <link rel="stylesheet" href="/css/mail/boldHover.css">
-    <style>
-        .bold{
-            font-weight:bold;
-            color : #5c1915;
-        }
-    </style>
+
 
 </head>
 <body>
@@ -30,7 +23,6 @@
     <div class="sidebar">
         <div class="sidebar-title">사내 메일</div>
         <ul>
-<!--            <li th:onclick="|location.href='@{/user/mail}'|">전체 메일</li>-->
             <li class="menu-item"
                 th:onclick="|location.href='@{/mail/sentMails}'|"
                 th:classappend="${currentPageItem == 'sentMails'} ? 'bold' : ''">
@@ -41,7 +33,6 @@
                 th:classappend="${currentPageItem == 'receivedMails'} ? 'bold' : ''">
                 받은 메일
             </li>
-<!--            <li th:onclick="|location.href='@{/mail/mailBin}'|">휴지통</li>-->
         </ul>
     </div>
 
