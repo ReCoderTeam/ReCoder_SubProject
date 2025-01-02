@@ -150,14 +150,18 @@
                 <form action="changePW" method="post" id="changePWForm">
                     <div class="modal-body">
                         <label for="presentPW">현재 비밀번호</label>
-                        <input type="password" id="presentPW" name="presentPW">
+                        <input type="password" id="presentPW" name="presentPW" required>
                         <p>현재 비밀번호와 일치하지 않습니다.</p>
+                        <p class="presentPwNull">값을 입력해주세요</p>
                         <label for="changePW">변경 비밀번호</label>
-                        <input type="password" id="changePW" name="changePW">
+                        <input type="password" id="changePW" name="changePW" required>
                         <p>비밀번호가 일치하지 않습니다.</p>
+                        <p class="changePWNull">값을 입력해주세요</p>
+                        <p class="pwdRuleError">비밀번호는 영문과 숫자 조합의 6자리 이상입니다.</p>
                         <label for="comparePW">비밀번호 확인</label>
-                        <input type="password" id="comparePW" name="comparePW">
+                        <input type="password" id="comparePW" name="comparePW" required>
                         <p>비밀번호가 일치하지 않습니다.</p>
+                        <p class="comparePWNull">값을 입력해주세요</p>
                     </div>
                     <div class="modal-footer">
 <!--                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
@@ -192,8 +196,6 @@
         // js에서 사용중 삭제 불가
         const profileImgUrl = '[[${LoginUserInfo.profile}]]';
         const empPhone = '[[${LoginUserInfo.empPhone}]]';
-
-        console.log(profileImgUrl)
     </script>
 
     <script th:src="@{/js/myPage/myPage.js}"></script>

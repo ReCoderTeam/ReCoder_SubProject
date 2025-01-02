@@ -13,7 +13,7 @@ html, body {
 
 .sidebar {
     width: 20%;
-    border-right: 1px solid black;
+    border-right: 1px solid #5C1915;
     padding: 20px;
     overflow-y: auto;
 }

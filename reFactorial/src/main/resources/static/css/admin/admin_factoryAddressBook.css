@@ -8,8 +8,6 @@ html, body {
     overflow: hidden; /* 페이지 스크롤 제거 */
 }
 
-
-
 .menuMainBox h2 {
     margin-bottom: 20px;
     font-size: 24px; /* 제목 크기 조정 */

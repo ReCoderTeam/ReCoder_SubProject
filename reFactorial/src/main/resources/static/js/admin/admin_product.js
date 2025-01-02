@@ -39,6 +39,7 @@ async function addProduct() {
 document.addEventListener("DOMContentLoaded", function () {
     const registerContainer = document.getElementById("registerContainer");
     const editContainer = document.getElementById("editContainer");
+    const selectedMenu = document.querySelectorAll(".sideMenuUl li");
 
     // 제품 등록 화면 초기화
     showRegister();
@@ -51,12 +52,28 @@ document.addEventListener("DOMContentLoaded", function () {
     function showRegister() {
         registerContainer.style.display = "block"; // 제품 등록 화면 표시
         editContainer.style.display = "none"; // 제품 수정 화면 숨김
+
+        selectedMenu.forEach(menu => {
+            if (menu.classList.contains('selected')){
+                menu.classList.remove('selected')
+            }
+        })
+
+        document.getElementById("showRegister").classList.add('selected')
     }
 
     // 제품 수정 화면 표시
     function showEdit() {
         registerContainer.style.display = "none"; // 제품 등록 화면 숨김
         editContainer.style.display = "block"; // 제품 수정 화면 표시
+
+        selectedMenu.forEach(menu => {
+            if (menu.classList.contains('selected')){
+                menu.classList.remove('selected')
+            }
+        })
+
+        document.getElementById("showEdit").classList.add('selected')
 
         initializeProductSearch(); // 검색창 초기화
     }

@@ -378,17 +378,18 @@ body{
                         margin-bottom: 0;
                     }
 
-                    input[class="error"]{
-                        margin-bottom: 0;
+                    input[class~="error"]{
+                        /*margin-bottom: 0;*/
                     }
 
                     p {
                         display: none;
                     }
 
-                    p[class="error"] {
+                    p[class~="error"] {
                         color: #bf0603;
                         display: block;
+                        margin-top: 0;
                     }
 
                 }

@@ -43,7 +43,7 @@ public class AddressBookController {
     @ResponseBody
     @GetMapping("/search")
     public List<EmployeeDTO> searchEmployees(@RequestParam("keyword") String keyword) {
-        System.out.println("Searching with keyword: " + keyword);
+
         return addressBookService.searchEmployees(keyword);
     }
 

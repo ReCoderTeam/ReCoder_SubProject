@@ -265,3 +265,43 @@ body{
         }
     }
 }
+
+
+/* 눈 내리는 효과 */
+body, html {
+    min-height: 100vh;
+}
+
+.snowfall-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.snowflake {
+    position: fixed;
+    color: rgba(176, 224, 230, 0.4);
+    text-shadow:
+            0 0 5px #add8e6,
+            0 0 10px #87ceeb,
+            0 0 15px #b0e0e6;
+    animation: snowfall linear infinite;
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(-10px) translateX(0) rotate(0deg);
+        opacity: 1;
+    }
+    75% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(100vh) translateX(20px) rotate(360deg);
+        opacity: 0;
+    }
+}

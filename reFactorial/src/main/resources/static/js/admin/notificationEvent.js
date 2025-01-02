@@ -1,8 +1,17 @@
 const postItemList = document.querySelectorAll(".postItem")
 const addPost = document.querySelector("#addPost")
 const menuMainBox = document.querySelector(".menuMainBox")
+const sideMenuList = document.querySelectorAll(".sideMenu")
 
 addPost.addEventListener("click",()=>{
+    sideMenuList.forEach(menu =>{
+        if (menu.classList.contains("selected")){
+            menu.classList.remove("selected")
+        }
+    })
+
+    addPost.classList.add("selected")
+
     menuMainBox.innerHTML = '';
     menuMainBox.innerHTML = `
                                     <div class="postInfo">
@@ -125,3 +134,30 @@ function deletePost (event){
     location.reload(`/admin/postDetail?postId=${postId}`);
 
 }
+
+document.addEventListener("DOMContentLoaded",()=>{
+    const URL = new URLSearchParams(window.location.search)
+
+    const categoryCode = URL.get("categoryCode")
+
+    if (categoryCode == 1){
+        sideMenuList.forEach(menu =>{
+            if (menu.classList.contains("selected")){
+                menu.classList.remove("selected")
+            }
+        })
+        const notificationSelect = document.querySelector("#notificationSelect")
+        notificationSelect.classList.add('selected')
+    }
+
+    if (categoryCode == 5){
+        sideMenuList.forEach(menu =>{
+            if (menu.classList.contains("selected")){
+                menu.classList.remove("selected")
+            }
+        })
+        const eventSelect = document.querySelector("#eventSelect")
+        eventSelect.classList.add('selected')
+    }
+
+})

@@ -24,7 +24,6 @@ public class AttendanceService {
         // 6시 이전(즉, 오전12시부터 새벽 시간인지 판별)
         boolean existWorkTime = attendance.getAttTime().isBefore(LocalTime.of(6, 0));
         if (existWorkTime) {
-            System.out.println("근무 시간 외입니다.");
             return;
         }
 
@@ -35,7 +34,6 @@ public class AttendanceService {
         // 중복 근태 확인
         AttendanceDTO exist = attendanceMapper.checkAttendance(searchData);
         if (exist != null) {
-            System.out.println("이미 근태 기록이 있습니다.");
             return;
         }
 

@@ -118,7 +118,7 @@ public class MainController {
 
         List<MailDTO> receivedMails = mailService.getReceivedMails(empId);
 
-        System.out.println("receivedMails = " + receivedMails);
+
 
 
         if(!receivedMails.isEmpty()){
@@ -140,8 +140,6 @@ public class MainController {
 
                 mailWithSenderList.add(mailWithDate);
             }
-
-            System.out.println("mailWithSenderList: " + mailWithSenderList);
 
             model.addAttribute("receivedMails", mailWithSenderList);
         }
@@ -218,9 +216,9 @@ public class MainController {
 
         // 각 탭에 표시할 최근 문서들 조회 (예: 최근 5개)
         List<DocumentDTO> draftDocuments = approvalService.getMyDocuments(empId, 3, 0);
-        System.out.println("draftDocuments: " + draftDocuments);  // 로그 추가
+
         List<DocumentDTO> approveDocuments = approvalService.getApprovableDocuments(empId, 3, 0);
-        System.out.println("Approve Documents: " + approveDocuments);  // 로그 추가
+
         List<DocumentDTO> referenceDocuments = approvalService.getReferenceDocuments(empId, 3, 0);
 
         // 모델에 데이터 추가

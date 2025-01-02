@@ -20,7 +20,7 @@ section{
 }
 .sidebar {
     width: 20%; /* 사이드바 너비 */
-    border-right: 1px solid black; /* 오른쪽 경계선 */
+    border-right: 1px solid #5C1915; /* 오른쪽 경계선 */
     padding: 20px; /* 내부 여백 */
     overflow-y: auto; /* 사이드바 내용이 넘칠 경우 스크롤 */
 }

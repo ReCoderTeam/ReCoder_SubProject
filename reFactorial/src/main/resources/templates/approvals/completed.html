@@ -28,7 +28,7 @@
             <ul>
                 <li><a href="/approvals/waiting">대기 중</a></li>
                 <li><a href="/approvals/inProgress">진행 중</a></li>
-                <li><a href="/approvals/completed">완료</a></li>
+                <li class="selected"><a href="/approvals/completed">완료</a></li>
                 <li><a href="/approvals/rejected">반려</a></li>
 
                 <li><a href="/approvals/myDocuments">내가 작성한</a></li>
@@ -91,6 +91,7 @@
 <footer th:replace="~{common/footer::footerFragment}"></footer>
 
 
-<script src="/js/approval/completed.js"></script>
+
+<script th:src="@{/js/approval/completed.js}"></script>
 </body>
 </html>

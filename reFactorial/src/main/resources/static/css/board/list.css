@@ -12,7 +12,7 @@ html, body {
 }
 .sidebar {
     width: 20%; /* 사이드바 너비 */
-    border-right: 1px solid black; /* 오른쪽 경계선 */
+    border-right: 1px solid #5C1915; /* 오른쪽 경계선 */
     padding: 20px; /* 내부 여백 */
     overflow-y: auto; /* 사이드바 내용이 넘칠 경우 스크롤 */
 }
@@ -56,7 +56,7 @@ html, body {
 
 .main-content {
     flex: 1; /* 남은 공간을 메인 콘텐츠가 차지 */
-    padding: 20px; /* 내부 여백 */
+    padding: 20px 10px 5px; /* 내부 여백 */
     overflow-y: auto; /* 메인 콘텐츠 내용 넘칠 경우 스크롤 */
     display: flex;
     flex-direction: column;
@@ -229,73 +229,19 @@ a:visited {
 
 .category-3 .document-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, auto);
-    gap: 3rem;
+    gap: 1em;
     width: 100%;
-    max-width: 1200px;
-    margin: 3rem auto 0;
-    min-height: auto;
+    max-width: 100%;
     overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
     background: linear-gradient(to bottom, #ffffff, #f8f9fa);
     border-radius: 2rem;
-    padding-bottom: 2rem;
-}
-
-/* 가로 구분선 */
-.category-3 .document-grid::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 4rem;
-    right: 4rem;
-    height: 1px;
-    background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(92, 25, 21, 0.1) 20%,
-            rgba(92, 25, 21, 0.2) 50%,
-            rgba(92, 25, 21, 0.1) 80%,
-            transparent
-    );
-    transform: translateY(-50%);
-}
-
-/* 세로 구분선들 */
-.category-3 .document-grid::before {
-    content: '';
-    position: absolute;
-    top: 4rem;
-    bottom: 4rem;
-    left: 33.33%;
-    width: 1px;
-    background: linear-gradient(
-            180deg,
-            transparent,
-            rgba(92, 25, 21, 0.1) 20%,
-            rgba(92, 25, 21, 0.2) 50%,
-            rgba(92, 25, 21, 0.1) 80%,
-            transparent
-    );
-}
-
-/* 두 번째 세로 구분선 */
-.category-3 .document-grid > div:nth-child(2)::before {
-    content: '';
-    position: absolute;
-    top: 4rem;
-    bottom: 4rem;
-    left: 66.66%;
-    width: 1px;
-    background: linear-gradient(
-            180deg,
-            transparent,
-            rgba(92, 25, 21, 0.1) 20%,
-            rgba(92, 25, 21, 0.2) 50%,
-            rgba(92, 25, 21, 0.1) 80%,
-            transparent
-    );
+    padding: 1em 10px 1em;
+    max-height: calc(100vh - 250px);
+    box-sizing: border-box;
 }
 
 .category-3 .document-card {
