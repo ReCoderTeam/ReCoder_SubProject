@@ -330,6 +330,7 @@
                     border-radius: 4px;
                     padding: 5px 10px;
                     border: none;
+                    cursor: pointer;
                 }
             }
 
@@ -367,6 +368,7 @@
                                 height: 20px;
                                 aspect-ratio: 1 /1;
                                 margin-right: 10px;
+                                cursor: pointer;
                             }
                         }
                     }
@@ -378,6 +380,7 @@
                         background-color: #5C1915;
                         color: white;
                         border-radius: 5px;
+                        cursor: pointer;
                     }
                 }
             }
