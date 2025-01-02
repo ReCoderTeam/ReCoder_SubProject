@@ -84,7 +84,7 @@
                 </div>
 
                 <!-- 게시물 내용 -->
-                <pre class="content">
+                <pre id="contentContainer" class="content">
                     <div class="contentText" th:text="${postDetail.postContent}">
                         게시물 내용이 여기에 표시됩니다.
                     </div>
@@ -306,6 +306,22 @@
                 commentListArea.innerHTML = commentList;
             });
     });
+
+    const URL = new URLSearchParams(window.location.search)
+
+    const currentCategory = URL.get("categoryCode")
+
+    if (currentCategory == 4){
+        const contentContainer = document.getElementById("contentContainer");
+
+        // 새 div 태그 생성
+        const newDiv = document.createElement("div");
+        newDiv.className = contentContainer.className; // 기존 클래스 복사
+        newDiv.innerHTML = contentContainer.innerHTML; // 기존 내용 복사
+
+        // 기존 pre 태그를 새 div 태그로 교체
+        contentContainer.replaceWith(newDiv);
+    }
 
 </script>
 

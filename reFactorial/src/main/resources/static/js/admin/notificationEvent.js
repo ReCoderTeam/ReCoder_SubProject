@@ -120,6 +120,8 @@ function savePost (event){
             "postCategory": document.getElementById("postCategory")?.value
         })
     })
+    
+    console.log("등록했어요")
 
     // 새 URL로 리디렉션
     location.reload(`/admin/postDetail?postId=${postId}`);

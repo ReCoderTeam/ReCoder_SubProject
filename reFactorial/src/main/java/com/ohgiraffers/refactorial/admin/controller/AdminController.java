@@ -346,6 +346,7 @@ public class AdminController {
 
         // ID 자동 생성
         String newFactoryId = adminService.generateFactoryId();
+        System.out.println("newFactoryId: " + newFactoryId);
         factoryDTO.setFabId(newFactoryId);
 
         // 등록 처리
