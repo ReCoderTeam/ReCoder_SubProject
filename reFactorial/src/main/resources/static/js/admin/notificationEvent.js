@@ -53,6 +53,9 @@ postItemList.forEach(postItem =>{
             .then(data =>{
                 console.log("detail data : ",data)
 
+                const dateTime = data.postDetail.postCreationDate
+                const createDate = dateTime.split('T')[0];
+
                 if (data.postDetail != null){
                     menuMainBox.innerHTML ='';
 
@@ -71,7 +74,7 @@ postItemList.forEach(postItem =>{
 
                                     <div class="postInfo">
                                         <label for="postDate">작성일 : </label>
-                                        <input id="postDate" name="postDate" type="text" value="${data.postDetail.postCreationDate}" disabled>
+                                        <input id="postDate" name="postDate" type="text" value="${createDate}" disabled>
                                     </div>
 
                                     <div class="postInfo">

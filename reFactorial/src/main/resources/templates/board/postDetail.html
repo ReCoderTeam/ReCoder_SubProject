@@ -84,7 +84,7 @@
                 </div>
 
                 <!-- 게시물 내용 -->
-                <div class="content">
+                <pre class="content">
                     <div class="contentText" th:text="${postDetail.postContent}">
                         게시물 내용이 여기에 표시됩니다.
                     </div>
@@ -115,7 +115,7 @@
                         <input type="hidden" name="voteResults" th:value="${voteSelectResult}" />
                         <input type="hidden" name="voteSelectResult" th:value="${voteSelectResult}" />
                     </form>
-                </div>
+                </pre>
 
                 <div class="commentBox">
                     <!-- 댓글 등록 -->
