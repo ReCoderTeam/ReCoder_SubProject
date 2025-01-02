@@ -38,7 +38,7 @@
             #{limit} OFFSET #{offset};
     </select>
 
-    <!-- 게시물 카테고리별 카운트 -->
+<!--     게시물 카테고리별 카운트-->
     <select id="getBoardListCount" parameterType="com.ohgiraffers.refactorial.board.model.dto.BoardDTO">
         SELECT
         COUNT(*)
@@ -57,6 +57,18 @@
         ORDER BY
         p.post_creationDate DESC;
     </select>
+
+    <select id="getBoardListCounts" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_post p
+        LEFT JOIN employee e ON p.emp_id = e.emp_id
+        WHERE p.category_code = #{categoryCode}
+        <if test="searchContents != null and searchContents != ''">
+            AND (p.post_title LIKE CONCAT('%', #{searchContents}, '%')
+            OR e.emp_name LIKE CONCAT('%', #{searchContents}, '%'))
+        </if>
+    </select>
+
 
     <!-- 게시물 등록, 수정 -->
     <insert id="boardPost" parameterType="com.ohgiraffers.refactorial.board.model.dto.BoardDTO">

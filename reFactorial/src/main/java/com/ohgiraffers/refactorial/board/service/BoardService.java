@@ -110,6 +110,8 @@ public class BoardService {
         return boardMapper.getBoardListCount(categoryCode);
     }
 
+
+
     // 댓글 좋아요 조회
     public void commentLikes(String postId) {
 
@@ -135,5 +137,12 @@ public class BoardService {
     // 좋아요 삭제
     public void commentLikesDelete(CommentLikesDTO commentLikes) {
         boardMapper.commentLikesDelete(commentLikes);
+    }
+
+    public int getBoardListCounts(int categoryCode, String searchContents) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("categoryCode", categoryCode);
+        params.put("searchContents", searchContents);
+        return boardMapper.getBoardListCounts(params);
     }
 }

@@ -4,6 +4,7 @@ import com.ohgiraffers.refactorial.board.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface BoardMapper {
@@ -68,4 +69,6 @@ public interface BoardMapper {
 
     // 투표 삭제
     void commentLikesDelete(CommentLikesDTO commentLikes);
+
+    int getBoardListCounts(Map<String, Object> params);
 }

@@ -121,34 +121,36 @@
                 </div>
 
                 <!-- 페이지네이션 표시 -->
-                <div class="pagination">
-                    <ul>
-                        <!-- 첫 페이지 -->
-                        <li class="first">
-                            <a th:href="@{'/board/list?categoryCode=' + ${categoryCode} + '&page=1'}"><<</a>
-                        </li>
-                        <!-- 이전 페이지 -->
-                        <li class="prev">
-                            <a th:href="@{'/board/list?categoryCode=' + ${categoryCode} + '&page=' + ${prevPage}}" class="prev"><</a>
-                        </li>
-
-                        <!-- 페이지 번호들 -->
-                        <th:block th:each="i : ${#numbers.sequence(1, totalPages)}">
-                            <li th:classappend="${i == currentPage ? 'active' : ''}">
-                                <a th:href="@{'/board/list?categoryCode=' + ${categoryCode} + '&page=' + ${i}}" th:text="${i}"></a>
+                    <!-- 페이지네이션 표시 -->
+                    <div class="pagination">
+                        <ul>
+                            <!-- 첫 페이지 -->
+                            <li th:class="${currentPage == 1} ? 'disabled' : ''">
+                                <a th:href="@{'/board/list?categoryCode=' + ${categoryCode} + '&page=1' + ${searchContents != null ? '&searchContents=' + searchContents : ''}}">&lt;&lt;</a>
                             </li>
-                        </th:block>
+                            <!-- 이전 페이지 -->
+                            <li th:class="${currentPage == 1} ? 'disabled' : ''">
+                                <a th:href="@{'/board/list?categoryCode=' + ${categoryCode} + '&page=' + ${prevPage} + ${searchContents != null ? '&searchContents=' + searchContents : ''}}">&lt;</a>
+                            </li>
 
-                        <!-- 다음 페이지 -->
-                        <li class="next">
-                            <a th:href="@{'/board/list?categoryCode=' + ${categoryCode} + '&page=' + ${nextPage}}" class="next">></a>
-                        </li>
-                        <!-- 마지막 페이지 -->
-                        <li class="last">
-                            <a th:href="@{'/board/list?categoryCode='+ ${categoryCode} + '&page=' + ${totalPages}}" class="last">>></a>
-                        </li>
-                    </ul>
-                </div>
+                            <!-- 페이지 번호들 -->
+                            <th:block th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+                                <li th:class="${pageNum == currentPage} ? 'active' : ''">
+                                    <a th:href="@{'/board/list?categoryCode=' + ${categoryCode} + '&page=' + ${pageNum} + ${searchContents != null ? '&searchContents=' + searchContents : ''}}"
+                                       th:text="${pageNum}"></a>
+                                </li>
+                            </th:block>
+
+                            <!-- 다음 페이지 -->
+                            <li th:class="${currentPage == totalPages} ? 'disabled' : ''">
+                                <a th:href="@{'/board/list?categoryCode=' + ${categoryCode} + '&page=' + ${nextPage} + ${searchContents != null ? '&searchContents=' + searchContents : ''}}">&gt;</a>
+                            </li>
+                            <!-- 마지막 페이지 -->
+                            <li th:class="${currentPage == totalPages} ? 'disabled' : ''">
+                                <a th:href="@{'/board/list?categoryCode='+ ${categoryCode} + '&page=' + ${totalPages} + ${searchContents != null ? '&searchContents=' + searchContents : ''}}">&gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </div>
             </div>
         </div>
     </section>

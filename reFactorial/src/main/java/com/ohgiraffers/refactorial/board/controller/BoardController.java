@@ -32,52 +32,54 @@ public class BoardController {
     }
 
     // 게시물 전체조회
-    @GetMapping("list") // url로 이동
-    public String list(@RequestParam int categoryCode, Model model, HttpSession session,
+    @GetMapping("list")
+    public String list(@RequestParam int categoryCode,
+                       Model model,
+                       HttpSession session,
                        @RequestParam(value = "page", defaultValue = "1") int currentPage,
                        @RequestParam(required = false) String searchContents) {
 
-//        LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");   // 로그인한 유저 정보를 가져옴
-
-        // 페이지네이션
         int limit = 15; // 한 페이지당 문서 수
-        int totalBoardList = boardService.getBoardListCount(categoryCode); // 전체 게시글 개수 가져오기
-        int totalPages = totalBoardList > 0 ? (int) Math.ceil((double) totalBoardList / limit) : 1; // 총 페이지 수
+        int totalBoardList = boardService.getBoardListCounts(categoryCode, searchContents); // 전체 게시글 개수 가져오기
+
+        // totalPages 계산 수정 - 최소 1페이지 보장
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalBoardList / limit));
 
         // 현재 페이지 범위 검증
-        if (currentPage < 1) {
-            currentPage = 1;
-        }
-        if (currentPage > totalPages) {
-            currentPage = totalPages;
-        }
+        currentPage = Math.max(1, Math.min(currentPage, totalPages));
 
-        int offset = (currentPage - 1) * limit; // offset 계산
+        int offset = (currentPage - 1) * limit;
 
-        // 게시물 목록 가져오기
         List<BoardDTO> postList = boardService.postList(categoryCode, limit, offset, searchContents);
 
-        // 문서 번호 설정
-        for (int i = 0; i < postList.size(); i++) {
-            postList.get(i).setRowNum(totalBoardList - offset - i);
+        // 번호 매기기 수정
+        if (!postList.isEmpty()) {
+            int startNumber = totalBoardList - offset;
+            for (int i = 0; i < postList.size(); i++) {
+                postList.get(i).setRowNum(startNumber - i);
+            }
         }
 
-        // 이전/다음 페이지 설정
-        int prevPage = currentPage > 1 ? currentPage - 1 : 1;
-        int nextPage = currentPage < totalPages ? currentPage + 1 : totalPages;
+        int prevPage = Math.max(1, currentPage - 1);
+        int nextPage = Math.min(totalPages, currentPage + 1);
 
-        // 모델에 데이터 추가
-        model.addAttribute("currentPage", currentPage); // 현재 페이지 번호
-        model.addAttribute("totalPages", totalPages); // 전체 페이지 수
-        model.addAttribute("prevPage", prevPage); // 이전 페이지 번호
-        model.addAttribute("nextPage", nextPage); // 다음 페이지 번호
-        model.addAttribute("totalBoardList", totalBoardList); // 전체 페이지 갯수
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("prevPage", prevPage);
+        model.addAttribute("nextPage", nextPage);
+        model.addAttribute("totalBoardList", totalBoardList);
+        model.addAttribute("postList", postList);
+        model.addAttribute("categoryCode", categoryCode);
+        model.addAttribute("currentCategory", categoryCode);
+        model.addAttribute("searchContents", searchContents);
 
-        model.addAttribute("postList", postList);    // 템플릿에 값 전달
-        model.addAttribute("categoryCode", categoryCode);   // 카테고리코드를 게시물 등록페이지로 이동시키기 위한 셋팅
-        model.addAttribute("currentCategory", categoryCode);    // 게시판 사이드바에 값 전달
+        System.out.println("Total Board List: " + totalBoardList);
+        System.out.println("Total Pages: " + totalPages);
+        System.out.println("Current Page: " + currentPage);
+        System.out.println("Offset: " + offset);
+        System.out.println("Post List Size: " + postList.size());
 
-        return "board/list";   // html 페이지로 이동
+        return "board/list";
     }
 
     // 게시물 등록 / 수정 페이지로 이동
