@@ -14,7 +14,7 @@ html, body {
 
 .sidebar {
     width: 20%; /* 사이드바 너비를 화면의 20%로 설정 */
-    border-right: 1px solid black; /* 오른쪽 경계선을 검은색으로 추가 */
+    border-right: 1px solid #5C1915; /* 오른쪽 경계선을 검은색으로 추가 */
     padding: 20px; /* 내부 여백 설정 */
     overflow-y: auto; /* 내용이 넘칠 경우 수직 스크롤바 추가 */
 }
@@ -36,6 +36,11 @@ html, body {
     font-size: 18px;
 }
 
+.sidebar .selected{
+    font-weight: bold;
+    color: #5C1915;
+}
+
 .sidebar li {
     position: relative; /* 가상 요소 위치를 설정하기 위한 기준 위치 */
     padding: 10px 0; /* 리스트 항목의 상하 여백 설정 */
@@ -55,12 +60,6 @@ html, body {
     display: none; /* 마지막 항목의 구분선을 제거 */
 }
 
-.sidebar li:hover {
-    font-family: 'Noto Sans KR', Arial, sans-serif; /* 마우스 오버 시 글꼴 설정 */
-    color: #5C1915; /* 마우스 오버 시 글씨 색상 설정 */
-    font-weight: 1000; /* 마우스 오버 시 글씨 굵게 설정 */
-}
-
 .sidebar li a {
     text-decoration: none; /* 링크 밑줄 제거 */
     color: inherit; /* 부모 요소의 색상을 상속 */
@@ -74,11 +73,11 @@ html, body {
 }
 
 /* 퀴즈 컨테이너 스타일 */
-.quiz-container {
-    background: linear-gradient(to bottom, #4c1d95, #5b21b6, #4c1d95);
-    padding: 1rem;
+#quiz-container {
     height: 100%;
     width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 /* 메인 컨텐츠 영역 크기 조정 */
@@ -88,7 +87,8 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    max-height: calc(100vh - 235px);  /* ⭐ 오른쪽숫자가 커질수록 메인컨텐츠 하단부분이 위로올라감*/
+    /*max-height: calc(100vh - 235px);  !* ⭐ 오른쪽숫자가 커질수록 메인컨텐츠 하단부분이 위로올라감*!*/
+    box-sizing: border-box;
 }
 
 .quiz-card {
@@ -98,7 +98,6 @@ html, body {
     max-width: 100%; /* 이 부분을 수정 */
     width: 900px;
     max-height: 83vh;
-    min-height: 60vh; /* 이 부분을 추가 */
     position: relative;
     box-shadow: 0 0 30px 10px rgba(218,165,32,0.2);
     border: 2px solid rgba(253, 230, 138, 0.5);
@@ -401,7 +400,6 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 70vh;
     padding: 2rem;
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 193, 7, 0.05)); /* 황금색 그라데이션 배경 */
     position: relative; /* 추가 */
@@ -522,7 +520,7 @@ html, body {
 .floating-candy {
     position: absolute;
     animation: float 3s ease-in-out infinite;
-    font-size: 100px; /* 이모지 크기를 훨씬 크게 조정 */
+    font-size: 90px; /* 이모지 크기를 훨씬 크게 조정 */
     z-index: 10;
     opacity: 0.7;
 
@@ -531,7 +529,7 @@ html, body {
 /*2번쨰캔디*/
 .candy-1 {
     top: 10%;
-    left: 15%;
+    left: 10%;
     transform: rotate(30deg);
 }
 

@@ -199,13 +199,10 @@ public class UserController {
     @GetMapping("getAllCheckEvent")
     @ResponseBody
     public List<String> getAllCheckEvent(@RequestParam String start, @RequestParam String end, HttpSession session){
-        System.out.println("start = " + start);
 
         LocalDate startDate = LocalDate.parse(start.substring(0,10));
         LocalDate endDate = LocalDate.parse(end.substring(0,10));
 //        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth()); // 해당 달의 마지막 날 구하기
-
-        System.out.println("startDate = " + startDate + ", " +endDate);
 
         LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");
         String empId = user.getEmpId();

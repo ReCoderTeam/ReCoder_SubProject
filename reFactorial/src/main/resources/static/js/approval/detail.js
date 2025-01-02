@@ -51,6 +51,22 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.style.display = "none";
     });
 
+
+    // 모달 창 취소 버튼 클릭 (여기에 추가)
+    cancelBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+        rejectReason.value = "";
+    });
+
+    // 모달 바깥 영역 클릭 시 닫기
+    window.addEventListener("click", function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            rejectReason.value = "";
+        }
+    });
+
+
     // 승인/반려/전결 요청 전송 함수
     function sendApprovalAction(action, pmId, reason) {
         console.log("승인/반려/전결 요청 - action:", action, "pmId:", pmId, "reason:", reason);

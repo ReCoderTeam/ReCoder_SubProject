@@ -16,7 +16,7 @@ html, body {
 .sidebar {
     width: 20%; /* 사이드바 너비 */
     background-color: white;
-    border-right: 1px solid black;
+    border-right: 1px solid #5C1915;
     padding: 20px;
     overflow-y: auto;
 }
@@ -38,6 +38,11 @@ html, body {
     font-size: 18px;
 }
 
+.sidebar .selected{
+    font-weight: bold;
+    color: #5C1915;
+}
+
 .sidebar li {
 
     position: relative;
@@ -56,12 +61,6 @@ html, body {
 
 .sidebar li:last-child::after {
     display: none;
-}
-
-.sidebar li:hover {
-    font-family: 'Noto Sans KR', Arial, sans-serif; /* 마우스 오버 시 글꼴 설정 */
-    color: #5C1915;
-    font-weight: 1000;
 }
 
 .sidebar li a {

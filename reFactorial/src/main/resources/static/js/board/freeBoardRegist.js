@@ -140,7 +140,7 @@ function onChangeSelectOption(){
         voteContainer.style.display = 'block';
         freeBoardForm.removeAttribute('enctype');
     }else if(categoryCode === "3"){
-        postFileBox.style.display = 'block'
+        postFileBox.style.display = 'flex'
         voteContainer.style.display = 'none';
 
         // form에 enctype 속성 추가
@@ -179,7 +179,7 @@ function initSelectOption(){
 
     // 카테고리 코드가 3일 경우 첨부파일 노출
     }else if(categoryCodeValue == 3){
-        postFileBox.style.display = 'block'
+        postFileBox.style.display = 'flex'
         voteContainer.style.display = 'none';
 
     // form에 enctype 속성 추가

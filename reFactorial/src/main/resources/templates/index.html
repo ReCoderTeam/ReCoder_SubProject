@@ -164,90 +164,6 @@
     <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('custom_canvas')
-            const jsConfetti = new JSConfetti({ canvas })
-
-            var calendarEl = document.getElementById('checkCalendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
-                headerToolbar: { // 헤더에 표시할 툴 바
-                    left: 'title',
-                    right: 'customBtn today prev next'
-                },
-                titleFormat: function(date) {
-                    return (parseInt(date.date.month) + 1) + '월' + "(출석체크 이벤트)";
-                },
-                customButtons:{
-                    customBtn :{
-                        text: "출석체크 하기",
-                        id : "checkBtn",
-                        click : function (){
-                            fetch("/user/addCheckEvent",{
-                                method:'GET'
-                            }).then( () =>{
-                                console.log("클릭함")
-                                calendar.refetchEvents();
-                                setEventBtn();
-                            } )
-
-                            // JSConfetti 동작 추가
-                            jsConfetti.addConfetti({
-                                emojis: ['🍫', '🍰', '🍩', '🍬', '🍭', '🍪️'],
-                                emojiSize: 80,
-                                confettiNumber: 60,
-                            });
-                        },
-                    }
-                },
-                selectable: true, // 날짜 선택 여부 설정
-                locale: 'ko', // 한국어 설정
-                fixedWeekCount: false,
-                electMirror: false,
-                events:function (info,addEvent){
-
-                    fetch(`/user/getAllCheckEvent?start=${info.startStr}&end=${info.endStr}`,{
-                        method:"GET"
-                    }).then(response => response.json())
-                        .then(data=>{
-                            console.log("출석체크 이벤트 data : ",data)
-
-                            if (data.length > 0){
-                                const events = data.map(data =>({
-                                    title: "🍫",
-                                    color : "#ffffff",
-                                    start: data,
-                                    allDay:true,
-                                    background: "none",
-                                }))
-
-                                addEvent(events)
-                                setEventBtn();
-                            }
-
-                        })
-                }
-            });
-
-            calendar.render();
-        });
-
-        function setEventBtn(){
-            fetch("/user/getCheckEvent",{
-                method:'GET'
-            }).then(response => response.json())
-                .then(data =>{
-                    if (data.result > 0){
-                        document.querySelector('.fc-customBtn-button').style.display = 'none';
-                    }else {
-                        document.querySelector('.fc-customBtn-button').style.display = 'inline-block';
-                    }
-                })
-        }
-
-    </script>
-
-    <script>
         const message = `[[${message}]]''`
 
         const viewAuth = '[[${LoginUserInfo.viewAuth}]]';
@@ -256,14 +172,6 @@
         const recently3List = '[[${recently3List}]]';
 
         const receivedMails = '[[${receivedMails}]]'
-
-        if (receivedMails){
-            console.log("receivedMails: ",receivedMails)
-        }
-
-    </script>
-
-    <script>
         const canvas = document.getElementById('custom_canvas')
 
     </script>

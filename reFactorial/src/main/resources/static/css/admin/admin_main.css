@@ -1,5 +1,5 @@
 .menu{
-    --menu-size: 300px;
+    --menu-size: 17em !important;
     margin-bottom: 10px;
 }
 
@@ -13,13 +13,14 @@ section{
     .pageTitle{
         font-size: 1.5em;
         font-weight: bold;
-        margin: 10px 0;
+        margin: 10px 0 10px 10px;
     }
 
     .mainBox{
         display: flex;
         width: 100%;
         flex: 1;
+        max-height: calc(100vh - 160px);
 
         .mainLeft_box{
             width: 40%;
@@ -33,7 +34,17 @@ section{
             padding: 3% 0;
             box-sizing: border-box;
 
-            .inquiryBox{
+            .menu {
+                .menu_background {
+                    .center-key{
+                        top: calc(var(--menu-size) * 0.01);
+                        left: calc(var(--menu-size) * 0.015);
+                    }
+                }
+            }
+
+
+                    .inquiryBox{
                 width: 350px;
                 flex: 1;
                 padding: 10px;

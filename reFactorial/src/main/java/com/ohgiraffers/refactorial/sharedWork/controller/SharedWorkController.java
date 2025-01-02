@@ -75,8 +75,8 @@ public class SharedWorkController {
         sharedWork.setWorkColor(String.valueOf(eventData.get("workColor")));    // 색상 전달
 
         // 날짜 포맷 검증 및 변환
-        String workScheduleStr = (String) eventData.get("workSchedule");
-        String deadLineStr = (String) eventData.get("deadLine");
+        String workScheduleStr = String.valueOf(eventData.get("workSchedule"));
+        String deadLineStr = String.valueOf(eventData.get("deadLine"));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

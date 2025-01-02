@@ -1,5 +1,29 @@
 const changePW = document.querySelector("#changePW")
 const comparePW = document.querySelector("#comparePW")
+let matchPwd = false;
+let pwdRuleBoolean = false;
+const pwdRuleError = document.querySelector(".pwdRuleError");  // 에러 메시지 요소
+
+changePW.addEventListener("input",pwdRule)
+
+function pwdRule(){
+    validatePasswords();
+    const password = changePW.value.trim();  // 입력된 비밀번호 값
+
+    // 비밀번호가 영어와 숫자 조합, 6자리 이상인지 확인하는 정규식
+    const pwdRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+
+    if (!pwdRegex.test(password)) {
+        // 조건을 만족하지 않으면 에러 메시지 출력
+        pwdRuleError.classList.add('error');
+        pwdRuleBoolean = false;
+        return;  // 함수 종료
+    }
+
+    // 조건을 만족하면 에러 메시지 숨기기
+    pwdRuleBoolean = true;
+    pwdRuleError.classList.remove('error');  // 에러 메시지 표시
+}
 
 comparePW.addEventListener("input", validatePasswords)
 
@@ -10,8 +34,10 @@ function validatePasswords() {
 
     if (changePWValue !== comparePWValue) {
         addErrorClasses();
+        matchPwd = false
     } else {
         removeErrorClasses();
+        matchPwd = true
     }
 }
 
@@ -42,33 +68,64 @@ const presentPWTag = document.querySelector("#presentPW")
 
 matchPWBtn.addEventListener("click", (e) => {
     e.preventDefault();
+    const presentPW = document.querySelector("#presentPW").value.trim();
+    const presentPwNull = document.querySelector(".presentPwNull");
+    const changePWNull = document.querySelector(".changePWNull");
+    const comparePWNull = document.querySelector(".comparePWNull");
 
-    const presentPW = document.querySelector("#presentPW").value;
+    console.log("presentPW: ",presentPW)
+    console.log("changePW.value.trim(): ",changePW.value.trim())
+    console.log("comparePW.value.trim(): ",comparePW.value.trim())
 
-    fetch('/user/matchPW', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            presentPW: presentPW
+    if (!presentPW){
+        presentPwNull.classList.add('error')
+        return
+    }else{presentPwNull.classList.remove('error')}
+
+    if (!changePW.value.trim()){
+        changePWNull.classList.add('error')
+        return
+    } else{changePWNull.classList.remove('error')}
+
+
+    if (!comparePW.value.trim()){
+        comparePWNull.classList.add('error')
+        return
+    } else{comparePWNull.classList.remove('error')}
+
+    if (!pwdRuleBoolean){
+        pwdRuleError.classList.add('error')
+        return
+    } else{
+        pwdRuleError.classList.remove('error')
+    }
+
+    if (matchPwd){
+        fetch('/user/matchPW', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                presentPW: presentPW
+            })
         })
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log("data: ", data)
+            .then(response => response.json())
+            .then(data => {
+                console.log("data: ", data)
 
-            if (data) {
-                presentPWTag.classList.remove("error");
-                presentPWTag.nextElementSibling.classList.remove("error");
-                Dataform.submit();
-            } else {
-                // p태그 지칭
-                presentPWTag.classList.add("error");
-                presentPWTag.nextElementSibling.classList.add("error");
-            }
-        })
-        .catch(error => console.log(error));
+                if (data) {
+                    presentPWTag.classList.remove("error");
+                    presentPWTag.nextElementSibling.classList.remove("error");
+                    Dataform.submit();
+                } else {
+                    // p태그 지칭
+                    presentPWTag.classList.add("error");
+                    presentPWTag.nextElementSibling.classList.add("error");
+                }
+            })
+            .catch(error => console.log(error));
+    }
 })
 
 // 개인정보 수정하기 코드 시작

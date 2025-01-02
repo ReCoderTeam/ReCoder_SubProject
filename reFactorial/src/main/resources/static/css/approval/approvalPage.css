@@ -1,145 +1,6 @@
 /* 기본 폰트 및 스타일 */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 
-/*!* 스타일은 동일하게 유지 *!*/
-/*    html, body {*/
-/*        height: 100%;*/
-/*        margin: 0;*/
-/*        padding: 0;*/
-/*        box-sizing: border-box;*/
-/*        overflow: hidden;*/
-/*    }*/
-/*    .wrapper {*/
-/*        display: flex;*/
-/*        flex-direction: row;*/
-/*        height: 100%;*/
-/*    }*/
-/*    .sidebar {*/
-/*        width: 20%;*/
-/*        background-color: #ffffff;*/
-/*        border-right: 1px solid black;*/
-/*        padding: 20px;*/
-/*        display: flex;*/
-/*        flex-direction: column;*/
-/*        align-items: center;*/
-/*    }*/
-/*    .sidebar-title {*/
-/*        font-size: 32px;*/
-/*        font-weight: bold;*/
-/*        color: #000;*/
-/*        margin-top: 46px;*/
-/*    }*/
-/*    .main-content {*/
-/*        flex: 1;*/
-/*        padding: 20px;*/
-/*        display: flex;*/
-/*        flex-direction: column;*/
-/*        align-items: flex-start;*/
-/*        justify-content: flex-start;*/
-
-/*    }*/
-
-/*    !* 메인 컨텐츠 폼 *!*/
-/*    .main-content form {*/
-/*        max-height: calc(100vh - 200px); !* 화면 높이에서 헤더와 푸터 공간 제외 *!*/
-/*        overflow-y: auto; !* 세로 스크롤 활성화 *!*/
-/*        padding: 10px; !* 내부 여백 *!*/
-/*        box-sizing: border-box; !* 패딩 포함 계산 *!*/
-/*    }*/
-
-
-
-
-/*    !* 폼 그룹 *!*/
-/*    .form-group {*/
-/*        display: flex;*/
-/*        align-items: center; !* 입력창과 버튼을 세로로 정렬 *!*/
-/*        margin-bottom: 15px;*/
-
-/*    }*/
-
-/*    !* 제목 *!*/
-/*    #title {*/
-/*        font-family: 'Playfair Display', serif !important;*/
-/*        width: 850px;    !* 다른 입력창과 동일한 너비 *!*/
-/*        height: 30px; !* 다른 입력창과 동일한 높이 *!*/
-/*        padding: 6px;*/
-/*        border: 1px solid #ccc;*/
-/*        border-radius: 4px;*/
-/*        font-size: 12px;*/
-
-/*    }*/
-
-/*    !* 라벨 스타일 *!*/
-/*    .form-group label {*/
-/*        width: 120px; !* 라벨의 고정 너비 *!*/
-/*        margin-right: 10px; !* 라벨과 입력창 간격 *!*/
-/*        font-size: 14px;*/
-/*        text-align: right; !* 라벨 텍스트 정렬 *!*/
-/*    }*/
-
-/*    !* 공통 입력 필드 스타일 *!*/
-/*    .form-group input,*/
-/*    .form-group select {*/
-/*        flex: 1; !* 요소가 같은 기준선을 공유 *!*/
-/*        padding: 6px;*/
-/*        border: 1px solid #ccc;*/
-/*        border-radius: 4px;*/
-/*        font-size: 14px;*/
-/*        width: 250px; !* 공통 너비 *!*/
-/*        height: 35px; !* 공통 높이 *!*/
-/*        box-sizing: border-box; !* 패딩 포함 계산 *!*/
-/*    }*/
-
-/*    .form-group button {*/
-/*        margin-left: 10px; !* 버튼과 입력창 간격 *!*/
-/*        padding: 6px 12px;*/
-/*        background-color: #5C1915;*/
-/*        color: white;*/
-/*        border: none;*/
-/*        border-radius: 4px;*/
-/*        font-size: 12px;*/
-/*        height: 30px; !* 버튼 높이 *!*/
-/*        cursor: pointer;*/
-/*    }*/
-
-/*    .form-group button:hover {*/
-/*        background-color: #7e2411;*/
-/*    }*/
-
-
-/*    !* 참조자 컨테이너 *!*/
-/*    #referrer-container {*/
-/*        max-height: 150px; !* 최대 높이 설정 *!*/
-/*        overflow-y: auto; !* 세로 스크롤 활성화 *!*/
-/*        border: 1px solid #ccc; !* 시각적으로 영역을 표시 *!*/
-/*        padding: 10px; !* 내부 여백 *!*/
-/*        box-sizing: border-box; !* 패딩 포함 계산 *!*/
-/*        background-color: #f9f9f9; !* 배경색 추가 *!*/
-/*        margin-right: 15px;*/
-/*    }*/
-
-/*    !* 내용 텍스트 영역 *!*/
-/*    #content {*/
-/*        width: 900px; !* 고정된 가로 길이 *!*/
-/*        height: 350px; !* 고정된 높이 *!*/
-/*        resize: none; !* 크기 조절 불가능 *!*/
-/*        overflow: auto; !* 스크롤 추가 *!*/
-/*        box-sizing: border-box; !* 패딩 포함 계산 *!*/
-/*    }*/
-
-/*    !* 추가 스타일 예시 (필요 시 삭제 가능) *!*/
-/*    #content:focus {*/
-/*        outline: 2px solid #5C1915; !* 포커스 시 외곽선 효과 *!*/
-/*    }*/
-
-/*    !* 제출 버튼 컨테이너 *!*/
-/*    .button-group {*/
-/*        display: flex;*/
-/*        justify-content: flex-end; !* 버튼을 오른쪽 정렬 *!*/
-/*        margin-top: 20px; !* 위 요소들과 간격 *!*/
-/*    }*/
-
     /* 제출 버튼 스타일  */
 .button-group .submit-btn {
     background: linear-gradient(45deg, #e6b800 0%, #ffd700 100%); /* 골드 그라데이션 */
@@ -169,45 +30,6 @@
     box-shadow: 0 2px 4px rgba(193, 127, 89, 0.2);
 }
 
-    /*.button-group .submit-btn:hover {*/
-    /*    background-color: #7e2411; !* hover 효과 *!*/
-    /*}*/
-
-    /*.alert-danger {*/
-    /*    color: #721c24;*/
-    /*    background-color: #f8d7da;*/
-    /*    border: 1px solid #f5c6cb;*/
-    /*    padding: 10px;*/
-    /*    margin-bottom: 15px;*/
-    /*    border-radius: 4px;*/
-    /*}*/
-
-    /*#leaveTypeDropdown {*/
-    /*    display: none; !* 기본적으로 숨김 *!*/
-    /*}*/
-
-    /*#leaveTypeDropdown label {*/
-    /*    width: 120px; !* 다른 라벨들과 동일한 너비 *!*/
-    /*    !*margin-right: 50px;*!*/
-    /*    margin-left: 73px;*/
-    /*    font-size: 14px;*/
-    /*    text-align: right;*/
-    /*}*/
-
-    /*#leaveTypeDropdown select {*/
-    /*    width: 250px; !* 다른 입력 필드들과 동일한 너비 *!*/
-    /*    height: 35px;*/
-    /*    padding: 6px;*/
-    /*    border: 1px solid #ccc;*/
-    /*    border-radius: 4px;*/
-    /*    font-size: 14px;*/
-    /*    box-sizing: border-box;*/
-    /*}*/
-
-
-
-
-
     /* 기본 레이아웃 */
     html, body {
         height: 100%;
@@ -227,7 +49,7 @@
     .sidebar {
         width: 20%;
         background-color: #ffffff;
-        border-right: 1px solid black;
+        border-right: 1px solid #5C1915;
         padding: 20px;
         display: flex;
         flex-direction: column;

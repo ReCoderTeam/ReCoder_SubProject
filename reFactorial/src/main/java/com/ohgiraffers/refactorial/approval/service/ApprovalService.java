@@ -314,12 +314,11 @@
             }
 
             if (requiredOrder == null) {
-                System.out.println("Required Order is null for pmId: " + pmId);
+
                 return false; // 또는 예외 처리
             }
 
-            System.out.println("Current Order: " + currentOrder); // 디버깅 로그
-            System.out.println("Required Order: " + requiredOrder); // 디버깅 로그
+
             return currentOrder != null && currentOrder.equals(requiredOrder);
         }
 
@@ -347,15 +346,12 @@
             params.put("limit", limit);
             params.put("offset", offset);
 
-            // 디버깅용 로그 추가
-            System.out.println("로그인 사용자 ID: " + empId);
 
-            // 매퍼 호출 전 로그
-            System.out.println("매퍼 호출 전 전달된 파라미터: " + params);
+
+
             // 진행 중 문서 조회
             List<DocumentDTO> inProgressDocs = approvalMapper.findInProgressDocuments(params);
-            // 매퍼 호출 후 결과 로그
-            System.out.println("조회된 진행 중 문서: " + inProgressDocs);
+
 
 
 
@@ -378,15 +374,12 @@
             params.put("limit", limit);
             params.put("offset", offset);
 
-            // 디버깅용 로그 추가
-            System.out.println("로그인 사용자 ID: " + empId);
-            System.out.println("매퍼 호출 전 전달된 파라미터: " + params);
+
 
             // 반려 문서 조회
             List<DocumentDTO> rejectedDocs = approvalMapper.findRejectedDocuments(params);
 
-            // 매퍼 호출 후 결과 로그
-            System.out.println("조회된 반려 문서: " + rejectedDocs);
+
 
             return rejectedDocs;
         }
@@ -452,28 +445,22 @@
             Integer approverOrderdozang = approvalMapper.getApprovalOrderdozang(pmId, currentEmpId); // 현재 승인자의 순서
             Integer maxOrder = approvalMapper.getMaxApprovalOrder(pmId); // 최대 승인 순서
 
-            System.out.println("approverOrder: " + approverOrderdozang); // 디버깅 로그
-            System.out.println("maxOrder: " + maxOrder);           // 디버깅 로그
+
             return approverOrderdozang != null && approverOrderdozang.equals(maxOrder);
         }
 
         public void updateEmployeeLeave(String empId, BigDecimal deduction, String leaveType) {
-            System.out.println("updateEmployeeLeave 호출");
-            System.out.println("empId: " + empId);
-            System.out.println("deduction: " + deduction);
-            System.out.println("leaveType: " + leaveType);
+
 
             // 업데이트 직전 사용자 정보 확인
             LoginUserDTO beforeUser = userMapper.findUserById(empId);
-            System.out.println("업데이트 전 연차: " + beforeUser.getAnnualLeave());
-            System.out.println("업데이트 전 사용 연차: " + beforeUser.getUsedAnnualLeave());
+
 
             userMapper.updateUserLeave(empId, deduction, leaveType);
 
             // 업데이트 직후 사용자 정보 확인
             LoginUserDTO afterUser = userMapper.findUserById(empId);
-            System.out.println("업데이트 후 연차: " + afterUser.getAnnualLeave());
-            System.out.println("업데이트 후 사용 연차: " + afterUser.getUsedAnnualLeave());
+           
         }
         public String getRejectReasonByApprover(String pmId, String currentEmpId) {
             return approvalMapper.getRejectReasonByApprover(pmId, currentEmpId);

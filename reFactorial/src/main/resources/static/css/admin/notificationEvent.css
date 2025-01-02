@@ -181,3 +181,9 @@ a:visited {
     color: inherit;
 }
 
+ul{
+    li{
+        width: 100% !important;
+    }
+}
+

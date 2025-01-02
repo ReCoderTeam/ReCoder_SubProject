@@ -2,12 +2,12 @@
     display: flex; /* 플렉스 레이아웃 사용 */
     border-right: 1px solid #ddd;
     height: 100%;
-    max-height: 76vh;
+    max-height: calc(100vh - 170px);
 }
 
 .sidebar{
     width: 20%; /* 사이드바 너비 */
-    border-right: 1px solid black; /* 오른쪽 경계선 */
+    border-right: 1px solid #5C1915; /* 오른쪽 경계선 */
     padding: 20px; /* 내부 여백 */
     overflow-y: auto; /* 사이드바 내용이 넘칠 경우 스크롤 */
 }
@@ -55,11 +55,12 @@
     height: 100%;
     padding: 20px; /* 내부 여백 */
     overflow-y: auto; /* 메인 콘텐츠 내용 넘칠 경우 스크롤 */
+    box-sizing: border-box;
 }
 
 .sidebar {
  width: 20%; /* 사이드바 너비 */
- border-right: 1px solid black; /* 오른쪽 경계선 */
+ border-right: 1px solid #5C1915; /* 오른쪽 경계선 */
  padding: 20px; /* 내부 여백 */
  overflow-y: auto; /* 사이드바 내용이 넘칠 경우 스크롤 */
 }
@@ -117,7 +118,7 @@
 /* 캘린더 적용 CSS*/
 #calendar {
     max-width: 1100px;  /* 최대 너비를 900px로 제한 */
-    height: 650px;  /* 캘린더 높이를 500px로 지정 */
+    height: 100%;
 }
 .fc{
     ::-webkit-scrollbar{

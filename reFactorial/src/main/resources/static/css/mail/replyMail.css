@@ -14,7 +14,7 @@ html, body {
 
 .sidebar {
     width: 20%;
-    border-right: 1px solid black;
+    border-right: 1px solid #5C1915;
     padding: 20px;
     overflow-y: auto;
 }
@@ -54,11 +54,7 @@ html, body {
     display: none;
 }
 
-.sidebar li:hover {
-    font-family: 'Noto Sans KR', Arial, sans-serif;
-    color: #5C1915;
-    font-weight: 1000;
-}
+
 
 .form-container {
     flex: 1;

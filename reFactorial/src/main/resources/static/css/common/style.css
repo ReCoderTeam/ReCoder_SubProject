@@ -19,7 +19,8 @@ body{
 }
 
 section{
-    border: solid 1px blue;
+    border-right: solid 2px #5C1915;
+    border-left: solid 2px #5C1915;
     height: 100%;
     flex-grow: 1;
     margin: 0 11%;
