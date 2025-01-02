@@ -36,36 +36,8 @@ public class MailController {
 
     // 메일 쓰기 페이지로 이동
     @GetMapping("/sendMail")
-    public String showSendMailPage(@RequestParam(defaultValue = "1") int currentPage, Model model, HttpSession session) {
+    public String showSendMailPage() {
 
-        LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");
-
-        if (user == null) {
-            model.addAttribute("errorMessage", "로그인 정보가 없습니다. 다시 로그인해주세요.");
-            return "redirect:/login";
-        }
-
-        String loggedInEmpId = user.getEmpId();
-        int limit = 14;
-        int offset = (currentPage - 1) * limit;
-
-        List<MailDTO> myDocuments = mailService.getSendMailDocuments(loggedInEmpId, limit, offset,currentPage);
-        int totalDocuments = mailService.getTotalSendMailDocuments(loggedInEmpId);
-        int totalPages = (int) Math.ceil((double) totalDocuments / limit);
-
-        int startNumber = (totalPages - currentPage) * limit + 1;
-        for (int i = 0; i < myDocuments.size(); i++) {
-            myDocuments.get(i).setRowNum(startNumber + (myDocuments.size() - 1 - i));
-        }
-
-        int prevPage = Math.max(1, currentPage - 1);
-        int nextPage = Math.min(totalPages, currentPage + 1);
-
-        model.addAttribute("documents", myDocuments);
-        model.addAttribute("currentPage", currentPage);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("prevPage", prevPage);
-        model.addAttribute("nextPage", nextPage);
         return "/mail/sendMail";
     }
 
@@ -102,72 +74,102 @@ public class MailController {
         return "redirect:/mail/sendMail";  // 메일 전송 후 리다이렉트
     }
 
-    // 메일 답신
-    @PostMapping("/reply")
-    public String replyMail(@ModelAttribute MailDTO mailDTO, HttpSession session, @RequestParam("mailFiles") List<MultipartFile> mailFileList, Model model) throws IOException {
-        // 로그인 유저 가져오기
-        LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
-        mailDTO.setSenderEmpId(loginUser.getEmpId());
-
-        // 메일 ID 생성 및 설정
-        String emId = "EM" + String.format("%05d", (int) (Math.random() * 100000));
-        mailDTO.setEmailId(emId);
-
-        // 원본 메일의 발신자를 수신자로 설정
-        String receiverEmpId = mailDTO.getReceiverEmpIds().get(0); // 첫 번째 수신자
-        mailDTO.setReceiverEmpIds(Arrays.asList(receiverEmpId)); // 단일 수신자로 설정
-
-        // 메일 서비스 호출
-        try {
-            mailService.sendMail(mailDTO, mailFileList);
-        } catch (Exception e) {
-            model.addAttribute("error", "메일 전송 중 오류가 발생했습니다.");
-            return "mail/sendMail";
-        }
-
-        return "redirect:/mail/sentMails"; // 답신 후 보낸 메일 목록으로 리디렉션
-    }
-
-    // 답신 페이지로 이동
-    @GetMapping("/reply")
-    public String showReplyPage(@RequestParam("emailId") String emailId, Model model) {
-        MailDTO originalMail = mailService.getReplyMailDetail(emailId);
-
-        if (originalMail == null) {
-            throw new IllegalArgumentException("해당 이메일이 존재하지 않습니다.");
-        }
-
-        model.addAttribute("originalMail", originalMail);
-        return "mail/replyMail"; // 템플릿 경로 확인
-    }
-
     //내가 보낸 메일 읽기
     @GetMapping("/sentMails")
-    public String sentMails(Model model, HttpSession session) {
+    public String sentMails(@RequestParam(value = "page", defaultValue = "1") int currentPage,
+                            Model model,
+                            HttpSession session) {
         // 로그인 유저 정보 가져오기
         LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
+
+        // 로그인 정보 확인
+        if (loginUser == null) {
+            model.addAttribute("errorMessage", "로그인 정보가 없습니다. 다시 로그인해주세요.");
+            return "redirect:/login";
+        }
+
         String senderEmpId = loginUser.getEmpId();
+        int limit = 14;
+        int offset = (currentPage - 1) * limit;
 
-        // 보낸 메일 목록을 모델에 추가
-        List<MailDTO> sentMails = mailEmployeeService.getSentMails(senderEmpId);
+        // 보낸 메일 목록 조회
+        List<MailDTO> sentMails = mailService.getSentMails(senderEmpId, limit, offset);
 
-        // Model sentMails 데이터가 제대로 추가되었는지 확인
+        // 전체 보낸 메일 수 조회
+        int totalMails = mailService.getSentMailsCount(senderEmpId);
+
+        // 전체 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalMails / limit);
+
+        // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
+        int startNumber = (totalPages - currentPage) * limit + 1;
+        for (int i = 0; i < sentMails.size(); i++) {
+            // i 대신 (size - 1 - i)를 사용하여 역순으로 번호 매기기
+            sentMails.get(i).setRowNum(startNumber + (sentMails.size() - 1 - i));
+        }
+
+        // 이전 페이지와 다음 페이지 계산
+        int prevPage = Math.max(1, currentPage - 1);
+        int nextPage = Math.min(totalPages, currentPage + 1);
+
+        // 모델에 데이터 추가
         model.addAttribute("sentMails", sentMails);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("prevPage", prevPage);
+        model.addAttribute("nextPage", nextPage);
+        model.addAttribute("currentItemPage", "sentMails");
 
         return "mail/sentMails";
     }
 
-    //내가 받은 메일 읽기
+    // 받은 메일 페이지
     @GetMapping("/receivedMails")
-    public String receivedMails(Model model, HttpSession session) {
+    public String receivedMails(
+            @RequestParam(value = "page", defaultValue = "1") int currentPage,
+            Model model,
+            HttpSession session) {
+
+        // 로그인 유저 정보 가져오기
         LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
-        String receiverEmpIds = loginUser.getEmpId();
 
-        // 내가 받은 메일 목록을 모델에 추가
-        List<MailDTO> receivedMails = mailEmployeeService.getReceivedMails(receiverEmpIds);
+        // 로그인 정보 확인
+        if (loginUser == null) {
+            model.addAttribute("errorMessage", "로그인 정보가 없습니다. 다시 로그인해주세요.");
+            return "redirect:/login";
+        }
 
-        // Model receivedMails 데이터가 제대로 추가되었는지 확인
+        String receiverEmpId = loginUser.getEmpId();
+        int limit = 14;
+        int offset = (currentPage - 1) * limit;
+
+        // 받은 메일 목록 조회
+        List<MailDTO> receivedMails = mailEmployeeService.getReceivedMails(receiverEmpId, limit, offset);
+
+        // 전체 받은 메일 수 조회
+        int totalMails = mailEmployeeService.getReceivedMailsCount(receiverEmpId);
+
+        // 전체 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalMails / limit);
+
+        // 번호 매기기 수정 - 각 페이지 내에서 아래에서 위로 증가하도록
+        int startNumber = (totalPages - currentPage) * limit + 1;
+        for (int i = 0; i < receivedMails.size(); i++) {
+            // i 대신 (size - 1 - i)를 사용하여 역순으로 번호 매기기
+            receivedMails.get(i).setRowNum(startNumber + (receivedMails.size() - 1 - i));
+        }
+
+        // 이전 페이지와 다음 페이지 계산
+        int prevPage = Math.max(1, currentPage - 1);
+        int nextPage = Math.min(totalPages, currentPage + 1);
+
+        // 모델에 데이터 추가
         model.addAttribute("receivedMails", receivedMails);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("prevPage", prevPage);
+        model.addAttribute("nextPage", nextPage);
+        model.addAttribute("currentPageItem", "receivedMails");
 
         return "mail/receivedMails";
     }

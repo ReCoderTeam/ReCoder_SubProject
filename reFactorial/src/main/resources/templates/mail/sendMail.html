@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/css/common/footer.css">
     <link rel="stylesheet" href="/css/common/style.css">
     <link rel="stylesheet" href="/css/mail/sendMail.css">
+    <link rel="stylesheet" href="/css/mail/boldHover.css">
+    <script src="/js/mail/boldHover.js"></script>
 </head>
 <body>
 <header th:replace="~{common/header::headerFragment}"></header>
@@ -44,20 +46,23 @@
                         <input type="text" id="emailTitle" name="emailTitle" required>
                     </div>
 
-                    <!-- 첨부 파일 -->
+                    <!-- 파일첨부 버튼 -->
                     <div class="form-group mailFileBox">
                         <label for="mailFiles">첨부파일:</label>
-                        <input type="file" id="mailFiles" name="mailFiles" multiple>
+                        <div id="fileListContainer"></div>
+                        <input type="file" id="mailFiles" name="mailFiles" multiple onchange="updateFileList()" style="display: none;">
+                        <button type="button" class="custom-button" onclick="document.getElementById('mailFiles').click();">파일첨부</button>
                     </div>
 
                     <!-- 분류 -->
+                    <!-- 회원검색 버튼 -->
                     <div class="form-group">
                         <label for="receiverEmpIds">수신자:</label>
                         <div id="selectedReceivers">
                             <!-- 선택된 수신자 목록이 여기에 표시됩니다. -->
                         </div>
-                        <input type="hidden" id="receiverEmpIds" name="receiverEmpIds" required/>
-                        <button type="button" data-toggle="modal" data-target="#searchItems" >수신자 검색</button>
+                        <input type="hidden" id="receiverEmpIds" name="receiverEmpIds" required />
+                        <button type="button" class="custom-button" data-toggle="modal" data-target="#searchItems">회원검색</button>
                     </div>
 
                     <!-- 내용 -->
@@ -65,6 +70,8 @@
                         <label for="emailContent">내용:</label>
                         <textarea id="emailContent" name="emailContent" required></textarea>
                     </div>
+
+
                 </div>
             </form>
         </div>
@@ -99,6 +106,46 @@
             </div>
         </div>
     </div>
+
+
+
+    <script>
+        function updateFileList() {
+            const fileInput = document.getElementById('mailFiles');
+            const fileListContainer = document.getElementById('fileListContainer');
+            fileListContainer.innerHTML = ''; // 기존 파일 목록 초기화
+
+            for (let i = 0; i < fileInput.files.length; i++) {
+                const file = fileInput.files[i];
+                const fileLink = document.createElement('div');
+                fileLink.className = 'attachmentFile';
+                fileLink.textContent = file.name; // 파일 이름 표시
+
+                // 삭제 버튼 추가
+                const removeButton = document.createElement('button');
+                removeButton.textContent = '삭제';
+                removeButton.onclick = function() {
+                    removeFile(file);
+                };
+
+                fileLink.appendChild(removeButton);
+                fileListContainer.appendChild(fileLink);
+            }
+        }
+
+        function removeFile(file) {
+            const fileInput = document.getElementById('mailFiles');
+            const fileList = Array.from(fileInput.files);
+            const index = fileList.indexOf(file);
+            if (index > -1) {
+                fileList.splice(index, 1);
+                const dataTransfer = new DataTransfer();
+                fileList.forEach(f => dataTransfer.items.add(f));
+                fileInput.files = dataTransfer.files;
+                updateFileList(); // 파일 목록을 다시 업데이트
+            }
+        }
+    </script>
 
     <script>
         const selectedEmployees = []; // 선택된 직원 목록
@@ -165,7 +212,7 @@
             selectedEmployees.forEach(function(employee) {
                 const div = document.createElement('div');
                 div.className = 'selected-employee';
-                div.innerHTML = `${employee.empName} (${employee.empId}) <button type="button" onclick="removeReceiver('${employee.empId}')">삭제</button>`;
+                div.innerHTML = `${employee.empName} <button type="button" onclick="removeReceiver('${employee.empId}')">삭제</button>`;
                 container.appendChild(div);
             });
 

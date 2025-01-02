@@ -234,7 +234,7 @@
 
             LoginUserDTO user = (LoginUserDTO) session.getAttribute("LoginUserInfo");
 
-            System.out.println("fileList = " + fileList);
+
 
             if (user == null) {
                 model.addAttribute("errorMessage", "로그인 정보가 없습니다. 다시 로그인해주세요.");
@@ -448,7 +448,7 @@
             // pmId에 해당하는 결재 문서 정보 조회
             DocumentDTO document = approvalService.getDocumentById(pmId);
 
-            System.out.println("상세페이지 document = " + document.getAttachment());
+
 
             if (document == null) {
                 model.addAttribute("errorMessage", "해당 결제 문서를 찾을 수 없습니다.");
@@ -511,8 +511,7 @@
             // 반려자인지 확인하고 반려 이유 가져오기
             String rejectReason = approvalService.getRejectReasonByApprover(pmId, currentEmpId);
 
-            System.out.println("Reject Reason: " + rejectReason);
-            System.out.println("Is Rejecter: " + (rejectReason != null));
+
 
             // 모델에 데이터 추가
             model.addAttribute("document", document);
@@ -658,7 +657,7 @@
                 return "error/500"; // 오류 페이지로 이동
             }
 
-            System.out.println("Received pmId: " + pmId); // 디버깅 로그 추가
+
             return "approvals/detail"; // 상세 페이지로 이동
         }
 
@@ -668,65 +667,6 @@
     }
 
 
-    //    // 파일 다운로드 (파일 ID 기준)
-    //    @GetMapping("/downloadById")
-    //    public ResponseEntity<Resource> downloadFileById(@RequestParam int fileId) {
-    //        try {
-    //            FileDTO file = approvalService.getFileById(fileId);
-    //
-    //            if (file == null || file.getFilePath() == null) {
-    //                return ResponseEntity.notFound().build();
-    //            }
-    //
-    //            Path filePath = Paths.get(file.getFilePath()).normalize();
-    //            Resource resource = new UrlResource(filePath.toUri());
-    //
-    //            if (!resource.exists()) {
-    //                return ResponseEntity.notFound().build();
-    //            }
-    //
-    //            String encodedFileName = URLEncoder.encode(file.getFileName(), "UTF-8").replace("+", "%20");
-    //
-    //            return ResponseEntity.ok()
-    //                    .contentType(MediaType.parseMediaType(file.getFileType()))
-    //                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFileName)
-    //                    .body(resource);
-    //
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //            return ResponseEntity.internalServerError().build();
-    //        }
-    //    }
-    //
-    //    // 파일 다운로드 (파일 이름으로 조회)
-    //    @GetMapping("/downloadByName")
-    //    public ResponseEntity<Resource> downloadFileByName(@RequestParam String fileName) {
-    //        try {
-    //            FileDTO file = approvalService.getFileByFileName(fileName);
-    //
-    //            if (file == null || file.getFilePath() == null) {
-    //                return ResponseEntity.notFound().build();
-    //            }
-    //
-    //            Path filePath = Paths.get(file.getFilePath()).normalize();
-    //            Resource resource = new UrlResource(filePath.toUri());
-    //
-    //            if (!resource.exists()) {
-    //                return ResponseEntity.notFound().build();
-    //            }
-    //
-    //            return ResponseEntity.ok()
-    //                    .contentType(MediaType.parseMediaType(file.getFileType()))
-    //                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
-    //                    .body(resource);
-    //
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //            return ResponseEntity.internalServerError().build();
-    //        }
-    //    }
-    //
-    //}
 
 
 

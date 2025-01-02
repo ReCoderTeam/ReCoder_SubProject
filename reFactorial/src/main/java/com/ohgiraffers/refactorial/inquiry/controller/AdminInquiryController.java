@@ -24,20 +24,21 @@ public class AdminInquiryController {
         this.uploadService = uploadService;
         this.adminInquiryService = adminInquiryService;
     }
-
-    // 모든 문의 불러오기
-    @GetMapping("/admin/adminInquiryList")
-    public String getAllInquiries(Model model) {
-        List<InquiryDTO> getAllInquiries = adminInquiryService.getAllInquiries();
-        model.addAttribute("getAllInquiries", getAllInquiries);
-        return "inquiry/adminInquiryList";
-    }
+// 모든 문의 불러오기
+@GetMapping("/admin/adminInquiryList")
+public String getAllInquiries(Model model) {
+    List<InquiryDTO> getAllInquiries = adminInquiryService.getAllInquiries();
+    model.addAttribute("getAllInquiries", getAllInquiries);
+    model.addAttribute("currentPage", "adminInquiryList"); // 현재 페이지 설정
+    return "inquiry/adminInquiryList";
+}
 
     // 미답변 문의 가져오기
     @GetMapping("/admin/adminInquiryNoAnswerList")
     public String getAllNoAnswerInquires(Model model) {
         List<InquiryDTO> getAllNoAnswerInquires = adminInquiryService.getAllNoAnswerInquires();
         model.addAttribute("getAllNoAnswerInquires", getAllNoAnswerInquires);
+        model.addAttribute("currentPage", "adminInquiryNoAnswerList"); // 현재 페이지 설정
         return "inquiry/adminInquiryNoAnswerList";
     }
 
@@ -45,10 +46,10 @@ public class AdminInquiryController {
     @GetMapping("/admin/adminInquiryAnswerList")
     public String getAllAnswerInquires(Model model) {
         List<InquiryDTO> getAllAnswerList = adminInquiryService.getAllAnswerList();
-        model.addAttribute("getAllAnswerList",getAllAnswerList);
+        model.addAttribute("getAllAnswerList", getAllAnswerList);
+        model.addAttribute("currentPage", "adminInquiryAnswerList"); // 현재 페이지 설정
         return "inquiry/adminInquiryAnswerList";
     }
-
     // 문의 상세 조회
     @GetMapping("/admin/adminInquiryDetail")
     public String adminInquiryDetail( @RequestParam("iqrValue") String iqrValue, Model model) {

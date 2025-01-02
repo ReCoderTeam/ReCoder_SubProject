@@ -108,3 +108,82 @@ html, body {
     color: #5C1915; /* 마지막 셀의 텍스트 색상 설정 */
     font-weight: bold; /* 마지막 셀의 텍스트 굵게 설정 */
 }
+
+.menu-item {
+    cursor: pointer;
+}
+
+.menu-item.active {
+    font-weight: bold;
+}
+
+.no-mails{
+    margin-top : 50px;
+    text-align: center;
+}
+
+/* 페이지네이션 컨테이너 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* 페이지네이션 리스트 스타일 */
+.pagination ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 페이지네이션 항목 스타일 */
+.pagination li {
+    margin: 0 5px;
+}
+
+/* 페이지네이션 링크 스타일 */
+.pagination a {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-width: 30px;
+    text-align: center;
+}
+
+/* 페이지네이션 링크 호버 스타일 */
+.pagination a:hover {
+    background-color: #5C1915;
+    color: white;
+}
+
+/* 활성화된 페이지 번호 스타일 */
+.pagination .active a {
+    background-color: #5C1915;
+    color: white;
+    font-weight: bold;
+}
+
+/* 비활성화된 페이지 링크 스타일 (이전/다음 버튼) */
+.pagination li a.disabled {
+    background-color: #e0e0e0;
+    color: #ccc;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* 첫 번째, 마지막 페이지 버튼 스타일 */
+.pagination .first, .pagination .last {
+    font-weight: bold;
+}
+
+/* 이전/다음 페이지 버튼 스타일 */
+.pagination .prev, .pagination .next {
+    font-weight: bold;
+}

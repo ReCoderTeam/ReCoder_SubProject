@@ -50,6 +50,7 @@
         employee e ON mr.receiver_emp_id = e.emp_id
         WHERE
         m.email_id = #{emailId}
+        ORDER BY m.sent_date
     </select>
 
     <!--내가 받은 메일-->
@@ -60,6 +61,7 @@
         JOIN employee e on e.emp_id = mr.receiver_emp_id
         WHERE mr.receiver_emp_id = #{receiverEmpId}
         AND mr.trash_status = 0
+        ORDER BY m.sent_date
     </select>
 
     <!-- 내가 보낸 메일의 수신자 사원 ID 가져오기 -->
@@ -70,15 +72,28 @@
     </select>
 
     <select id="getMailDetail" resultMap="MailResultMap">
-        SELECT DISTINCT e.*, m.*, mr.*
-        FROM employee e
-        JOIN tbl_mail m ON e.emp_id = m.sender_emp_id
-        JOIN tbl_mail_receivers mr ON e.emp_id = mr.receiver_emp_id
+        SELECT
+        m.email_id,
+        m.email_title,
+        m.email_content,
+        m.sent_date,
+        m.sender_emp_id,
+        emp1.emp_name AS sender_emp_name,
+        m.attachment
+        FROM tbl_mail m
+        JOIN employee emp1 ON m.sender_emp_id = emp1.emp_id
         WHERE m.email_id = #{emailId}
-        OR mr.receiver_emp_id IN (
-        SELECT receiver_emp_id FROM tbl_mail_receivers WHERE email_id = #{emailId}
-        )
     </select>
+
+    <select id="getMailReceivers" resultType="string">
+        SELECT
+        emp2.emp_name
+        FROM tbl_mail_receivers mr
+        JOIN employee emp2 ON mr.receiver_emp_id = emp2.emp_id
+        WHERE mr.email_id = #{emailId}
+    </select>
+
+
     <!-- 휴지통 메일의 상세 페이지-->
     <select id="getMailDetailBin" resultMap="MailResultMap">
         SELECT *
@@ -135,22 +150,17 @@
         WHERE mr.trash_status = 1
     </select>
 
-    <!-- 발신 메일 목록 조회 (페이징) -->
-    <select id="getSendMailDocuments" resultType="com.ohgiraffers.refactorial.mail.model.dto.MailDTO">
+
+    <!-- 페이지네이션을 위한 새로운 쿼리 -->
+    <select id="getSentMailsPaginated" resultType="com.ohgiraffers.refactorial.mail.model.dto.MailDTO">
         SELECT
         m.email_id AS emailId,
         m.email_title AS emailTitle,
+        m.sender_emp_id AS senderEmpId,
         m.sent_date AS sentDate,
-        m.attachment,
-        e.emp_name AS positionName,
-        d.dept_name AS deptName,
-        (SELECT COUNT(*) FROM tbl_mail_receivers mr WHERE mr.email_id = m.email_id) AS receiverCount
+        ROW_NUMBER() OVER (ORDER BY m.sent_date DESC) AS rowNum
         FROM
         tbl_mail m
-        JOIN
-        employee e ON m.sender_emp_id = e.emp_id
-        JOIN
-        tbl_department d ON e.dept_code = d.dept_code
         WHERE
         m.sender_emp_id = #{empId}
         ORDER BY
@@ -158,8 +168,8 @@
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
-    <!-- 총 발신 메일 개수 조회 -->
-    <select id="getTotalSendMailDocuments" resultType="int">
+    <!-- 보낸 메일 총 개수 조회 -->
+    <select id="getSentMailsCount" resultType="int">
         SELECT COUNT(*)
         FROM tbl_mail
         WHERE sender_emp_id = #{empId}

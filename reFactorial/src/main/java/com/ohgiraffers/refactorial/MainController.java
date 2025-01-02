@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import java.util.ArrayList;
@@ -111,30 +113,37 @@ public class MainController {
         }
 
         // 내가 받은 메일 가져오기
-//        LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
-//        String empId = loginUser.getEmpId(); // 보낸 사람의 empId로 설정
-//
-//        List<MailDTO> receivedMails = mailService.getReceivedMails(empId);
-//
-//        if(!receivedMails.isEmpty()){
-//            Map<String,Object> findSender = new HashMap<>();
-//
+        LoginUserDTO loginUser = (LoginUserDTO) session.getAttribute("LoginUserInfo");
+        String empId = loginUser.getEmpId(); // 보낸 사람의 empId로 설정
+
+        List<MailDTO> receivedMails = mailService.getReceivedMails(empId);
+
+        System.out.println("receivedMails = " + receivedMails);
+
+
+        if(!receivedMails.isEmpty()){
+            List<Map<String, Object>> mailWithSenderList = new ArrayList<>();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 //            SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//
-//            for (MailDTO mail : receivedMails){
-//                String name = memberService.getNameById(mail.getSenderEmpId());
-//
-//                String date = (smp.format(mail.getSentDate()));
-//
-//                Map<String, Object> mailWithDate = new HashMap<>();
-//                mailWithDate.put("mail", mail);  // 기존 mail 객체 저장
-//                mailWithDate.put("date", date);  // 날짜 정보 추가
-//
-//                findSender.put(name, mailWithDate);
-//            }
-//
-//            model.addAttribute("receivedMails", findSender);
-//        }
+
+            for (MailDTO mail : receivedMails){
+                String name = memberService.getNameById(mail.getSenderEmpId());
+
+                LocalDateTime sentDate = mail.getSentDate();
+                String date = sentDate.format(formatter);
+
+                Map<String, Object> mailWithDate = new HashMap<>();
+                mailWithDate.put("mail", mail);  // 기존 mail 객체 저장
+                mailWithDate.put("senderName", name); // 보낸 사람 이름
+                mailWithDate.put("date", date);  // 날짜 정보 추가
+
+                mailWithSenderList.add(mailWithDate);
+            }
+            System.out.println("mailWithSenderList: " + mailWithSenderList);
+
+            model.addAttribute("receivedMails", mailWithSenderList);
+        }
 
         return "index";
     }
@@ -151,7 +160,8 @@ public class MainController {
     }
 
     @GetMapping("/user/inquiry")
-    public String showInquiryPage(){
+    public String showInquiryPageForUser(Model model) {
+        model.addAttribute("currentPage", "inquiry"); // 1:1 문의하기 페이지
         return "inquiry/sendInquiry";
     }
 

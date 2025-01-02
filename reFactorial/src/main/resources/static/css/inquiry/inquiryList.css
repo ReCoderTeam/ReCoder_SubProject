@@ -108,3 +108,8 @@ html, body {
     color: #5C1915; /* 마지막 셀의 텍스트 색상 설정 */
     font-weight: bold; /* 마지막 셀의 텍스트 굵게 설정 */
 }
+
+.no-inquiries{
+    text-align: center;
+    margin-top:50px;
+}

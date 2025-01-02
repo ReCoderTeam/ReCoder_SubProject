@@ -16,11 +16,15 @@
     <link rel="stylesheet" th:href="@{/css/common/header.css}">
     <link rel="stylesheet" th:href="@{/css/common/footer.css}">
     <link rel="stylesheet" th:href="@{/css/common/style.css}">
+    <link rel="stylesheet" th:href="@{/css/inquiry/adminInquiryDetail.css}">
+
+
+
 
 </head>
 <body>
 <header th:replace="~{/admin/common/admin_header::adminHeaderFragment}"></header>
-<section class="inquiry-detail">
+<section>
 
     <div class="leftBox">
         <div th:replace="~{admin/common/admin_circle_menu::adminCircleMenuFragment}"></div>
@@ -30,89 +34,57 @@
         <div class="sideMenu">
             <div class="sideTitle">1:1 문의</div>
 
-            <ul class="sideMenuUl">
-                <li th:onclick="|location.href='@{/admin/adminInquiryList}'|">전체 조회</li>
-                <li th:onclick="|location.href='@{/admin/adminInquiryNoAnswerList}'|">미답변</li>
-                <li th:onclick="|location.href='@{/admin/adminInquiryList}'|">답변완료</li>
-            </ul>
+                <ul class="sideMenuUl">
+                    <li class="menu-item" th:onclick="|location.href='@{/admin/adminInquiryList}'|">전체 조회</li>
+                    <li class="menu-item" th:onclick="|location.href='@{/admin/adminInquiryNoAnswerList}'|">미답변</li>
+                    <li class="menu-item" th:onclick="|location.href='@{/admin/adminInquiryList}'|">답변완료</li>
+                </ul>
+            </div>
+
+        <!-- Inquiry Detail Section Inside rightBox -->
+        <div class="inquiry-container">
+        <div class="inquiry-detail">
+            <div class="inquiry-detail-header">
+                <h2 th:text="${adminInquiries.iqrTitle}"></h2> <!-- 문의 제목 -->
+
+                <div class="inquiry-meta">
+                    <span>답변 상태 : </span><span th:if="${adminInquiries.answerStatus == false}">답변대기중</span>
+                    <span th:if="${adminInquiries.answerStatus == true}">답변완료</span>
+                    <span>작성시간: <span th:text="${#temporals.format(adminInquiries.iqrCreationDate)}"></span></span>
+                </div>
+            </div>
+
+            <div class="inquiry-content">
+                <p th:text="${adminInquiries.iqrDetails}"></p> <!-- 문의 내용 -->
+            </div>
+
+            <div class="inquiry-answer-detail">
+                <div class="inquiry-answerContent">
+                    <span th:text="${adminInquiries != null && adminInquiries.answerDetail != null ? adminInquiries.answerDetail : '없음'}"></span> <!-- 답변 내용 -->
+                </div>
+            </div>
+
+            <div>
+                <form method="POST" action="/admin/adminInquiryAnswer">
+                    <textarea id="answerDetail" class="answerDetail" name="answerDetail" placeholder="답변을 입력하세요..."
+                              th:disabled="${adminInquiries.answerDetail != null}"></textarea>
+                    <input type="hidden" name="iqrValue" th:value="${adminInquiries.iqrValue}"/>
+                    <button type="submit">답변하기</button>
+                </form>
+            </div>
+
+            <div th:each="file : ${attachmentFileList}"> <!-- 파일 첨부 -->
+                <a class="attachmentFile" th:href="@{/files/downLoad(fileId=${file.fileId})}" th:text="${file.originFileName}">첨부 파일</a>
+            </div>
+
+            <div class="back-button">
+                <a href="/admin/adminInquiryList">목록으로 돌아가기</a>
+            </div>
+            </div>
+
+        </div>
         </div>
 
-    <table>
-        <tr>
-            <th>제목</th>
-            <td th:text="${adminInquiries.iqrTitle}"></td>
-        </tr>
-        <tr>
-            <th>내용</th>
-            <td th:text="${adminInquiries.iqrDetails}"></td>
-        </tr>
-        <tr>
-            <th>답변 상태</th>
-            <td th:text="${adminInquiries.answerStatus ? '답변 완료' : '답변 대기 중'}"></td>
-        </tr>
-        <tr>
-            <th>작성일</th>
-            <td th:text="${adminInquiries.iqrCreationDate}"></td>
-        </tr>
-        <tr>
-            <th>답변 내용</th>
-            <td th:text="${adminInquiries.answerDetail != null ? adminInquiries.answerDetail : '없음'}"></td>
-        </tr>
-        <tr>
-            <th>문의자</th>
-            <td th:text="${adminInquiries.empName}"></td>
-        </tr>
-        <tr>
-            <th>문의자</th>
-            <td th:text="${adminInquiries.empId}"></td>
-        </tr>
-    </table>
-
-    <div>
-        <form method="POST" action="/admin/adminInquiryAnswer">
-            <textarea id="answerDetail" class="answerDetail" name="answerDetail" placeholder="답변을 입력하세요..."></textarea>
-            <input type="hidden" name="iqrValue" th:value="${adminInquiries.iqrValue}"/>
-            <button type="submit">답변하기</button>
-        </form>
-    </div>
-
-    <script>
-        function submitAnswer(iqrValue) {
-            const answerDetail = document.getElementById("answerDetail").value; // 텍스트영역의 답변 내용 가져오기
-            const params = new URLSearchParams();
-            params.append('iqrValue', iqrValue); // 실제 iqrValue 값을 서버로 전달
-            params.append('answerDetail', answerDetail);
-            console.log("iqrValue:", iqrValue); // 추가된 로그
-
-            fetch('/inquiry/adminInquiryAnswer', {
-                method: 'POST',
-                body: params,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
-                .then(response => response.text())
-                .then(result => {
-                    console.log("Result:", result); // 응답 로그 확인
-                    if (result === 'success') {
-                        alert('답변이 등록되었습니다.');
-                        location.reload(); // 페이지 새로고침
-                    } else {
-                        alert('답변 등록에 실패했습니다.');
-                    }
-                })
-                .catch(err => {
-                    console.error("Error:", err);
-                    alert('네트워크 오류가 발생했습니다.');
-                });
-        }
-    </script>
-
-    <div th:each="file : ${attachmentFileList}"> <!-- 파일 첨부 -->
-        <a class="attachmentFile" th:href="@{/files/downLoad(fileId=${file.fileId})}" th:text="${file.originFileName}">첨부 파일</a>
-    </div>
-
-    <div class="back-button">
-        <a href="/admin/adminInquiryList">목록으로 돌아가기</a>
-    </div>
 </section>
 
 <footer th:replace="~{common/footer::footerFragment}"></footer>

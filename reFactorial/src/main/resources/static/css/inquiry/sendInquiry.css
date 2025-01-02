@@ -158,3 +158,54 @@ html, body {
         }
     }
 }
+
+/* Inquiry form: File attachment */
+.inquiryFileBox {
+    margin-bottom: 20px;
+}
+
+.inquiryFileBox label {
+    margin-right: 10px;
+}
+
+#fileListContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.attachmentFile {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.attachmentFile button {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.custom-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-left: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.custom-button:hover {
+    background-color: #0056b3;
+}

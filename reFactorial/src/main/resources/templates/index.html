@@ -87,11 +87,11 @@
                             <div class="mailDate">수신일</div>
                         </div>
 
-                        <div th:onclick="|location.href='@{'/mail/detail'(emailId=${mail.value.mail.emailId})}'|" class="mailTd" th:each="mail, num : ${receivedMails}">
+                        <div th:onclick="|location.href='@{'/mail/detail'(emailId=${mail.mail.emailId})}'|" class="mailTd" th:each="mail, num : ${receivedMails}">
                             <div class="mailNum" th:text="${num.count}">번호</div>
-                            <div class="sender" th:text="${mail.key}">보낸사람</div>
-                            <div class="mailTitle" th:text="${mail.value.mail.emailTitle}">제목</div>
-                            <div class="mailDate" th:text="${mail.value.date}">수신일</div>
+                            <div class="sender" th:text="${mail.senderName}">보낸사람</div>
+                            <div class="mailTitle" th:text="${mail.mail.emailTitle}">제목</div>
+                            <div class="mailDate" th:text="${mail.date}">수신일</div>
                         </div>
 
                     </div>
@@ -159,10 +159,15 @@
 
     </section>
     <footer th:replace="~{common/footer::footerFragment}"></footer>
+    <canvas id="custom_canvas"></canvas>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('custom_canvas')
+            const jsConfetti = new JSConfetti({ canvas })
+
             var calendarEl = document.getElementById('checkCalendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
@@ -181,9 +186,17 @@
                             fetch("/user/addCheckEvent",{
                                 method:'GET'
                             }).then( () =>{
+                                console.log("클릭함")
                                 calendar.refetchEvents();
                                 setEventBtn();
                             } )
+
+                            // JSConfetti 동작 추가
+                            jsConfetti.addConfetti({
+                                emojis: ['🍫', '🍰', '🍩', '🍬', '🍭', '🍪️'],
+                                emojiSize: 80,
+                                confettiNumber: 60,
+                            });
                         },
                     }
                 },
@@ -241,6 +254,18 @@
         const profileUrl = '[[${LoginUserInfo.profile}]]';
 
         const recently3List = '[[${recently3List}]]';
+
+        const receivedMails = '[[${receivedMails}]]'
+
+        if (receivedMails){
+            console.log("receivedMails: ",receivedMails)
+        }
+
+    </script>
+
+    <script>
+        const canvas = document.getElementById('custom_canvas')
+
     </script>
 
     <script th:src="@{/js/mainPage/mainPage.js}"></script>

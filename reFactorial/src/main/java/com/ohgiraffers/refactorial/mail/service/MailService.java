@@ -58,8 +58,22 @@ public class MailService {
 
 
     // 내가 보낸 메일
+    // 기존 메서드 (파라미터 1개)
     public List<MailDTO> getSentMails(String senderEmpId) {
         List<MailDTO> sentMails = mailMapper.getSentMails(senderEmpId);
+
+        // 각 메일에 대한 수신자 정보 추가
+        for (MailDTO mailDTO : sentMails) {
+            List<String> receiverEmpIds = mailMapper.getReceiverEmpIds(mailDTO.getEmailId());
+            mailDTO.setReceiverEmpIds(receiverEmpIds);
+        }
+
+        return sentMails;
+    }
+
+    // 새로 추가할 페이지네이션용 메서드 (파라미터 3개)
+    public List<MailDTO> getSentMails(String senderEmpId, int limit, int offset) {
+        List<MailDTO> sentMails = mailMapper.getSentMailsPaginated(senderEmpId, limit, offset);
 
         // 각 메일에 대한 수신자 정보 추가
         for (MailDTO mailDTO : sentMails) {
@@ -152,31 +166,7 @@ public class MailService {
     }
 
 
-    public List<MailDTO> getSendMailDocuments(String empId, int limit, int offset,int currentPage) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("empId", empId);
-        params.put("limit", limit);
-        params.put("offset", offset);
-
-        List<MailDTO> documents = mailMapper.getSendMailDocuments(params);
-
-        int totalDocuments = mailMapper.getTotalSendMailDocuments(empId);
-        int totalPages = (int) Math.ceil((double) totalDocuments / limit);
-
-        int startNumber = (totalPages - currentPage) * limit + 1;
-        for (int i = 0; i < documents.size(); i++) {
-            documents.get(i).setRowNum(startNumber + (documents.size() - 1 - i));
-        }
-
-        return documents;
-    }
-
-
-    public int getTotalSendMailDocuments(String empId) {
-        return mailMapper.getTotalSendMailDocuments(empId);
-    }
-
-    public MailDTO getReplyMailDetail(String emailId) {
-        return mailMapper.getReplyMailDetail(emailId);
+    public int getSentMailsCount(String senderEmpId) {
+        return mailMapper.getSentMailsCount(senderEmpId);
     }
 }

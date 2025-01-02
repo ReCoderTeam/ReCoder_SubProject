@@ -16,6 +16,12 @@
     <link rel="stylesheet" th:href="@{/css/common/style.css}">
     <link rel="stylesheet" th:href="@{/css/inquiry/inquiryList.css}">
 
+    <style>
+        .bold{
+            font-weight: bold;
+        }
+    </style>
+
 </head>
 <body>
 <header th:replace="~{common/header::headerFragment}"></header>
@@ -25,8 +31,16 @@
         <div class="sidebar">
             <div class="sidebar-title">1:1 문의</div>
             <ul>
-                <li th:onclick="|location.href='@{/user/inquiry}'|">1:1 문의하기</li>
-                <li th:onclick="|location.href='@{/inquiry/inquiryList}'|">문의 내역</li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/user/inquiry}'|"
+                    th:classappend="${currentPage == 'inquiry'} ? 'bold' : ''">
+                    1:1 문의하기
+                </li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/inquiry/inquiryList}'|"
+                    th:classappend="${currentPage == 'inquiryList'} ? 'bold' : ''">
+                    문의 내역
+                </li>
             </ul>
         </div>
 
@@ -41,10 +55,13 @@
                 <!-- Table -->
                 <div class="table-header">
                     <div class="table-cell">제목</div>
-                    <div class="table-cell">작성일</div>
+                    <div class="table-cell">작성시간</div>
                     <div class="table-cell">상태</div>
                 </div>
 
+                <div th:if="${#lists.isEmpty(sentInquiries)}" class="no-inquiries">
+                    <span>문의내역 없음</span>
+                </div>
                 <!-- Table body -->
                 <div th:each="sentInquiry : ${sentInquiries}">
                     <div class="table-row">

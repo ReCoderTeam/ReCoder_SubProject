@@ -1,0 +1,9 @@
+/* boldHover.css */
+.menu-item {
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.menu-item.active {
+    font-weight: bold;
+}

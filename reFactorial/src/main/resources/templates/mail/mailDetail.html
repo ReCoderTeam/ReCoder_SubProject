@@ -33,9 +33,9 @@
 
         <div class="main-content">
             <div class="top-bar">
-                <button type="button" th:onclick="|location.href='@{/mail/reply(emailId=${mailDetail.emailId})}'|">
-                    답신 하기
-                </button>
+<!--                <button type="button" th:onclick="|location.href='@{/mail/reply(emailId=${mailDetail.emailId})}'|">-->
+<!--                    답신 하기-->
+<!--                </button>-->
             </div>
 
             <!-- Mail Detail Section -->
@@ -45,7 +45,6 @@
 
                     <div class="mail-meta">
                         <span>보낸사람: <span th:text="${mailDetail.senderEmpName}"></span></span>
-                        <span>받는사람: <span th:text="${mailDetail.receiverEmpName}"></span></span>
                         <span>보낸 날짜: <span th:text="${#temporals.format(mailDetail.sentDate, 'yyyy-MM-dd HH:mm:ss')}"></span></span>
                     </div>
                 </div>

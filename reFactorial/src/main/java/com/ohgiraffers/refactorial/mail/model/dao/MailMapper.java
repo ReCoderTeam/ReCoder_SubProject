@@ -18,7 +18,7 @@ public interface MailMapper {
     void saveReceiver(MailReceiverDTO receiverDTO);
 
     // 내가 보낸 메일 읽기
-    List<MailDTO> getSentMails(String senderEmpId);
+  
 
     // 내가 받은 메일 읽기
     List<MailDTO> getReceivedMails(String receiverEmpId);
@@ -42,10 +42,13 @@ public interface MailMapper {
     // 휴지통으로 이동하기
     void updateTrashStatus(Map<String, Object> params);
 
+    int getSentMailsCount(String senderEmpId);
 
-    int getTotalSendMailDocuments(String empId);
+    List<MailDTO> getSentMails(String senderEmpId);
 
-    List<MailDTO> getSendMailDocuments(Map<String, Object> params);
-
-    MailDTO getReplyMailDetail(String emailId);
+    List<MailDTO> getSentMailsPaginated(
+            @Param("empId") String senderEmpId,
+            @Param("limit") int limit,
+            @Param("offset") int offset
+    );
 }

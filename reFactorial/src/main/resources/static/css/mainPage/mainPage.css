@@ -569,6 +569,13 @@ section{
     }
 }
 
+#custom_canvas{
+    position: absolute;
+    width: 99%;
+    height: 99%;
+    z-index: -3;
+}
+
 .fc {
     font-size: 0.7em;
 }

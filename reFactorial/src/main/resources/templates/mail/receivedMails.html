@@ -11,6 +11,16 @@
     <link rel="stylesheet" href="/css/common/footer.css">
     <link rel="stylesheet" href="/css/common/style.css">
     <link rel="stylesheet" href="/css/mail/receivedMails.css">
+    <script src="/js/mail/boldHover.js" defer></script>
+    <link rel="stylesheet" href="/css/mail/boldHover.css">
+
+    <style>
+        .bold{
+            font-weight: bold;
+        }
+    </style>
+
+
 </head>
 <body>
 <header th:replace="~{common/header::headerFragment}"></header>
@@ -22,8 +32,16 @@
         <div class="sidebar-title">사내 메일</div>
         <ul>
 <!--            <li th:onclick="|location.href='@{/user/mail}'|">전체 메일</li>-->
-            <li th:onclick="|location.href='@{/mail/sentMails}'|">보낸 메일</li>
-            <li th:onclick="|location.href='@{/mail/receivedMails}'|">받은 메일</li>
+            <li class="menu-item"
+                th:onclick="|location.href='@{/mail/sentMails}'|"
+                th:classappend="${currentPageItem == 'sentMails'} ? 'bold' : ''">
+                보낸 메일
+            </li>
+            <li class="menu-item"
+                th:onclick="|location.href='@{/mail/receivedMails}'|"
+                th:classappend="${currentPageItem == 'receivedMails'} ? 'bold' : ''">
+                받은 메일
+            </li>
 <!--            <li th:onclick="|location.href='@{/mail/mailBin}'|">휴지통</li>-->
         </ul>
     </div>
@@ -40,10 +58,15 @@
         <div class="table-header">
             <div class="table-cell">보낸 사람</div>
             <div class="table-cell">제목</div>
-            <div class="table-cell">작성일</div>
+            <div class="table-cell">작성시간</div>
         </div>
 
         <!-- Table Body -->
+
+        <div th:if="${#lists.isEmpty(receivedMails)}" class="no-mails">
+            <span>받은 메일 없음</span>
+        </div>
+
         <div th:each="receivedMail : ${receivedMails}">
             <div class="table-row">
 
@@ -58,6 +81,35 @@
                 <!-- 작성일 -->
                 <div class="table-cell" th:text="${#temporals.format(receivedMail.sentDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
             </div>
+        </div>
+
+
+        <!-- 페이지네이션 표시 -->
+        <div class="pagination">
+            <ul>
+                <!-- 이전 페이지 -->
+                <li>
+                    <a href="?page=1" class="first"><<</a>
+                </li>
+                <li>
+                    <a th:href="@{'/mail/receivedMails?page=' + ${prevPage}}" class="prev"><</a>
+                </li>
+
+                <!-- 페이지 번호들 -->
+                <th:block th:each="i : ${#numbers.sequence(1, totalPages)}">
+                    <li th:classappend="${i == currentPage ? 'active' : ''}">
+                        <a th:href="@{'/mail/receivedMails?page=' + ${i}}" th:text="${i}"></a>
+                    </li>
+                </th:block>
+
+                <!-- 다음 페이지 -->
+                <li>
+                    <a th:href="@{'/mail/receivedMails?page=' + ${nextPage}}" class="next">></a>
+                </li>
+                <li>
+                    <a th:href="@{'/mail/receivedMails?page=' + ${totalPages}}" class="last">>></a>
+                </li>
+            </ul>
         </div>
 
     </div>

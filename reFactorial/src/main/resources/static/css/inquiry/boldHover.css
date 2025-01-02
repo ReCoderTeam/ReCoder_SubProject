@@ -1,0 +1,7 @@
+.menu-item {
+    cursor: pointer;
+}
+
+.menu-item.active {
+    font-weight: bold;
+}

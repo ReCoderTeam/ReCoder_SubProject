@@ -6,46 +6,40 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" media="all" href="static/css/admin/pdfFile/resultPDF.css" />
-    <link rel="stylesheet" type="text/css" th:href="@{static/css/admin/pdfFile/resultPDF.css}" />
+<!--    <link rel="stylesheet" type="text/css" media="all" href="static/css/admin/pdfFile/resultPDF.css" />-->
+<!--    <link rel="stylesheet" type="text/css" th:href="@{static/css/admin/pdfFile/resultPDF.css}" />-->
 </head>
 <body style="font-family: 'NanumGothic'">
 
-    <div class="mainContainer">
-        <h1 class="title">예약자 정보</h1>
+    <div class="mainContainer" style="width: 100%; height: 100%; padding: 20px; box-sizing: border-box;">
+        <h1 class="title" style="text-align: center; font-size: 24px; margin-bottom: 20px;">예약자 정보</h1>
 
-        <div class="reserveTableBox">
-            <table class="reserveTable" border="1">
+        <div class="reserveTableBox" style="width: 100%; margin-bottom: 30px;">
+            <table class="reserveTable" border="1" style="border-collapse: collapse; width: 100%;">
                 <tr>
-                    <th class="reserveDate">에약 날짜</th>
-                    <th class="reserveName" >당첨자</th>
-                    <th class="reserveRegion" >당첨 지역</th>
-                    <th class="reservePhone" >전화번호</th>
-                    <th class="reserveWithName">동반인</th>
+                    <th class="reserveDate" style="border: 1px solid black; padding: 8px; text-align: left; font-size: 14px;">에약 날짜</th>
+                    <th class="reserveName" style="border: 1px solid black; padding: 8px; text-align: left; font-size: 14px;">당첨자</th>
+                    <th class="reserveRegion" style="border: 1px solid black; padding: 8px; text-align: left; font-size: 14px;">당첨 지역</th>
+                    <th class="reservePhone" style="border: 1px solid black; padding: 8px; text-align: left; font-size: 14px;">전화번호</th>
+                    <th class="reserveWithName" style="border: 1px solid black; padding: 8px; text-align: left; font-size: 14px;">동반인</th>
                 </tr>
                 <tr th:each="reserve : ${reserveDataList}">
-                    <td class="reserveDate" th:text="${reserve.tktReserveDate}"></td>
-                    <td class="reserveName" th:text="${reserve.tktReserveName}"></td>
-                    <td class="reserveRegion" th:text="${reserve.tktReserveAddress}"></td>
-                    <td class="reservePhone" th:text="${reserve.tktReservePhone}"></td>
-                    <td class="reserveWithName" th:text="${reserve.tktReserveAccomp}"></td>
+                    <td class="reserveDate" style="border: 1px solid black; padding: 8px; text-align: left; font-size: 14px;" th:text="${reserve.tktReserveDate}"></td>
+                    <td class="reserveName" style="border: 1px solid black; padding: 8px; text-align: left; font-size: 14px;" th:text="${reserve.tktReserveName}"></td>
+                    <td class="reserveRegion" style="border: 1px solid black; padding: 8px; text-align: left; font-size: 14px;" th:text="${reserve.tktReserveAddress}"></td>
+                    <td class="reservePhone" style="border: 1px solid black; padding: 8px; text-align: left; font-size: 14px;" th:text="${reserve.tktReservePhone}"></td>
+                    <td class="reserveWithName" style="border: 1px solid black; padding: 8px; text-align: left; font-size: 14px;" th:text="${reserve.tktReserveAccomp}"></td>
                 </tr>
             </table>
         </div>
 
-
-        <div class="reserveFooter">
+        <div class="reserveFooter" style="text-align: right; font-size: 14px; margin-top: 20px; font-weight: bold;">
             <h3>서명 : 윌리웡카 (인)</h3>
         </div>
     </div>
 
     <script>
         const reserveDataList = '[[${reserveDataList}]]'
-
-        if (reserveDataList){
-            console.log("reserveDataList: ",reserveDataList)
-        }
-
     </script>
 </body>
 </html>

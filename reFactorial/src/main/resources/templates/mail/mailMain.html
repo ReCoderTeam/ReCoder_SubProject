@@ -48,9 +48,9 @@
             <div th:each="mail : ${receivedMails}">
                 <div class="table-row">
                     <!-- 보낸 사람 -->
-                    <div class="table-cell" th:text="${mail.senderEmpId}"></div>
+                    <div class="table-cell" th:text="${mail.senderEmpName}"></div>
                     <!-- 받는 사람 -->
-                    <div class="table-cell" th:text="${mail.receiverEmpId}"></div>
+                    <div class="table-cell" th:text="${mail.receiverEmpName}"></div>
                     <!-- 제목, 클릭 시 mailDetail로 이동 -->
                     <div class="table-cell">
                         <a th:href="@{'/mail/detail'(emailId=${mail.emailId})}" th:text="${mail.emailTitle}"></a>

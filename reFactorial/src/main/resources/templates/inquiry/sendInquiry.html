@@ -15,6 +15,12 @@
     <link rel="stylesheet" th:href="@{/css/common/footer.css}">
     <link rel="stylesheet" th:href="@{/css/common/style.css}">
     <link rel="stylesheet" th:href="@{/css/inquiry/sendInquiry.css}">
+    <style>
+        .bold{
+            font-weight: bold;
+        }
+    </style>
+
 
 </head>
 <body>
@@ -25,8 +31,16 @@
         <div class="sidebar">
             <div class="sidebar-title">1:1 문의</div>
             <ul>
-                <li th:onclick="|location.href='@{/user/inquiry}'|">1:1 문의하기</li>
-                <li th:onclick="|location.href='@{/inquiry/inquiryList}'|">문의 내역</li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/user/inquiry}'|"
+                    th:classappend="${currentPage == 'inquiry'} ? 'bold' : ''">
+                    1:1 문의하기
+                </li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/inquiry/inquiryList}'|"
+                    th:classappend="${currentPage == 'inquiryList'} ? 'bold' : ''">
+                    문의 내역
+                </li>
             </ul>
         </div>
 
@@ -49,7 +63,9 @@
                     <!-- 첨부 파일 -->
                     <div class="form-group inquiryFileBox">
                         <label for="inquiryFiles">첨부파일:</label>
-                        <input type="file" id="inquiryFiles" name="inquiryFiles" multiple>
+                        <div id="fileListContainer"></div>
+                        <input type="file" id="inquiryFiles" name="inquiryFiles" multiple onchange="updateFileList()" style="display: none;">
+                        <button type="button" class="custom-button" onclick="document.getElementById('inquiryFiles').click();">파일첨부</button>
                     </div>
 
                     <!-- 내용 -->
@@ -63,6 +79,43 @@
         </div>
     </div>
 </section>
+<script>
+    function updateFileList() {
+        const fileInput = document.getElementById('inquiryFiles');
+        const fileListContainer = document.getElementById('fileListContainer');
+        fileListContainer.innerHTML = ''; // Clear previous file list
+
+        for (let i = 0; i < fileInput.files.length; i++) {
+            const file = fileInput.files[i];
+            const fileLink = document.createElement('div');
+            fileLink.className = 'attachmentFile';
+            fileLink.textContent = file.name; // Display file name
+
+            // Create a delete button
+            const removeButton = document.createElement('button');
+            removeButton.textContent = '삭제';
+            removeButton.onclick = function() {
+                removeFile(file);
+            };
+
+            fileLink.appendChild(removeButton);
+            fileListContainer.appendChild(fileLink);
+        }
+    }
+
+    function removeFile(file) {
+        const fileInput = document.getElementById('inquiryFiles');
+        const fileList = Array.from(fileInput.files);
+        const index = fileList.indexOf(file);
+        if (index > -1) {
+            fileList.splice(index, 1);
+            const dataTransfer = new DataTransfer();
+            fileList.forEach(f => dataTransfer.items.add(f));
+            fileInput.files = dataTransfer.files;
+            updateFileList(); // Update the file list
+        }
+    }
+</script>
 <footer th:replace="~{common/footer::footerFragment}"></footer>
 </body>
 </html>

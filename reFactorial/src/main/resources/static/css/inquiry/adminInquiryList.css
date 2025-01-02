@@ -1,0 +1,56 @@
+/* 테이블 컨테이너 설정 */
+.table-container {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    width: 100%; /* 테이블 전체 너비 */
+}
+
+/* 테이블 헤더 스타일 */
+.table-header {
+    display: flex; /* 가로 정렬 */
+    justify-content: space-between; /* 셀 간의 공간을 균등 배분 */
+    font-weight: bold; /* 굵은 글씨 */
+    background-color: #f5f5f5; /* 연한 배경색 */
+    padding: 10px 0; /* 내부 여백 */
+    border-bottom: 2px solid #ccc; /* 테이블 헤더 하단 경계선 */
+}
+
+/* 테이블 행 스타일 */
+.table-row {
+    display: flex; /* 가로 정렬 */
+    justify-content: space-between; /* 셀 간의 공간을 균등 배분 */
+    padding: 10px 0; /* 내부 여백 */
+    border-bottom: 1px solid #ddd; /* 행 하단 경계선 */
+}
+
+/* 셀 스타일 */
+.table-cell {
+    flex: 1; /* 셀 너비를 균등 분배 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    padding: 8px; /* 내부 여백 */
+}
+
+/* 행의 배경색 번갈아 표시 */
+.table-row:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.table-row:nth-child(odd) {
+    background-color: #fff;
+}
+
+/* 링크 스타일 */
+.table-cell a {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: #007BFF; /* 파란색 */
+    font-weight: bold;
+}
+
+.table-cell a:hover {
+    text-decoration: underline; /* 호버 시 밑줄 표시 */
+}
+
+.no-inquiries{
+    margin-top:50px;
+    text-align: center;
+}

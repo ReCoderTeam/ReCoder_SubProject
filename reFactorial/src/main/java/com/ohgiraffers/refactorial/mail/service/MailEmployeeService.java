@@ -32,7 +32,14 @@ public class MailEmployeeService {
     }
 
     // 받은 메일 목록 조회
-    public List<MailDTO> getReceivedMails(String receiverEmpId) {
-        return mailEmployeeMapper.selectReceivedMails(receiverEmpId);
+    public List<MailDTO> getReceivedMails(String receiverEmpId, int limit, int offset) {
+        return mailEmployeeMapper.selectReceivedMails(receiverEmpId, limit, offset);
     }
+
+    public int getReceivedMailsCount(String receiverEmpId) {
+        return mailEmployeeMapper.selectReceivedMailsCount(receiverEmpId);
+    }
+
+
+
 }

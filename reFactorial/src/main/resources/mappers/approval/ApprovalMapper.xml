@@ -236,63 +236,6 @@
         GROUP BY pm.pm_id;
     </select>
 
-
-
-
-
-    <!-- PM ID로 파일 조회 -->
-    <!--    <select id="findFilesByPmId" resultType="com.ohgiraffers.refactorial.approval.model.dto.FileDTO">-->
-    <!--        SELECT file_id AS fileId,-->
-    <!--               pm_id AS pmId,-->
-    <!--               file_name AS fileName,-->
-    <!--               file_path AS filePath,-->
-    <!--               file_size AS fileSize,-->
-    <!--               file_type AS fileType,-->
-    <!--               uploaded_at AS uploadedAt-->
-    <!--        FROM tbl_approval_files-->
-    <!--        WHERE pm_id = #{pmId}-->
-    <!--    </select>-->
-
-    <!-- 파일 추가 -->
-    <!--    <insert id="insertFile" parameterType="com.ohgiraffers.refactorial.approval.model.dto.FileDTO">-->
-    <!--        INSERT INTO tbl_approval_files (pm_id, file_name, file_path, file_size, file_type)-->
-    <!--        VALUES (#{pmId}, #{fileName}, #{filePath}, #{fileSize}, #{fileType})-->
-    <!--    </insert>-->
-
-    <!-- 파일 삭제 -->
-    <!--    <delete id="deleteFileByFileId" parameterType="int">-->
-    <!--        DELETE FROM tbl_approval_files-->
-    <!--        WHERE file_id = #{fileId}-->
-    <!--    </delete>-->
-
-    <!-- 파일 ID로 파일 조회 -->
-    <!--    <select id="findFileByFileId" resultType="com.ohgiraffers.refactorial.approval.model.dto.FileDTO">-->
-    <!--        SELECT file_id AS fileId,-->
-    <!--               pm_id AS pmId,-->
-    <!--               file_name AS fileName,-->
-    <!--               file_path AS filePath,-->
-    <!--               file_size AS fileSize,-->
-    <!--               file_type AS fileType,-->
-    <!--               uploaded_at AS uploadedAt-->
-    <!--        FROM tbl_approval_files-->
-    <!--        WHERE file_id = #{fileId}-->
-    <!--    </select>-->
-
-
-    <!--    <select id="findFileByFileName" resultType="com.ohgiraffers.refactorial.approval.model.dto.FileDTO">-->
-    <!--        SELECT file_id AS fileId,-->
-    <!--               pm_id AS pmId,-->
-    <!--               file_name AS fileName,-->
-    <!--               file_path AS filePath,-->
-    <!--               file_size AS fileSize,-->
-    <!--               file_type AS fileType,-->
-    <!--               uploaded_at AS uploadedAt-->
-    <!--        FROM tbl_approval_files-->
-    <!--        WHERE file_name = #{fileName}-->
-    <!--    </select>-->
-
-
-
     <select id="getApproversStatus" resultType="string">
         SELECT pm_status
         FROM tbl_approval

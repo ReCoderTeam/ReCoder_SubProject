@@ -73,8 +73,24 @@
         .table-cell a:hover {
             text-decoration: underline; /* 호버 시 밑줄 표시 */
         }
-    </style>
 
+        .no-adminInquiries{
+            text-align:center;
+            margin-top:50px;
+        }
+
+        /* 테이블 본문에 세로 스크롤 추가 */
+        .table-body {
+            max-height: 400px; /* 원하는 높이로 설정 */
+            overflow-y: auto; /* 세로 스크롤 추가 */
+        }
+
+    </style>
+    <style>
+        .bold{
+            font-weight: bold;
+        }
+    </style>
 
 </head>
 <body>
@@ -90,46 +106,59 @@
             <div class="sideTitle">1:1 문의</div>
 
             <ul class="sideMenuUl">
-                <li th:onclick="|location.href='@{/admin/adminInquiryList}'|">전체 조회</li>
-                <li th:onclick="|location.href='@{/admin/adminInquiryNoAnswerList}'|">미답변</li>
-                <li th:onclick="|location.href='@{/admin/adminInquiryAnswerList}'|">답변완료</li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/admin/adminInquiryList}'|"
+                    th:classappend="${currentPage == 'adminInquiryList'} ? 'bold' : ''">전체 조회</li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/admin/adminInquiryNoAnswerList}'|"
+                    th:classappend="${currentPage == 'adminInquiryNoAnswerList'} ? 'bold' : ''">미답변</li>
+                <li class="menu-item"
+                    th:onclick="|location.href='@{/admin/adminInquiryAnswerList}'|"
+                    th:classappend="${currentPage == 'adminInquiryAnswerList'} ? 'bold' : ''">답변완료</li>
             </ul>
         </div>
 
         <div class="table-container">
-        <!-- Table -->
-        <div class="table-header">
-            <div class="table-cell">제목</div>
-            <div class="table-cell">작성일</div>
-            <div class="table-cell">문의자</div>
-            <div class="table-cell">상태</div>
-        </div>
+
+            <!-- Table Header -->
+            <div class="table-header">
+                <div class="table-cell">제목</div>
+                <div class="table-cell">작성시간</div>
+                <div class="table-cell">문의자</div>
+                <div class="table-cell">상태</div>
+            </div>
 
 
-        <!-- Table body -->
-        <div th:each="inquiry : ${getAllNoAnswerInquires}">
-            <div class="table-row">
-                <!-- 제목, 클릭 시 inquiryDetail 로 이동 -->
-                <div class="table-cell">
-                    <a th:href="@{'/admin/adminInquiryDetail'(iqrValue=${inquiry.iqrValue})}" th:text="${inquiry.iqrTitle}"></a>
-                </div>
-                <!-- 작성일 -->
-                <div class="table-cell" th:text="${inquiry.iqrCreationDate}"></div>
-                <!-- 문의자-->
-                <div class="table-cell" th:text="${inquiry.empName}"></div>
-                <!-- 상태 -->
-                <div class="table-cell">
-                    <span th:if="${inquiry.answerStatus == false}">답변대기중</span>
-                    <span th:if="${inquiry.answerStatus == true}">답변완료</span>
+            <div th:if="${#lists.isEmpty(getAllNoAnswerInquires)}" class="no-adminInquiries">
+                <span>미답변 문의 없음</span>
+            </div>
+
+            <!-- Table body with scroll -->
+            <div class="table-body">
+                <div th:each="inquiry : ${getAllNoAnswerInquires}">
+                    <div class="table-row">
+                        <!-- 제목, 클릭 시 inquiryDetail 로 이동 -->
+                        <div class="table-cell">
+                            <a th:href="@{'/admin/adminInquiryDetail'(iqrValue=${inquiry.iqrValue})}" th:text="${inquiry.iqrTitle}"></a>
+                        </div>
+                        <!-- 작성일 -->
+                        <div class="table-cell" th:text="${inquiry.iqrCreationDate}"></div>
+                        <!-- 문의자-->
+                        <div class="table-cell" th:text="${inquiry.empName}"></div>
+                        <!-- 상태 -->
+                        <div class="table-cell">
+                            <span th:if="${inquiry.answerStatus == false}">답변대기중</span>
+                            <span th:if="${inquiry.answerStatus == true}">답변완료</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
 
     </div>
 </section>
-<footer th:replace="~{/common/footer::footerFragment}"></footer>
-
+<footer th:replace="~{common/footer::footerFragment}"></footer>
 
 </body>
 </html>

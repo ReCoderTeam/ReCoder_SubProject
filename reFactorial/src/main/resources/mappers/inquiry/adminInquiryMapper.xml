@@ -18,18 +18,21 @@
     <!-- 전체문의 조회 -->
     <select id="getAllInquiries" resultMap="AdminInquiryResultMap">
         SELECT * FROM employee e JOIN tbl_inquiry i ON e.emp_id = i.emp_id
+        ORDER BY i.iqr_creationDate
     </select>
 
     <!-- 미답변문의 전체 조회-->
     <select id="getAllNoAnswerInquires" resultMap="AdminInquiryResultMap">
         SELECT * FROM employee e JOIN tbl_inquiry i ON e.emp_id = i.emp_id
         WHERE answer_status = 0
+        ORDER BY i.iqr_creationDate
     </select>
 
     <!-- 답변문의 전체 조회-->
     <select id="getAllAnswerList" resultMap="AdminInquiryResultMap">
         SELECT * FROM employee e JOIN tbl_inquiry i ON e.emp_id = i.emp_id
         WHERE answer_status = 1
+        ORDER BY i.iqr_creationDate
     </select>
 
 
